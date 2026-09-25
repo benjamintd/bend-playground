@@ -1,0 +1,15 @@
+#!/bin/sh
+set -eu
+root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+cd "$root"
+export BEND_NO_TELEMETRY=1
+scripts/bend PROOF.bend
+for suite in parallel spatial render; do
+  bun --preload ./.toolchain/bend/bend2/main.ts "tests/$suite.js"
+done
+if [ "${1:-}" = --native ]; then
+  scripts/bend tests/native.bend -o build/native-test
+  ./build/native-test --gpu off > results/native-cpu.csv
+  ./build/native-test --gpu on > results/native-gpu.csv
+  bun --preload ./.toolchain/bend/bend2/main.ts tests/native-check.js
+fi

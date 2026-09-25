@@ -1,0 +1,20 @@
+{
+  "command": [
+    "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/boids-frame",
+    "--gpu",
+    "on",
+    "--threads",
+    "10",
+    "--",
+    "18",
+    "10",
+    "30",
+    "90"
+  ],
+  "date": "2026-09-25T09:14:01.920873+00:00",
+  "returncode": 1,
+  "stderr": "bend: compiling the GPU program (/Users/benjamintd/Personal/bend-playground/bend-swarm/build/boids-frame.gpu is missing or stale)\nbend: Internal Error (0000000e:Internal Error)\n",
+  "stdout": "",
+  "source_sha256": "40c00d60ee66ba7eec611d23c4a850dc93f625146d6fc4af6a3323f0459456da",
+  "binary_sha256": "148e0ba6df5f800204dba86c07a1fb2c123d271952776f63d65213095af22e57"
+}

@@ -1,0 +1,16 @@
+#!/bin/sh
+set -eu
+root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+cd "$root"
+mkdir -p build
+scripts/bend PROOF.bend
+scripts/bend demos/swarm/main.bend -o build/swarm
+scripts/bend benches/full_frame.bend -o build/boids-frame
+scripts/bend benches/points.bend -o build/points-frame
+scripts/bend tests/native.bend -o build/native-test
+if [ "$(uname)" = Darwin ]; then
+  mkdir -p 'build/Bend Swarm.app/Contents/MacOS'
+  cp build/swarm 'build/Bend Swarm.app/Contents/MacOS/swarm'
+  if [ -f build/swarm.gpu ]; then cp build/swarm.gpu 'build/Bend Swarm.app/Contents/MacOS/swarm.gpu'; fi
+  cp scripts/Info.plist 'build/Bend Swarm.app/Contents/Info.plist'
+fi

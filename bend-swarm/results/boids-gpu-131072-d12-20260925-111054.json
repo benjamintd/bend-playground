@@ -1,0 +1,105 @@
+{
+  "date": "2026-09-25T09:10:50.022464+00:00",
+  "git_commit": null,
+  "source_sha256": "a0a06a74b6bfba1e3dcf9732c412f3e5ddbe9f40dbcb5bfbe86b822fc719c786",
+  "binary_sha256": "148e0ba6df5f800204dba86c07a1fb2c123d271952776f63d65213095af22e57",
+  "bend_version": [
+    "2.0.27",
+    "95317d952c8fe5be18ef49f916b2a57250cfb0aa"
+  ],
+  "os": "macOS-15.7.4-arm64-arm-64bit",
+  "cpu": "Apple M2 Pro",
+  "gpu": [
+    {
+      "sppci_model": "Apple M2 Pro",
+      "sppci_cores": "16"
+    }
+  ],
+  "memory_gb": 16.0,
+  "backend": "gpu",
+  "threads": 10,
+  "agents": 131072,
+  "resolution": [
+    1024,
+    1024
+  ],
+  "world_size": [
+    1024,
+    1024
+  ],
+  "radius": 8,
+  "dt": 0.016666666666666666,
+  "fork_depth": 12,
+  "leaf_items": 32,
+  "render_quadtree_depth": 7,
+  "tile_size": 8,
+  "warmup": 30,
+  "samples": 90,
+  "workload": "boids",
+  "command": [
+    "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/boids-frame",
+    "--gpu",
+    "on",
+    "--threads",
+    "10",
+    "--",
+    "17",
+    "12",
+    "30",
+    "90"
+  ],
+  "summary": {
+    "histogram_ms": {
+      "mean": 1.5100333333333333,
+      "median": 1.474,
+      "p95": 1.818,
+      "minimum": 1.225,
+      "maximum": 2.5
+    },
+    "scan_ms": {
+      "mean": 0.042222222222222223,
+      "median": 0.037,
+      "p95": 0.092,
+      "minimum": 0.015,
+      "maximum": 0.256
+    },
+    "scatter_ms": {
+      "mean": 1.5558555555555555,
+      "median": 1.493,
+      "p95": 2.483,
+      "minimum": 1.224,
+      "maximum": 3.299
+    },
+    "simulation_ms": {
+      "mean": 24.226044444444444,
+      "median": 23.988999999999997,
+      "p95": 27.675,
+      "minimum": 21.141,
+      "maximum": 29.429
+    },
+    "screen_binning_ms": {
+      "mean": 3.326411111111111,
+      "median": 3.2089999999999996,
+      "p95": 4.232,
+      "minimum": 2.599,
+      "maximum": 5.671
+    },
+    "render_ms": {
+      "mean": 3.053722222222222,
+      "median": 2.8645,
+      "p95": 4.21,
+      "minimum": 2.478,
+      "maximum": 6.819
+    },
+    "frame_ms": {
+      "mean": 33.71428888888889,
+      "median": 33.573499999999996,
+      "p95": 38.018,
+      "minimum": 29.732,
+      "maximum": 39.592
+    }
+  },
+  "scope": "headless Bend pipeline; includes previous image reclamation; excludes HUD, Window.frame, display sync and startup",
+  "stderr": "bend: compiling the GPU program (/Users/benjamintd/Personal/bend-playground/bend-swarm/build/boids-frame.gpu is missing or stale)\n",
+  "candidates_per_second": 413335070.0623388
+}
