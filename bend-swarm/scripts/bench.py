@@ -45,6 +45,7 @@ def run(agents,depth,backend,warmup,frames,workload='boids',tag=None):
     meta=dict(date=started,git_commit=commit,source_sha256=source_hash(),binary_sha256=hashlib.sha256(binary.read_bytes()).hexdigest(),bend_version=(ROOT/'.bend-version').read_text().splitlines(),
       **machine_info(),
       backend=backend,threads=10,agents=agents,resolution=[1024,1024],world_size=[1024,1024],radius=8,dt=1/60,
+      boids_speed_range=[20,60] if workload=='boids' else None,
       fork_depth=depth,leaf_items=agents//2**min(depth,agents.bit_length()-1),render_quadtree_depth=7,tile_size=8,
       warmup=warmup,samples=frames,workload=workload,command=args,summary=summaries,
       scope='headless Bend pipeline; includes previous image reclamation; excludes HUD, Window.frame, display sync and startup',stderr=result.stderr)

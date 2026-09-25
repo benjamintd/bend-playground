@@ -35,3 +35,31 @@ The 120-warmup/600-sample depth-12 run reached 52.46 ms/frame GPU and 51.21 ms/f
 ## Native interaction check
 
 The final native app was visually checked at 131072 and 262144 agents, with visible emergent flock shapes. G changed backend; bracket keys changed population; pause, HUD hide/show while paused, and a mouse drag all worked in a captured-log run. The title reports frame rate including HUD/presentation; the HUD separates compute stages. One computer-control call transiently reported `noWindowsAvailable`; repeating the controls with captured stderr did not reproduce a runtime error. Two test windows were found and closed afterward, so native UI FPS snapshots are deliberately not used as benchmark results.
+
+## Boundary and shutdown investigation
+
+The apparent confinement to tiles was checked with a new native regression,
+`tests/crossings.bend`, using interacting pairs that start on either side of
+8, 256, 512 and 1024 in both axes. For 120 steps on each native backend, the
+positions and velocities agree with the independent all-pairs JS oracle
+(0.012 absolute accumulated tolerance), CPU and Metal agree within 0.003, and
+the expected particle colors appear in both the pixel buffer and the actual
+Image tree. Each designated crossing is asserted after the first step. This
+covers bin rebuilds, large quadtree boundaries, periodic wrapping and old-image
+reuse; the fixture does not demonstrate stability at large dense populations.
+
+A captured GUI run exited with status 0 and no runtime error. A separate LLDB
+run reached the normal Window.close effect and exited with status 0; neither
+run establishes a GPU crash. The earlier depth-10 Metal fault remains an
+independent unresolved issue. Do not describe relaunching as a crash fix.
+
+Live inspection of the original 131072-agent GPU scene at frame 1200 found
+mean speed 1.1313, median speed 1.0470, and 47.03% of agents below 1 world unit/s.
+Neighbor alignment damps the initially opposing headings toward rest; this
+explains the nearly stationary groups without requiring tile walls. The demo
+now applies a 20–60 world-unit/s cruising constraint after acceleration, with a
+deterministic +X fallback for near-zero velocity. This deliberately changes the
+dynamics. The old benchmark records remain historical, not current performance
+claims. Native oracle and crossing regressions pass with the new constraint.
+The normal-shutdown cause is still unconfirmed; the minimum-speed change is
+not a crash-recovery mechanism.

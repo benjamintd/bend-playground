@@ -22,7 +22,7 @@ On macOS you can also open `build/Bend Swarm.app`. The launcher requires a real 
 - **[ / ]:** halve/double population, from 1024 to 1048576; starts at 131072.
 - **Escape:** close.
 
-The HUD reports computation milliseconds, excluding HUD and presentation. Population capacity support is not a real-time performance guarantee. Dense crowds make exact boids expensive; no neighbor caps hide that cost.
+The HUD reports computation milliseconds, excluding HUD and presentation. Population capacity support is not a real-time performance guarantee. Boids maintain a cruising speed of 20–60 world units per simulated second. Dense crowds make exact boids expensive; no neighbor caps hide that cost.
 
 ## Measured on this Mac
 
@@ -30,10 +30,10 @@ Apple M2 Pro (10 CPU / 16 GPU cores), 1024×1024, 120 warmup + 600 sampled frame
 
 | Genuine boids | Metal frame median | Frame p95 |
 |---:|---:|---:|
-| 131,072 | 26.04 ms | 30.66 ms |
-| 262,144 | 41.81 ms | 49.84 ms |
+| 131,072 | 36.32 ms | 40.87 ms |
+| 262,144 | 98.67 ms | 115.63 ms |
 
-These are complete **headless computation** timings, including grid construction, flocking/integration, screen binning and Bend tile rendering. They exclude HUD/display and are not window FPS. The initial plan uses binary depth 14; results change with density and scene evolution. See `docs/PERF.md` for stage timings, CPU results, failed configurations and raw records.
+These are complete **headless computation** timings, including grid construction, flocking/integration, screen binning and Bend tile rendering. They exclude HUD/display and are not window FPS. These results include the 20–60 world-unit/s cruising constraint; the older stopping-flock results are retained in the performance log. The initial plan uses binary depth 14; results change with density and scene evolution. See `docs/PERF.md` for stage timings, CPU results, failed configurations and raw records.
 
 ## Programming shape
 
@@ -54,7 +54,7 @@ python3 scripts/bench.py --agents 131072 --backend gpu
 python3 scripts/sweep.py --agents 65536 131072 262144 --depths 8 10 12 14
 ```
 
-Tests include an independent numerical oracle, 48 clustered/periodic scenes, coincident and partial-active cases, grid membership/permutation/offsets, CPU/Metal agreement, deterministic pixel collisions, map/reduce/scan, and structural proofs. Unsafe-sharing invariants are tested contracts, not formal race-freedom guarantees.
+Tests include an independent numerical oracle, 48 clustered/periodic scenes, coincident and partial-active cases, grid membership/permutation/offsets, CPU/Metal agreement, 120-frame cell/quadrant/world-edge crossing checks (positions, pixel buffer and image tree), deterministic pixel collisions, map/reduce/scan, and structural proofs. Unsafe-sharing invariants are tested contracts, not formal race-freedom guarantees.
 
 Results and scope: [performance](docs/PERF.md), [environment](docs/ENVIRONMENT.md), [findings](docs/FINDINGS.md), [architecture](docs/ARCHITECTURE.md), [original brief](docs/BRIEF.md). Raw measurements are in `results/`.
 

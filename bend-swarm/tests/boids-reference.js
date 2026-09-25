@@ -17,7 +17,10 @@ export function oracle(w) {
     }
     const inv=1/Math.max(n,1),active=n?1:0;
     const [fx,fy]=limit(18*sx+active*(2*(ax*inv-w.vx[i])+4*cx*inv),18*sy+active*(2*(ay*inv-w.vy[i])+4*cy*inv),80);
-    const [vx,vy]=limit(w.vx[i]+fx*.016666667,w.vy[i]+fy*.016666667,60);
+    const rawX=w.vx[i]+fx*.016666667, rawY=w.vy[i]+fy*.016666667;
+    const rawSpeed=Math.hypot(rawX,rawY);
+    const targetSpeed=Math.max(20,Math.min(60,rawSpeed));
+    const [vx,vy]=rawSpeed<=.000001 ? [20,0] : [rawX/rawSpeed*targetSpeed,rawY/rawSpeed*targetSpeed];
     out.px[i]=wrap(w.px[i]+vx*.016666667); out.py[i]=wrap(w.py[i]+vy*.016666667); out.vx[i]=vx; out.vy[i]=vy;
   }
   return out;
@@ -46,3 +49,11 @@ for(const n of [8,32,128]) for(let seed=1;seed<=8;seed++) {
   compare(out.fst,w,0);
 }
 console.log('PASS: brute-force Bend agrees with independent JS oracle (24 dense / periodic scenes).');
+
+// Propulsion must recover from zero / tiny velocity and preserve a usable heading.
+for(const [vx,vy] of [[0,0],[1e-10,-1e-10],[3,4],[-30,40],[90,-120]]) {
+  const r=B.cruising(vx,vy), speed=Math.hypot(r.fst,r.snd);
+  assert.ok(Number.isFinite(speed) && speed>=20-.0001 && speed<=60+.0001);
+  if(Math.hypot(vx,vy)>.000001) assert.ok(Math.abs(vx*r.snd-vy*r.fst)<.01,'retain heading');
+}
+console.log('PASS: bounded cruising speed and deterministic stationary recovery.');

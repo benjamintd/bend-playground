@@ -48,13 +48,26 @@ def limited(+x: F32, +y: F32, limit: F32) -> F32 & F32:
   +scale = F32.min(1.0,(limit / F32.sqrt((x * x + y * y + 0.000001 : F32)) : F32))
   ((x * scale : F32),(y * scale : F32))
 
+# Boids propel themselves: alignment must not drain all motion from a flock.
+# Exactly stationary input has no heading, so use a deterministic +X heading.
+def moving_speed(moving: Bool, +vx: F32, +vy: F32) -> F32 & F32:
+  match moving:
+    case False{}: (20.0,0.0)
+    case True{}:
+      +speed = F32.sqrt((vx * vx + vy * vy : F32))
+      +scale = (F32.min(60.0,F32.max(20.0,speed)) / speed : F32)
+      ((vx * scale : F32),(vy * scale : F32))
+
+def cruising(+vx: F32, +vy: F32) -> F32 & F32:
+  moving_speed((vx * vx + vy * vy > 0.000000000001 : F32),vx,vy)
+
 def integrate_velocity(+x: F32, +y: F32, r: F32 & F32) -> W.Sample:
   (+vx,+vy) = r
   W.Sample{M.wrap((x + vx * 0.016666667 : F32)),M.wrap((y + vy * 0.016666667 : F32)),vx,vy}
 
 def integrate_accel(x: F32, y: F32, vx: F32, vy: F32, r: F32 & F32) -> W.Sample:
   (ax,ay) = r
-  integrate_velocity(x,y,limited((vx + ax * 0.016666667 : F32),(vy + ay * 0.016666667 : F32),60.0))
+  integrate_velocity(x,y,cruising((vx + ax * 0.016666667 : F32),(vy + ay * 0.016666667 : F32)))
 
 def integrate(self: W.Sample, f: Forces, mx: F32, my: F32, power: F32) -> W.Sample:
   W.Sample{+x,+y,+vx,+vy} = self

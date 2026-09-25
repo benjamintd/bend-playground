@@ -11,6 +11,7 @@ Completed:
 - Pure Bend tile renderer and native interactive swarm, CPU/GPU roots.
 - GPU/CPU stage benchmarks, depth/population sweeps, raw samples/metadata.
 - Long 131k and 262k runs, correctness tests and four structural proofs.
+- Cruising-speed constraint, 120-frame native boundary/image regressions, and a 1920-frame 131k GPU soak.
 
 Still open:
 - Standalone parallel microbenchmark matrix for every primitive.

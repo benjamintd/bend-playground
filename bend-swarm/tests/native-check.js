@@ -14,7 +14,12 @@ for(const backend of ['cpu','gpu']) {
   assert.equal(lines.length,128);
   const out=W.empty(7n,128);
   lines.forEach((line,i)=>line.split(',').map(Number).forEach((x,j)=>out[['px','py','vx','vy'][j]][i]=x));
-  compare(out,want,.0003); got.push(out);
+  compare(out,want,.0003);
+  for(let i=0;i<128;i++) {
+    const speed=Math.hypot(out.vx[i],out.vy[i]);
+    assert.ok(speed>=20-.0003 && speed<=60+.0003,`${backend}: cruising speed of agent ${i}`);
+  }
+  got.push(out);
 }
 compare(...got,.0002);
 console.log('PASS: native CPU and Metal agree with the independent oracle; position/velocity tolerance 0.0003.');

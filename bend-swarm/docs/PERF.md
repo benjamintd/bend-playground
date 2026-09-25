@@ -56,3 +56,27 @@ The initial app default is now binary depth **14**, based on these runs and the 
 | 131,072 | 14 | 10.01 ms | 20.11 ms |
 | 262,144 | 12 | 82.77 ms | 92.15 ms |
 | 262,144 | 14 | 28.03 ms | 38.58 ms |
+
+## Cruising-speed correction
+
+The previous tables describe the original dynamics, whose headings decayed
+toward rest. The current demo clamps speed to 20–60 world units/s. This changes
+the evolving scene and its candidate workload; the following numbers are not
+an isolated speedup/regression comparison of the same state. Both runs used
+120 warmups and 600 samples, binary depth 14, with no concurrent demo process.
+
+| Agents | Simulation median | Render median | Frame median | Frame p95 |
+|---:|---:|---:|---:|---:|
+| 131,072 | 27.05 ms | 2.76 ms | 36.32 ms | 40.87 ms |
+| 262,144 | 88.88 ms | 2.93 ms | 98.67 ms | 115.63 ms |
+
+Raw records: `results/cruise-gpu-131072-d14.{csv,json}` and
+`results/cruise-gpu-262144-d14.{csv,json}`. Both completed without a GPU error.
+The larger moving swarm is substantially more expensive than the old settled
+scene. No real-time claim is made for 262k, and timing still excludes HUD/display.
+
+The longer default-population soak (`cruise-long-gpu-131072-d14`) also completed:
+120 warmups + 1800 measured frames, no GPU error, 42.27 ms frame median and
+47.82 ms p95. The increased time again reflects the evolving dense flock.
+This is 1920 successful steps, not a guarantee against every input/population
+or the historical depth-10 failure.

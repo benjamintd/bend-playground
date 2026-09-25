@@ -12,4 +12,8 @@ if [ "${1:-}" = --native ]; then
   ./build/native-test --gpu off > results/native-cpu.csv
   ./build/native-test --gpu on > results/native-gpu.csv
   bun --preload ./.toolchain/bend/bend2/main.ts tests/native-check.js
+  scripts/bend tests/crossings.bend -o build/crossings-test
+  ./build/crossings-test --gpu off > build/crossings-cpu.csv
+  ./build/crossings-test --gpu on > build/crossings-gpu.csv
+  bun --preload ./.toolchain/bend/bend2/main.ts tests/crossings-check.js
 fi
