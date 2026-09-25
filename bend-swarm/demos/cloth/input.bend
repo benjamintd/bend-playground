@@ -14,7 +14,7 @@ def nearest(close: Bool, id: U32, d2: F32, depth: F32, old: Pick) -> Pick:
 
 def projected(id: U32, x: F32, y: F32, old: Pick, v: M.Vertex) -> Pick:
   Pick{j,+d2,z} = old
-  M.Vertex{vx,vy,+depth} = v
+  M.Vertex{vx,vy,+depth,_} = v
   +dx = (vx - x : F32)
   +dy = (vy - y : F32)
   +dist = (dx * dx + dy * dy : F32)

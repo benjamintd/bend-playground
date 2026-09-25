@@ -1,0 +1,49 @@
+{
+  "date": "2026-09-25T13:55:50.576325+00:00",
+  "cpu": "Apple M2 Pro",
+  "gpu": [
+    {
+      "sppci_model": "Apple M2 Pro",
+      "sppci_cores": "16"
+    }
+  ],
+  "source_sha256_at_recording": "0162d132c0807d2d3224c4bb4c951eec6cbea2757c9fedd53b6f2d2c35f24419",
+  "binary_sha256": "79f557f1030ca81b3ea04bb735382b17c12c1f1a5ea52b0d0d8e95989a051c79",
+  "bend_version": [
+    "2.0.27",
+    "95317d952c8fe5be18ef49f916b2a57250cfb0aa"
+  ],
+  "warmup": 120,
+  "samples": 600,
+  "simulation_vertices": 1024,
+  "render_vertices": 4096,
+  "resolution": [
+    1024,
+    1024
+  ],
+  "threads": 10,
+  "scope": "CPU physics, Metal projection/binning/raster; headless 120 warmup plus 600 samples. No other demo running; unrelated desktop applications remain active.",
+  "summary": {
+    "simulation_ms": {
+      "median": 10.0515,
+      "p95": 14.658,
+      "minimum": 8.957,
+      "maximum": 60.238
+    },
+    "render_ms": {
+      "median": 15.5225,
+      "p95": 17.486,
+      "minimum": 13.012,
+      "maximum": 26.512
+    },
+    "frame_ms": {
+      "median": 25.64,
+      "p95": 30.869,
+      "minimum": 23.117,
+      "maximum": 78.012
+    }
+  },
+  "os": "macOS-15.7.4-arm64-arm-64bit",
+  "memory_gb": 16.0,
+  "background_load": "Other desktop apps active; later snapshot showed Linear ~199% CPU plus a VM and browser. No concurrent demo."
+}

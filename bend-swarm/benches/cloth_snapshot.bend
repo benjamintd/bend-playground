@@ -29,7 +29,7 @@ def rows(n: Nat, +y: U32, pixels: Array<U32>) -> IO(Unit):
         rows(k,(y + 1 : U32),pixels)
 
 def result(f: F.Frame) -> IO(Unit):
-  F.Frame{_,_,_,pixels,_,_,_} = f
+  F.Frame{_,_,_,pixels,_,_,_,_} = f
   do IO<Unit>:
     Unit <- IO.print("P3\n512 512\n255")
     rows(512n,0,pixels)
@@ -37,5 +37,5 @@ def result(f: F.Frame) -> IO(Unit):
 def main() -> IO(Unit):
   do IO<Unit>:
     f : F.Frame <- F.create(5n)
-    f : F.Frame <- B.frames(180n,0,False{},f)
+    f : F.Frame <- B.frames_depth(0n,180n,0,False{},f)
     result(f)

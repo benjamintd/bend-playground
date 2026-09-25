@@ -1,0 +1,77 @@
+{
+  "date": "2026-09-25T13:20:45.288113+00:00",
+  "command": [
+    "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/cloth-frame",
+    "--gpu",
+    "off",
+    "--threads",
+    "10",
+    "--",
+    "0",
+    "120",
+    "600"
+  ],
+  "os": "macOS-15.7.4-arm64-arm-64bit",
+  "cpu": "Apple M2 Pro",
+  "gpu": [
+    {
+      "sppci_model": "Apple M2 Pro",
+      "sppci_cores": "16"
+    }
+  ],
+  "memory_gb": 16.0,
+  "backend": "cpu",
+  "threads": 10,
+  "bend_version": [
+    "2.0.27",
+    "95317d952c8fe5be18ef49f916b2a57250cfb0aa"
+  ],
+  "binary_sha256": "4db0e736f3eeb2e127f4bf6ff26e1ce2638427e9eaa0ebc41cc8b72d5bfa3ab2",
+  "source_sha256": "fe706d9eefaa08766b10c490dc796f1176a19c03a38beb79641a695c03ed837b",
+  "vertices": 1024,
+  "triangles": 1922,
+  "resolution": [
+    512,
+    512
+  ],
+  "substeps": 2,
+  "substep_dt": 0.008333333333333333,
+  "constraint_iterations": 12,
+  "spatial_cells": [
+    32,
+    32,
+    32
+  ],
+  "spatial_cell_size": 0.25,
+  "contact_thickness": 0.018,
+  "contact_query_radius": 0.40516129032258064,
+  "contact_passes": 1,
+  "pins": "opposite corners, initial height 1.55 m",
+  "wind": 1.5,
+  "fork_depth": 0,
+  "warmup": 120,
+  "samples": 600,
+  "summary": {
+    "simulation_ms": {
+      "median": 9.418,
+      "p95": 11.208,
+      "minimum": 8.809,
+      "maximum": 16.806
+    },
+    "render_ms": {
+      "median": 2.855,
+      "p95": 3.011,
+      "minimum": 2.536,
+      "maximum": 5.472
+    },
+    "frame_ms": {
+      "median": 12.279,
+      "p95": 14.198,
+      "minimum": 11.669,
+      "maximum": 20.456
+    }
+  },
+  "stderr": "",
+  "execution_plan": "coarse CPU solver plus 64 contact regions",
+  "scope": "headless simulation, spatial surface self-contact, mesh projection/binning/raster and old-image reclamation; excludes HUD, window and display"
+}

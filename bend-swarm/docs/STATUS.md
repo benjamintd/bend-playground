@@ -14,8 +14,9 @@ Completed:
 - Cruising-speed constraint, 120-frame native boundary/image regressions, and a 1920-frame 131k GPU soak.
 - Generic typed 2D/3D Spatial API, variable-radius neighborhood folds, snapshot ownership and CPU/Metal fixtures.
 - Swarm migrated to the generic stencil; specialized reference retained and benchmarked.
-- 3D cloth with persistent buffers, pinned corners, Verlet prediction, stretch/shear/bending constraints, sphere/floor contact, vertex self-contact, wind and perspective dragging.
+- 3D cloth with persistent buffers, pinned corners, Verlet prediction, stretch/shear/bending constraints, sphere/floor contact, vertex/face and edge/edge self-contact, wind and perspective dragging.
 - Pure Bend filled-triangle renderer, tile ownership, perspective depth, native pixel oracle and exported preview.
+- Smooth high-quality cloth tessellation separate from physical resolution, cached static depth/color, event-ordered picking and bounded catch-up.
 
 Still open:
 - Standalone parallel microbenchmark matrix for every primitive.
@@ -26,7 +27,7 @@ Still open:
 - Graceful runtime recovery from GPU faults at unvalidated large populations.
 - Streak/triangle/density modes, species interactions, predator/obstacles.
 - Stronger scan/permutation/index proofs; extended native random-seed testing.
-- Demo recording, Particle Life, and any million-agent performance claim.
+- Wind-driven meadow, Particle Life, demo recording, and any million-agent performance claim.
 
 Known failure: depth 10 at 262144 agents failed twice during warmup with a Metal
 internal error; depth 14 completes 720 frames. The current reproduction is still

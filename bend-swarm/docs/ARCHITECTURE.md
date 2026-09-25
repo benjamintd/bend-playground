@@ -36,8 +36,68 @@ Current proofs cover buffer swap involution, partition reassembly and positive/d
 
 `engine/spatial.bend` exposes typed layouts, reusable indices, source-owning snapshots and template-specialized neighbor folds. See [SPATIAL_API.md](SPATIAL_API.md) for the complete ownership/error contract. The former grid module delegates construction to the generic backend. Swarm and cloth use the same stencil with independent sample, accumulator and output types.
 
-Cloth has 32×32 vertices, three persistent x/y/z buffer sets, two diagonal pinned corners and two 1/120-second substeps per displayed frame. Each substep predicts positions with damped Verlet integration, runs twelve Jacobi passes over structural, shear and bending distance constraints, rebuilds a bounded 3D index, then performs a 0.035-m vertex-separation stencil. Fixed neighbors receive full correction weight. Every pass reapplies pins, mouse targets, sphere contact and floor contact. The constraint solver is an intentionally small PBD example, not an XPBD material model. At 32×32, the small fixed iteration budget allows local stretch near pins; the three-second fixture guards a 1.5× edge-length ceiling rather than promising inextensibility. Vertex self-contact is discrete and approximate; it does not guarantee triangle/edge non-intersection or prevent high-speed tunneling.
+Cloth has 32×32 vertices, three persistent x/y/z buffer sets, one reusable flat
+surface-sample buffer, and two diagonal pinned corners. Fixed 1/120-second steps
+use damped Verlet integration and twelve Jacobi passes over structural, shear
+and bending constraints. A compliant mouse spring is applied during prediction;
+constraint relaxation is allowed to move the grabbed vertex. Prediction limits
+motion to 2 cm per step. An elapsed-time accumulator decouples physics from the
+60 Hz presentation cap. Catch-up is capped at two fixed substeps per displayed
+frame; excess wall time is dropped after a stall to avoid a workload spiral.
 
-The new mesh renderer projects 1,922 two-sided triangles into a 512² framebuffer, bins their screen-space bounds into 8×8 tiles, and resolves perspective-correct depth per pixel. An analytic sphere/floor background supplies compatible camera depth. Packed flat `Array<Triangle>` records are scalar array elements; simulation positions remain SoA. Bin ID storage grows if required instead of silently wrapping writes. The old Image is consumed through the same tile tree. A 1024² native window scales these pixels; the Bend HUD is composed separately. Triangles crossing the near plane are rejected, not clipped; the fixed demo camera keeps normal cloth motion in front of it.
+The generic 3D stencil reads cached current/previous positions of six incident
+edges and two outgoing triangles per vertex. It applies two-sided vertex/face
+and edge/edge repulsion with 18 mm thickness, excluding the connected one-ring.
+Previous separation supplies the contact side; finite triangle/segment tests
+replace the old vertex-only radius test. AABB rejection avoids expensive contact
+math for separated features. These are discrete, approximate contacts, not a
+continuous-collision guarantee. Broad-phase reach is based on the regular mesh
+spacing and intended bounded stretch; arbitrarily stretched meshes require a
+primitive-bounds index. No per-vertex allocation or array clone occurs in a step.
 
-The mesh tree is a second explicit unsafe boundary for read-only triangle/index arrays and disjoint tile pixels. Its native and JS tests check full-frame coverage/depth and pixel-to-Image consistency. The source has no custom C/Metal simulation or rendering kernel.
+CPU uses one solver region, 64 contact regions, serial projection/binning and
+8×8 raster work units. Metal retains the same math with parallel solver roots
+and 4×4 raster work units (16,384 leaves). The demo selects CPU initially because
+this small cloth workload is faster there on the measured M2 Pro. Backend changes
+remain explicit and visible; no CPU work is labeled as Metal simulation.
+
+Standard quality projects 1,922 triangles into a 512² framebuffer, bins screen bounds
+into 4×4 cells, and resolves perspective-correct depth. Central-difference vertex
+normals and interpolated lighting remove flat triangle shading. CPU work units
+combine four adjacent bins. The analytic sphere/floor background supplies camera
+depth. Flat triangle records occupy packed arrays; bin storage grows as needed.
+The old Image is reclaimed through the same tile tree. A 1024² window scales the
+framebuffer; the Bend HUD is separate. Near-plane-crossing triangles are rejected;
+the fixed camera keeps the normal demo volume in view.
+
+High quality keeps the same 32×32 physical grid and derives a 64×64 visual grid
+using `engine/geometry/grid_surface.bend`. This callback-specialized Catmull–Rom
+sampler reads a bounded 4×4 neighborhood and returns analytic derivatives for
+smooth normals. `engine/core/vec3.bend` supplies shared scalar vector operations.
+The visual points are projected onto the cloth obstacles before rendering.
+This is visual tessellation, not a claim of finer physical folds or collision
+resolution. High quality draws 7,938 triangles at 1024² with 8×8 bins and 16×16
+CPU work units. Both modes retain 128² bins and 4,096 CPU raster leaves.
+
+Projected high-quality vertices are cached in triangle slots 8192–12287;
+assembly writes only slots 0–7937. The 16,384-element buffer therefore keeps
+source and destination disjoint through the entire fork/join tree. No extra
+per-frame vertex allocation occurs. Q changes rendering quality and resets the
+scene; it never selects a 64×64 physics workload.
+
+Mouse presses are resolved at their position in the event sequence, before a
+later move in the same batch can change the pick location. The tiny host-only
+viewport effect queries actual logical window dimensions, because macOS can
+constrain a requested window to the available display. Bend performs coordinate
+conversion, picking, simulation, interpolation and rendering. The host effect
+contains no simulation or rendering computation.
+
+
+The mesh renderer retains a persistent `Array<Fragment>` backdrop alongside
+pixels. `Mesh.backdrop` fills color and camera depth once using a caller-supplied
+Bend callback; the caller must refill it when the camera or static scene changes.
+Raster workers only read the backdrop and rejoin the same allocation. This
+removes repeated analytic sphere/floor calculations without weakening occlusion.
+At 1024² the two-word Fragment payload costs 16 MiB; at 512² it costs 4 MiB.
+Pixels, Image nodes and runtime overhead are additional. This is a payload
+estimate, not measured peak heap use.

@@ -108,3 +108,74 @@ differences over time. Native tests therefore separate one-step agreement
 checking pins, finiteness and obstacle contact independently. The 32×32 strain
 regression bound is 1.5× rest edge length; this example does not claim
 inextensibility.
+
+## Cloth contact, dragging and execution plans (2026-09-25)
+
+Live LLDB inspection confirmed twelve separate constraint roots per substep at
+1024 vertices. Combining them into one enclosing bang only reduced a short
+Metal frame from roughly 52 ms to 50 ms; the internal fork continuations still
+cost iterations. That experiment was discarded. Running the same solver with
+one CPU region reduced its old particle-contact simulation from about 40 ms on
+Metal to 2.86 ms on CPU. This is execution-plan overhead on a small mesh, not a
+claim that the GPU cannot run large cloth workloads efficiently.
+
+Vertex-only contact with a 35 mm radius left gaps between vertices spaced
+116 mm apart. The replacement checks finite faces and edges and retains the
+previous approach side. Flat, reusable surface samples keep the generic stencil
+API and avoid per-vertex heap allocation. AABB rejection is necessary: the first
+unpruned surface-contact version took about 48 ms even on CPU. CPU solver,
+contact, projection and raster stages need different work sizes.
+
+The drag test exposed a second cause of intersections: forcing the grabbed
+vertex to its target during every constraint pass defeated collision response.
+The accepted version uses a bounded spring during prediction and lets the
+structural constraints move that vertex. Adding more repulsion passes or
+extending face-plane corrections to crossing edges made the hard-grab case
+worse; those experiments were discarded. The accepted version passed twenty
+independently checked snapshots over a ten-second drape/drag/release sequence.
+This does not establish continuous non-intersection between snapshots or for
+arbitrary material stretch and extreme input.
+
+Raster work was also undersubscribed on Metal. Changing 4096 8x8 work units to
+16384 4x4 work units reduced drawing from 11.42 ms to 5.59 ms in a paired short
+sweep, before smooth shading. CPU retains 8x8 work units and processes four
+4x4 bins per unit. Flat-color coverage/checksum oracles still apply; a separate
+fixture checks interpolated vertex lighting.
+
+
+## Cloth quality regression and visual tessellation
+
+The first high-quality attempt multiplied the physical grid from 32² to 64².
+In the live app it fell to about 2–3 FPS; allowing eight catch-up substeps made
+an expensive frame cause still more work. It was withdrawn. Q now changes only
+visual tessellation and framebuffer size, with a two-substep catch-up ceiling.
+The physics grid and all twelve constraint passes remain unchanged.
+
+A bounded generic Catmull–Rom grid sampler derives 64² visual vertices from the
+32² physical grid. It caches projected vertices once, then assembles triangles
+into a disjoint portion of the same persistent buffer. The initial high-quality
+CPU run (120 warmup, 600 samples) measured 16.188 ms median / 19.454 ms p95,
+including 9.539 ms simulation and 6.624 ms rendering. This excludes the window
+and HUD, so it does not establish sustained 60 FPS. See
+`results/cloth-visual-high-cpu.json`. Moving pixel rejection before color/depth
+work did not establish an improvement: 16.437 ms median / 20.703 ms p95 in the
+follow-up run (`cloth-visual-cull-cpu`), with unrelated long outliers present.
+
+Input had a separate event-ordering bug: a press followed by movement in the
+same frame was picked at the final cursor position. The new regression sends
+both events in one batch and confirms selection at the original press.
+
+
+Stage timing located the remaining high-quality cost in rasterization
+(6.239 ms median, compared with 0.448 ms projection and 0.336 ms binning).
+A persistent color/depth backdrop reduced high-quality drawing to 5.219 ms
+median and the headless frame to 15.081 ms. The full window/HUD/pacing run was
+21.302 ms median / 42.715 ms p95. Desktop load was not quiescent: a later process
+snapshot showed Linear at roughly 199% CPU plus a VM and browser renderer.
+There was no concurrent demo, but these are not machine-isolated timings.
+
+CPU physics plus Metal projection/binning/raster was also measured and rejected
+as the default: 25.640 ms median full frame, including 15.523 ms rendering.
+The benchmark can still select this plan with `-- hybrid`. Standard CPU quality
+remains the interactive default. No sustained 60 FPS claim is made for high
+quality. Raw baseline, cache, hybrid and window results remain under `results/`.

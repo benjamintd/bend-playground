@@ -4,7 +4,7 @@ root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 cd "$root"
 export BEND_NO_TELEMETRY=1
 scripts/bend PROOF.bend
-for suite in parallel spatial spatial-api render mesh cloth; do
+for suite in parallel spatial spatial-api render mesh mesh-high grid-surface cloth cloth-contact cloth-input cloth-visual; do
   bun --preload ./.toolchain/bend/bend2/main.ts "tests/$suite.js"
 done
 if [ "${1:-}" = --native ]; then
@@ -22,4 +22,7 @@ if [ "${1:-}" = --native ]; then
     ./build/"$suite-native" --gpu on > "build/$suite-gpu.csv"
     bun --preload ./.toolchain/bend/bend2/main.ts "tests/$suite-native-check.js"
   done
+  scripts/bend tests/cloth-soak.bend -o build/cloth-soak
+  ./build/cloth-soak --gpu off --threads 10 > build/cloth-soak.csv
+  python3 tests/cloth-surface-check.py build/cloth-soak.csv
 fi

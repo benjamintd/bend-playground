@@ -28,5 +28,13 @@ for(let y=0;y<512;y++) for(let x=0;x<512;x++) {
   if(x+y!==511 || want===65280 || want===66051) assert.equal(got,want,`${x},${y}`);
   assert.equal(pixel(result.snd,x,y),got,'Image and pixels agree');verified++;
 }
-assert.equal(M.bounds({$:'Triangle',a:{$:'Vertex',x:-20,y:5,z:1},b:{$:'Vertex',x:-10,y:20,z:1},c:{$:'Vertex',x:-1,y:0,z:1},color:0}).width,0);
+assert.equal(M.bounds({$:'Triangle',a:{$:'Vertex',light:1,x:-20,y:5,z:1},b:{$:'Vertex',light:1,x:-10,y:20,z:1},c:{$:'Vertex',light:1,x:-1,y:0,z:1},color:0}).width,0);
 console.log(`PASS: ${verified} depth-tested mesh pixels, overlap, triangle edges, rejected geometry, tile ownership and Image output.`);
+
+// Smooth lighting interpolates continuously while retaining flat-color fixtures.
+const smooth={$:'Triangle',a:{$:'Vertex',x:0,y:0,z:2,light:.2},b:{$:'Vertex',x:100,y:0,z:2,light:1},c:{$:'Vertex',x:0,y:100,z:2,light:.6},color:0xffffff};
+for(const [x,y] of [[10,10],[30,10],[10,30],[40,40]]) {
+  const sample=M.sample(x,y,smooth,{$:'Fragment',depth:1000,color:0});
+  const channel=Math.floor(255*(.2+x/100*.8+y/100*.4));
+  for(const shift of [0,8,16]) assert.ok(Math.abs(((sample.color>>>shift)&255)-channel)<=1,'interpolated vertex lighting');
+}

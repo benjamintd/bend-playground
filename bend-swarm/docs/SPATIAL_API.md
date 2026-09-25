@@ -98,24 +98,19 @@ modules, not a supported way to manufacture snapshots.
 
 ## Cloth example
 
-`demos/cloth/world.bend` supplies three persistent coordinate arrays and read,
-write and alias-join operations. `demos/cloth/physics.bend` supplies a collision
-accumulator and these callbacks:
+`demos/cloth/world.bend` supplies persistent coordinate arrays and read/write/join
+operations. `demos/cloth/surface.bend` caches a flat sample containing current and
+previous positions of each vertex, its incident edges and outgoing faces. The
+same generic stencil specializes to `Source`, `Sample`, `Contact.Push`, and
+`World.Positions`; no engine API change is needed for surface collision.
 
-```bend
-def collide(gpu: Bool, depth: Nat, c: Controls,
-  s: Spatial.Snapshot(space(),W.Positions), out: W.Positions)
-  -> Result<String,Spatial.Step(space(),W.Positions,W.Positions)>:
-  Spatial.stencil(~space(),~W.Positions,~W.Positions,~L.Point,~Correction,~Controls,
-    ~W.read,~point,~begin,~collision,~collision_finish,~W.join,~W.join,
-    gpu,depth,0.035,False{},c,s,out)
-```
-
-The simulation builds a snapshot after solving stretch constraints. The query
-finds nearby vertices in 3D; the callback excludes connected mesh neighbors and
-accumulates separation. The finish callback writes the next positions and
-reapplies pins and obstacle contact. Releasing the step recovers the index for
-the next substep. There is no per-vertex allocation or whole-world clone.
+The simulation builds a snapshot after solving structural constraints. The
+callback excludes the connected one-ring, rejects disjoint feature bounds, and
+accumulates vertex/face and edge/edge separation. Previous positions retain the
+approach side. `finish` writes its owned vertex and reapplies pins/obstacle contact.
+Releasing the step recovers the source, sample buffer and reusable index. There
+is no per-vertex allocation or whole-world clone. The regular-mesh broad phase
+uses a spacing-based radius; it is not a general swept-primitive collision API.
 
 The swarm example uses the same API with 2D periodic distances, velocity samples,
 and separation/alignment/cohesion accumulators. `engine/spatial/grid.bend` is a

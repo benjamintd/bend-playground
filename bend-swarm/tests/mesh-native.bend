@@ -17,9 +17,11 @@ def report(r: Array<U32> & U32 & U32) -> IO(Unit):
   (_,sum,count) = r
   IO.print(U32.show(sum) ++ "," ++ U32.show(count))
 
-def result(r: M.Drawing & Image) -> IO(Unit):
-  (M.Drawing{_,_,_,pixels},_) = r
-  report(checksum(262144n,0,(pixels,0,0)))
+def result(n: Nat, r: M.Drawing & Image) -> IO(Unit):
+  (M.Drawing{_,_,_,pixels,_},_) = r
+  report(checksum(n,0,(pixels,0,0)))
 
 def main() -> IO(Unit):
-  result(T.render(True{},4,T.fixture()))
+  do IO<Unit>:
+    Unit <- result(262144n,T.render(True{},4,T.fixture()))
+    result(1048576n,T.render_high(True{},4,T.fixture_high()))

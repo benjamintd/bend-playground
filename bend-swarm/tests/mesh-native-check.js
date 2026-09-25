@@ -1,7 +1,10 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 for(const backend of ['cpu','gpu']) {
-  const [sum,covered]=fs.readFileSync(`build/mesh-${backend}.csv`,'utf8').trim().split(',').map(Number);
+  const rows=fs.readFileSync(`build/mesh-${backend}.csv`,'utf8').trim().split('\n').map(l=>l.split(',').map(Number));
+  assert.equal(rows.length,2);
+  const [sum,covered]=rows[0];
+  assert.deepEqual(rows[1],[1146474304,262144],'1024px native checksum and complete coverage');
   assert.equal(covered,256*256,'complete quad with no holes across tiles');
   // Shared diagonal may belong to either equal-depth triangle after scatter.
   // Red and blue differ by 16711425; all other pixels have a fixed color.

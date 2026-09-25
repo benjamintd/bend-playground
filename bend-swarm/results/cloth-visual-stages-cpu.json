@@ -1,0 +1,52 @@
+{
+  "date": "2026-09-25T14:02:51.329347+00:00",
+  "cpu": "Apple M2 Pro",
+  "gpu": [
+    {
+      "sppci_model": "Apple M2 Pro",
+      "sppci_cores": "16"
+    }
+  ],
+  "source_sha256_at_recording": "aad9ffe020af5de198eb1527566c5f1e128eabf2862eb2a1a09b12e834ab6514",
+  "binary_sha256": "4fe60fc8416953189ae1d250c8be08d1165bc7f06e084b34ffc5949f5186529d",
+  "bend_version": [
+    "2.0.27",
+    "95317d952c8fe5be18ef49f916b2a57250cfb0aa"
+  ],
+  "warmup": 120,
+  "samples": 600,
+  "simulation_vertices": 1024,
+  "render_vertices": 4096,
+  "resolution": [
+    1024,
+    1024
+  ],
+  "threads": 10,
+  "scope": "Exploratory CPU stage timing before background caching; headless 120 warmup, 600 samples. Binary hash identifies the measured pre-cache build; source has since changed.",
+  "summary": {
+    "simulation_ms": {
+      "median": 9.6375,
+      "p95": 11.577,
+      "minimum": 8.76,
+      "maximum": 63.38
+    },
+    "projection_ms": {
+      "median": 0.448,
+      "p95": 0.531,
+      "minimum": 0.326,
+      "maximum": 1.184
+    },
+    "binning_ms": {
+      "median": 0.336,
+      "p95": 0.378,
+      "minimum": 0.3,
+      "maximum": 0.743
+    },
+    "raster_ms": {
+      "median": 6.239,
+      "p95": 7.57,
+      "minimum": 5.944,
+      "maximum": 77.145
+    }
+  }
+}

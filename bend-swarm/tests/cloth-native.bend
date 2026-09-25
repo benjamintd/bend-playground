@@ -28,7 +28,7 @@ def output(n: Nat, +i: U32, p: W.Positions) -> IO(Unit):
         output(k,(i + 1 : U32),p)
 
 def result(s: S.State) -> IO(Unit):
-  S.State{+side,p,_,_,_,_,_} = s
+  S.State{+side,p,_,_,_,_,_,_} = s
   output(U32.to_nat((side * side : U32)),0,p)
 
 def run(+bits: Nat, steps: Nat) -> IO(Unit):

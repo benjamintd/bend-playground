@@ -1,0 +1,49 @@
+{
+  "date": "2026-09-25T13:55:13.516431+00:00",
+  "cpu": "Apple M2 Pro",
+  "gpu": [
+    {
+      "sppci_model": "Apple M2 Pro",
+      "sppci_cores": "16"
+    }
+  ],
+  "source_sha256_at_recording": "0162d132c0807d2d3224c4bb4c951eec6cbea2757c9fedd53b6f2d2c35f24419",
+  "binary_sha256": "efd5981870c69d4138ec4791838fd04b882053a5e19f2f187d43c8634ce8d5cf",
+  "bend_version": [
+    "2.0.27",
+    "95317d952c8fe5be18ef49f916b2a57250cfb0aa"
+  ],
+  "warmup": 120,
+  "samples": 600,
+  "simulation_vertices": 1024,
+  "render_vertices": 4096,
+  "resolution": [
+    1024,
+    1024
+  ],
+  "threads": 10,
+  "scope": "CPU solver and renderer, native window, HUD, presentation and pacing; two fixed physics substeps per displayed frame.",
+  "summary": {
+    "simulation_ms": {
+      "median": 11.5765,
+      "p95": 24.66,
+      "minimum": 8.997,
+      "maximum": 129.864
+    },
+    "render_ms": {
+      "median": 6.961,
+      "p95": 16.496,
+      "minimum": 5.376,
+      "maximum": 186.633
+    },
+    "frame_ms": {
+      "median": 21.302,
+      "p95": 42.715,
+      "minimum": 16.411,
+      "maximum": 222.601
+    }
+  },
+  "os": "macOS-15.7.4-arm64-arm-64bit",
+  "memory_gb": 16.0,
+  "background_load": "Other desktop apps active; later snapshot showed Linear ~199% CPU plus a VM and browser. No concurrent demo."
+}

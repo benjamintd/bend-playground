@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';
+import T from './cloth-input.bend';
+import W from '../demos/cloth/world.bend';
+import V from '../demos/cloth/view.bend';
+const v=V.project(W.rest(32,528));
+const down={$:'Mouse',x:Math.round(v.x*2),y:Math.round(v.y*2),button:0,down:true};
+const moved={$:'Move',x:20,y:20};
+const list=xs=>xs.reduceRight((tail,head)=>({$:'Con',head,tail}),{$:'Nil'});
+assert.equal(T.batch(list([down,moved])),528,'pick at the press before a same-frame move leaves the surface');
+assert.equal(T.batch(list([down,moved,{...down,down:false}])),0xffffffff,'release clears the grab');
+console.log('PASS: press/move batching selects the pressed vertex and release clears selection.');

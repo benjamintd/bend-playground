@@ -114,3 +114,28 @@ depth 10. The depth changes did not address the main cost of many short passes;
 the demo retains depth 10. Development runs and the earlier hanging-sheet
 scene remain recorded in `results/cloth-development.json`. The rendered preview
 is exported from the native Bend framebuffer, not a mockup.
+
+
+## Cloth contact and quality correction (2026-09-25)
+
+These replace the older cloth timings above. The solver now checks finite
+vertex/face and edge/edge contact, uses a compliant grab, and has CPU execution
+plans suited to a 1024-point sheet. Twelve constraint passes and two 1/120 s
+substeps remain. Standard is the interactive default. High quality derives
+4096 visual vertices from the same 1024 simulated points; it does not simulate
+a 64×64 cloth. The static depth/color backdrop is cached in Bend.
+
+| CPU quality, 120 warmup + 600 samples | Simulation median | Draw median | Frame median | Frame p95 |
+|---|---:|---:|---:|---:|
+| Standard, 512² / 1,922 triangles | 9.349 ms | 3.356 ms | 12.724 ms | 14.262 ms |
+| High, 1024² / 7,938 triangles | 9.861 ms | 5.219 ms | 15.081 ms | 18.672 ms |
+| High with window/HUD/pacing | 11.577 ms | 6.961 ms | 21.302 ms | 42.715 ms |
+
+Sources: `cloth-responsive-cpu`, `cloth-visual-cache-cpu`, and
+`cloth-visual-window` in `results/`, each with raw CSV. The first two rows exclude
+HUD/display. Background desktop applications were active (a later snapshot
+showed Linear near two CPU cores), so this is not a quiescent-machine guarantee.
+The high-quality display test does not sustain 60 FPS. A CPU-physics/Metal-render
+headless comparison measured 25.640 ms median and was rejected as the default.
+The interactive clock limits catch-up to two steps and drops excess wall time
+after stalls; headless tests always simulate both steps.

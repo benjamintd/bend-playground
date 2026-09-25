@@ -28,19 +28,26 @@ inside the app; a runtime started with `--gpu off` always executes on CPU.
 ![Native Bend cloth after three simulated seconds](results/cloth-preview.png)
 
 A 32×32 sheet with two opposite pinned corners, gravity, wind, structural/shear/
-bending constraints, sphere/floor contact and spatial vertex self-contact.
-A pure Bend triangle renderer provides perspective, shading and depth occlusion.
-The native window displays a 512² framebuffer at 1024².
+bending constraints, sphere/floor contact and spatial vertex/face and edge/edge contact.
+A pure Bend triangle renderer provides perspective, interpolated vertex lighting and depth occlusion.
+Standard quality displays a 512² framebuffer. **Q** selects a sharper 1024²
+framebuffer with a smooth 64×64 visual surface. Both modes simulate the same
+32×32 physical grid; higher quality never quadruples the physics workload.
 
-- **Drag the fabric:** grab a nearby vertex and move it in the view plane.
-- **Space:** pause. **R:** reset. **W:** wind. **G:** CPU/GPU. **H:** details.
+- **Drag the fabric:** pull a nearby vertex with a compliant spring in the view plane.
+- **Space:** pause. **R:** reset. **W:** wind. **G:** CPU/GPU. **Q:** quality/reset. **H:** details.
 - **Escape:** close.
 
-Two fixed 1/120-second substeps run per displayed frame; simulation slows with
-low display frame rate. This is a small PBD cloth example. Vertex self-contact
-is approximate, not continuous triangle collision detection or a calibrated
-material model. CPU is faster for this small workload on the measured M2 Pro;
-G lets you compare both paths.
+The interactive loop advances fixed 1/120-second physics steps from elapsed time
+and paces presentation at 60 Hz. Catch-up is capped at two steps after a stall to prevent runaway work.
+The demo starts on CPU with a coarse execution plan for this small mesh; **G**
+compares the same algorithm on Metal. The HUD identifies the selected backend.
+
+Surface contacts retain the previous side of each face/edge, and dragging is
+bounded rather than teleporting a vertex. This remains a discrete PBD example,
+not a continuous collision detector or a calibrated material model. The native
+regression includes ten seconds of draping, dragging and release, checked for
+non-adjacent triangle crossings by an independent geometry oracle.
 
 ### Swarm
 
@@ -70,7 +77,7 @@ populations. Snapshots retain ownership of indexed state. Typed layouts prevent
 accidental layout mismatches. Callbacks are statically specialized; each output
 region reads the previous state and writes its own output slots.
 
-Both [boids](demos/swarm/boids.bend) and [cloth](demos/cloth/physics.bend) use the
+Both [boids](demos/swarm/boids.bend) and [cloth](demos/cloth/surface.bend) use the
 same stencil with their own state and equations. The old specialized boids
 kernel remains as a reference. Unsafe sharing stays inside documented engine
 primitives; callback ownership obligations are tested contracts, not formal
@@ -84,6 +91,7 @@ scripts/test --native
 python3 scripts/bench.py --agents 131072 --backend gpu
 python3 scripts/bench-cloth.py --backend gpu
 python3 scripts/bench-cloth.py --backend cpu
+python3 scripts/bench-cloth.py --backend cpu --quality high
 scripts/preview-cloth
 ```
 

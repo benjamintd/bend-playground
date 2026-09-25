@@ -1,7 +1,7 @@
 import Base
 import ./world.bend as W
+import ../../engine/core/vec3.bend as Contact
 import ../../engine/spatial/layout.bend as L
-import ../../engine/spatial.bend as Spatial
 import ../../engine/parallel/regions.bend as Region
 
 def space() -> L.Layout:
@@ -39,18 +39,18 @@ def contact(p: L.Point) -> L.Point:
 def constrained(i: U32, c: Controls, p: L.Point) -> L.Point:
   Controls{+side,grab,gx,gy,gz,_,_} = c
   +id = i
-  pick(pinned(side,id),W.rest(side,id),pick(U32.is_eq(id,grab),contact(L.Point{gx,gy,gz}),contact(p)))
+  pick(pinned(side,id),W.rest(side,id),contact(p))
 
-def predicted(i: U32, +c: Controls, old: L.Point, now: L.Point) -> L.Point:
-  Controls{_,_,_,_,_,time,wind} = c
+def predicted(+i: U32, +c: Controls, old: L.Point, now: L.Point) -> L.Point:
+  Controls{_,grab,gx,gy,gz,time,wind} = c
   L.Point{ox,oy,oz} = old
   L.Point{+x,+y,+z} = now
-  # Verlet prediction: two 1/120-second substeps per displayed frame.
+  # Verlet prediction at 120 Hz; bounded compliant dragging avoids teleportation.
   +gust = (wind * (0.65 + 0.35 * F32.sin((time * 1.7 + x * 2.0 + z : F32))) : F32)
-  constrained(i,c,L.Point{
+  Contact.limited(L.Point{x,y,z},constrained(i,c,Contact.lerp(L.Point{
     (x + (x - ox) * 0.995 + gust * 0.00006944445 : F32),
     (y + (y - oy) * 0.995 - 9.81 * 0.00006944445 : F32),
-    (z + (z - oz) * 0.995 + gust * 0.7 * 0.00006944445 : F32)})
+    (z + (z - oz) * 0.995 + gust * 0.7 * 0.00006944445 : F32)},contact(L.Point{gx,gy,gz}),L.pick(U32.is_eq(i,grab),0.04,0.0))),0.02)
 
 type Prediction is Type:
   Prediction{current: W.Positions, previous: W.Positions, output: W.Positions, controls: Controls}
@@ -130,7 +130,7 @@ def spring_valid(valid: Bool, +id: U32, side: U32, grab: U32, self: L.Point, res
     case False{}: r
     case True{}:
       (p,a) = r
-      spring_read(self,rest,pinned(side,id) || U32.is_eq(id,grab),a,W.read(id,p))
+      spring_read(self,rest,pinned(side,id),a,W.read(id,p))
 
 def spring_link(side: U32, grab: U32, self: L.Point, spacing: F32, l: Link,
   r: W.Positions & Correction) -> W.Positions & Correction:
@@ -155,7 +155,8 @@ type Relaxation is Type:
 
 def relaxed(+i: U32, self: L.Point, out: W.Positions, +c: Controls, r: W.Positions & Correction) -> Relaxation:
   (p,a) = r
-  Relaxation{p,W.write(i,out,constrained(i,c,corrected(self,a))),c}
+  +original = self
+  Relaxation{p,W.write(i,out,constrained(i,c,corrected(original,a))),c}
 
 def relax_read(+i: U32, out: W.Positions, +c: Controls, r: W.Positions & L.Point) -> Relaxation:
   Controls{side,grab,_,_,_,_,_} = c
@@ -185,49 +186,6 @@ def relax_run(gpu: Bool, depth: Nat, n: U32, r: Relaxation) -> Relaxation:
     case True{}: relax!(depth,n,r)
     case False{}: relax(depth,n,r)
 
-# This is the first application of the generic 3D stencil. Only distant mesh
-# vertices participate; adjacent vertices are already handled by constraints.
-def point(p: L.Point) -> L.Point:
-  p
-
-def begin(i: U32, p: L.Point, c: Controls) -> Correction:
-  Correction{0.0,0.0,0.0,0}
-
+# Grid-distance exclusion shared by the surface stencil.
 def diff(+a: U32, +b: U32) -> U32:
   (U32.max(a,b) - U32.min(a,b) : U32)
-
-def collision_delta(tiny: Bool, i: U32, j: U32, d: L.Delta) -> L.Delta:
-  match tiny:
-    case False{}: d
-    case True{}: L.Delta{L.pick((i < j : U32),0.000001,F32.neg(0.000001)),0.0,0.0,0.000000000001}
-
-def collision_push(d: L.Delta, a: Correction) -> Correction:
-  L.Delta{dx,dy,dz,d2} = d
-  Correction{ax,ay,az,n} = a
-  +length = F32.sqrt(F32.max(d2,0.000000000001))
-  +scale = (0.5 * (0.035 - length) / length : F32)
-  Correction{(ax - dx * scale : F32),(ay - dy * scale : F32),(az - dz * scale : F32),(n + 1 : U32)}
-
-def collision_accum(far: Bool, i: U32, j: U32, d: L.Delta, a: Correction) -> Correction:
-  match far:
-    case False{}: a
-    case True{}:
-      L.Delta{dx,dy,dz,+d2} = d
-      collision_push(collision_delta((d2 < 0.000000000001 : F32),i,j,L.Delta{dx,dy,dz,d2}),a)
-
-def collision(i: U32, self: L.Point, j: U32, other: L.Point, d: L.Delta, c: Controls, a: Correction) -> Correction:
-  Controls{+side,_,_,_,_,_,_} = c
-  +si = i
-  +sj = j
-  collision_accum((diff((si % side : U32),(sj % side : U32)) > 2 : U32)
-    || (diff((si / side : U32),(sj / side : U32)) > 2 : U32),si,sj,d,a)
-
-def collision_finish(i: U32, self: L.Point, c: Controls, a: Correction, out: W.Positions) -> W.Positions:
-  +id = i
-  W.write(id,out,constrained(id,c,corrected(self,a)))
-
-def collide(gpu: Bool, depth: Nat, c: Controls, s: Spatial.Snapshot(space(),W.Positions), out: W.Positions)
-  -> Result<String,Spatial.Step(space(),W.Positions,W.Positions)>:
-  Spatial.stencil(~space(),~W.Positions,~W.Positions,~L.Point,~Correction,~Controls,
-    ~W.read,~point,~begin,~collision,~collision_finish,~W.join,~W.join,
-    gpu,depth,0.035,False{},c,s,out)
