@@ -1,0 +1,175 @@
+{
+  "cpu": "Apple M2 Pro",
+  "gpu": [
+    {
+      "sppci_model": "Apple M2 Pro",
+      "sppci_cores": "16"
+    }
+  ],
+  "vertices": 1024,
+  "triangles": 1922,
+  "resolution": [
+    512,
+    512
+  ],
+  "substeps": 2,
+  "iterations": 12,
+  "threads": 10,
+  "scope": "Development headless runs. Individual interim binary hashes were not captured; final reproducible runs have separate complete metadata.",
+  "runs": [
+    {
+      "csv": "cloth-initial-gpu.csv",
+      "date": "2026-09-25T10:56:15.408886+00:00",
+      "warmup": 120,
+      "fork_depth": 10,
+      "scene": "two back corners pinned at y=2.35, wind=4",
+      "samples": 600,
+      "summary": {
+        "simulation_ms": {
+          "median": 38.788,
+          "p95": 40.306
+        },
+        "render_ms": {
+          "median": 7.7755,
+          "p95": 9.2
+        },
+        "frame_ms": {
+          "median": 46.68,
+          "p95": 48.611
+        }
+      }
+    },
+    {
+      "csv": "cloth-initial-cpu.csv",
+      "date": "2026-09-25T11:00:25.045045+00:00",
+      "warmup": 120,
+      "fork_depth": 10,
+      "scene": "two back corners pinned at y=2.35, wind=4",
+      "samples": 600,
+      "summary": {
+        "simulation_ms": {
+          "median": 25.311,
+          "p95": 25.962
+        },
+        "render_ms": {
+          "median": 3.697,
+          "p95": 4.194
+        },
+        "frame_ms": {
+          "median": 29.028,
+          "p95": 29.674
+        }
+      }
+    },
+    {
+      "csv": "cloth-gpu.csv",
+      "date": "2026-09-25T11:02:34.029041+00:00",
+      "warmup": 120,
+      "fork_depth": 10,
+      "scene": "opposite corners pinned at y=1.55, wind=1.5",
+      "samples": 600,
+      "summary": {
+        "simulation_ms": {
+          "median": 39.956,
+          "p95": 41.481
+        },
+        "render_ms": {
+          "median": 12.2985,
+          "p95": 14.796
+        },
+        "frame_ms": {
+          "median": 52.3215,
+          "p95": 54.996
+        }
+      }
+    },
+    {
+      "csv": "cloth-cpu.csv",
+      "date": "2026-09-25T11:02:54.989518+00:00",
+      "warmup": 120,
+      "fork_depth": 10,
+      "scene": "opposite corners pinned at y=1.55, wind=1.5",
+      "samples": 600,
+      "summary": {
+        "simulation_ms": {
+          "median": 25.6635,
+          "p95": 26.202
+        },
+        "render_ms": {
+          "median": 3.713,
+          "p95": 4.018
+        },
+        "frame_ms": {
+          "median": 29.369500000000002,
+          "p95": 29.959
+        }
+      }
+    },
+    {
+      "csv": "cloth-depth6-gpu.csv",
+      "date": "2026-09-25T11:04:33.889980+00:00",
+      "warmup": 60,
+      "fork_depth": 6,
+      "scene": "opposite corners pinned at y=1.55, wind=1.5",
+      "samples": 180,
+      "summary": {
+        "simulation_ms": {
+          "median": 40.741,
+          "p95": 42.107
+        },
+        "render_ms": {
+          "median": 12.431000000000001,
+          "p95": 13.922
+        },
+        "frame_ms": {
+          "median": 53.1095,
+          "p95": 55.537
+        }
+      }
+    },
+    {
+      "csv": "cloth-depth8-gpu.csv",
+      "date": "2026-09-25T11:04:46.891467+00:00",
+      "warmup": 60,
+      "fork_depth": 8,
+      "scene": "opposite corners pinned at y=1.55, wind=1.5",
+      "samples": 180,
+      "summary": {
+        "simulation_ms": {
+          "median": 41.3615,
+          "p95": 42.717
+        },
+        "render_ms": {
+          "median": 12.3995,
+          "p95": 14.883
+        },
+        "frame_ms": {
+          "median": 53.7425,
+          "p95": 56.279
+        }
+      }
+    },
+    {
+      "csv": "cloth-depth10-gpu.csv",
+      "date": "2026-09-25T11:04:59.666018+00:00",
+      "warmup": 60,
+      "fork_depth": 10,
+      "scene": "opposite corners pinned at y=1.55, wind=1.5",
+      "samples": 180,
+      "summary": {
+        "simulation_ms": {
+          "median": 40.3435,
+          "p95": 41.793
+        },
+        "render_ms": {
+          "median": 12.612,
+          "p95": 15.869
+        },
+        "frame_ms": {
+          "median": 53.088,
+          "p95": 57.036
+        }
+      }
+    }
+  ]
+}

@@ -1,121 +1,72 @@
 import Base
-import ../parallel/regions.bend as Region
+import ./layout.bend as L
+import ./internal/index.bend as I
 
-# 128 x 128 periodic cells, 8 world units per cell.
-# Offsets has double capacity so offsets[16384] is a real sentinel.
+# Compatibility adapter for the 2D particle renderer and stage benchmarks.
+# Histogram, scan and scatter all use the generic spatial implementation.
+def space() -> L.Layout:
+  L.Layout{2,7n,7n,0n,8.0,0.0,0.0,0.0,True{}}
+
 type Grid is Type:
   Grid{counts: Array<U32>, offsets: Array<U32>, cursors: Array<U32>, ids: Array<U32>}
 
+def from_index(~layout: L.Layout, g: I.Index<layout>) -> Grid:
+  I.Index{_,counts,offsets,cursors,ids} = g
+  Grid{counts,offsets,cursors,ids}
+
 def empty(depth: Nat) -> Grid:
-  Grid{Array.new(U32, 14n, 0), Array.new(U32, 15n, 0),
-    Array.new(U32, 14n, 0), Array.new(U32, depth, 0)}
+  from_index(~space(),I.allocate(~space(),depth))
 
 def cell(x: F32, y: F32) -> U32:
-  (U32.and(U32.shrn(F32.to_u32(x), 3n), 127)
-    + U32.shln(U32.and(U32.shrn(F32.to_u32(y), 3n), 127), 7n) : U32)
+  L.cell(space(),L.Point{x,y,0.0})
+
+type XY is Type:
+  XY{x: Array<F32>, y: Array<F32>}
+
+def read_y(x: F32, xs: Array<F32>, r: Array<F32> & F32) -> XY & L.Point:
+  (ys,y) = r
+  (XY{xs,ys},L.Point{x,y,0.0})
+
+def read_x(i: U32, ys: Array<F32>, r: Array<F32> & F32) -> XY & L.Point:
+  (xs,x) = r
+  read_y(x,xs,Array.get(F32,ys,i))
+
+def read(+i: U32, p: XY) -> XY & L.Point:
+  XY{x,y} = p
+  read_x(i,y,Array.get(F32,x,i))
+
+def join(a: XY, b: XY) -> XY:
+  XY{ax,ay} = a
+  XY{bx,by} = b
+  XY{Array.join(F32,ax,bx),Array.join(F32,ay,by)}
 
 type Build is Type:
   Build{px: Array<F32>, py: Array<F32>, counts: Array<U32>, ids: Array<U32>}
 
-def join(a: Build, b: Build) -> Build:
-  Build{ax, ay, ac, ai} = a
-  Build{bx, by, bc, bi} = b
-  Build{Array.join(F32, ax, bx), Array.join(F32, ay, by),
-    Array.join(U32, ac, bc), Array.join(U32, ai, bi)}
+def built(b: I.Build<XY>) -> Build:
+  I.Build{XY{x,y},counts,ids} = b
+  Build{x,y,counts,ids}
 
-def counted(px: Array<F32>, py: Array<F32>, ids: Array<U32>, r: Array<U32> & U32) -> Build:
-  (counts, _) = r
-  Build{px, py, counts, ids}
+def histogram_run(gpu: Bool, depth: Nat, n: U32, b: Build) -> Build:
+  Build{x,y,counts,ids} = b
+  built(I.histogram_run(~space(),~XY,~read,~join,gpu,depth,n,I.Build{XY{x,y},counts,ids}))
 
-def histogram_y(x: F32, px: Array<F32>, counts: Array<U32>, ids: Array<U32>,
-  r: Array<F32> & F32) -> Build:
-  (py, y) = r
-  counted(px, py, ids, Array.atomic.add(counts, cell(x, y), 1))
+def histogram(depth: Nat, n: U32, b: Build) -> Build:
+  histogram_run(False{},depth,n,b)
 
-def histogram_x(i: U32, py: Array<F32>, counts: Array<U32>, ids: Array<U32>,
-  r: Array<F32> & F32) -> Build:
-  (px, x) = r
-  histogram_y(x, px, counts, ids, Array.get(F32, py, i))
+def scatter_run(gpu: Bool, depth: Nat, n: U32, b: Build) -> Build:
+  Build{x,y,counts,ids} = b
+  built(I.scatter_run(~space(),~XY,~read,~join,gpu,depth,n,I.Build{XY{x,y},counts,ids}))
 
-def histogram_one(+i: U32, s: Build) -> Build:
-  Build{px, py, counts, ids} = s
-  histogram_x(i, py, counts, ids, Array.get(F32, px, i))
-
-def histogram_loop(n: Nat, +i: U32, s: Build) -> Build:
-  match n:
-    case 0n: s
-    case 1n+p: histogram_loop(p, (i + 1 : U32), histogram_one(i, s))
-
-def histogram_leaf(i: U32, n: U32, s: Build) -> Build:
-  histogram_loop(U32.to_nat(n), i, s)
-
-def histogram(depth: Nat, +n: U32, s: Build) -> Build:
-  Region.run(~Build, ~histogram_leaf, ~join, Nat.min(depth, U32.log2(n)), 0, n, s)
-
-def histogram_run(gpu: Bool, depth: Nat, n: U32, s: Build) -> Build:
-  match gpu:
-    case True{}: histogram!(depth, n, s)
-    case False{}: histogram(depth, n, s)
-
-# Safe sequential exclusive scan is the first reference. It also resets counts
-# for the next frame. Every cell is consumed exactly once; no sharing here.
-type Scan is Type:
-  Scan{counts: Array<U32>, offsets: Array<U32>, cursors: Array<U32>, total: U32}
-
-def scan_put(+i: U32, +sum: U32, offsets: Array<U32>, cursors: Array<U32>,
-  r: Array<U32> & U32) -> Scan:
-  (counts, value) = r
-  Scan{Array.set(U32, counts, i, 0), Array.set(U32, offsets, i, sum),
-    Array.set(U32, cursors, i, sum), (sum + value : U32)}
-
-def scan_loop(n: Nat, +i: U32, s: Scan) -> Scan:
-  match n:
-    case 0n:
-      Scan{counts, offsets, cursors, +sum} = s
-      Scan{counts, Array.set(U32, offsets, i, sum), cursors, sum}
-    case 1n+p:
-      Scan{counts, offsets, cursors, sum} = s
-      scan_loop(p, (i + 1 : U32), scan_put(i, sum, offsets, cursors, Array.get(U32, counts, i)))
-
-def scan_done(ids: Array<U32>, s: Scan) -> Grid:
-  Scan{counts, offsets, cursors, _} = s
-  Grid{counts, offsets, cursors, ids}
+def scatter(depth: Nat, n: U32, b: Build) -> Build:
+  scatter_run(False{},depth,n,b)
 
 def scan(g: Grid) -> Grid:
-  Grid{counts, offsets, cursors, ids} = g
-  scan_done(ids, scan_loop(16384n, 0, Scan{counts, offsets, cursors, 0}))
+  Grid{counts,offsets,cursors,ids} = g
+  from_index(~space(),I.scan(~space(),I.Index{0,counts,offsets,cursors,ids}))
 
-def scattered(i: U32, px: Array<F32>, py: Array<F32>, ids: Array<U32>,
-  r: Array<U32> & U32) -> Build:
-  (cursors, slot) = r
-  Build{px, py, cursors, Array.set(U32, ids, slot, i)}
-
-def scatter_y(i: U32, x: F32, px: Array<F32>, cursors: Array<U32>, ids: Array<U32>,
-  r: Array<F32> & F32) -> Build:
-  (py, y) = r
-  scattered(i, px, py, ids, Array.atomic.add(cursors, cell(x, y), 1))
-
-def scatter_x(+i: U32, py: Array<F32>, cursors: Array<U32>, ids: Array<U32>,
-  r: Array<F32> & F32) -> Build:
-  (px, x) = r
-  scatter_y(i, x, px, cursors, ids, Array.get(F32, py, i))
-
-def scatter_one(+i: U32, s: Build) -> Build:
-  Build{px, py, cursors, ids} = s
-  scatter_x(i, py, cursors, ids, Array.get(F32, px, i))
-
-def scatter_loop(n: Nat, +i: U32, s: Build) -> Build:
-  match n:
-    case 0n: s
-    case 1n+p: scatter_loop(p, (i + 1 : U32), scatter_one(i, s))
-
-def scatter_leaf(i: U32, n: U32, s: Build) -> Build:
-  scatter_loop(U32.to_nat(n), i, s)
-
-def scatter(depth: Nat, +n: U32, s: Build) -> Build:
-  Region.run(~Build, ~scatter_leaf, ~join, Nat.min(depth, U32.log2(n)), 0, n, s)
-
-def scatter_run(gpu: Bool, depth: Nat, n: U32, s: Build) -> Build:
-  match gpu:
-    case True{}: scatter!(depth, n, s)
-    case False{}: scatter(depth, n, s)
+# Internal adapter: caller has just completed all three build stages against
+# this exact source. User-facing code should use Spatial.build instead.
+def snapshot(~S: Type, n: U32, capacity: U32, source: S, g: Grid) -> I.Snapshot<space(),S>:
+  Grid{counts,offsets,cursors,ids} = g
+  I.Snapshot{n,source,I.Index{capacity,counts,offsets,cursors,ids}}

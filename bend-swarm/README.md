@@ -1,70 +1,106 @@
-# Bend Swarm
+# Bend Swarm + Cloth
 
-A GPU-native simulation engine experiment in **Bend 2.0.27**. Dense owned regions, a spatial stencil and tile rendering; the same flocking implementation runs on CPU or GPU.
-
-**Working prototype, not completed v0.** The native demo has genuine separation/alignment/cohesion, a periodic spatial grid, double buffering, mouse attraction/repulsion, a backend switch and a Bend bitmap HUD. Phase 0 and the first measured 131k-point native pipeline are complete. A tested spatial boids implementation follows it. The remaining architecture experiments are listed below; there is no million-boids-at-60-Hz claim.
+A GPU-native simulation engine experiment in **Bend 2.0.27**, with a reusable
+2D/3D spatial API and two native demos: massive boids and a draped cloth surface.
+The same Bend simulations and renderers run on CPU or Metal. No custom foreign
+simulation or rendering kernels are used.
 
 ## Run
 
-Prerequisites: Bun, Git, and Bend's native prerequisites (on this Mac: recent Apple Clang and Metal). The system Bend installation is left unchanged.
+Prerequisites: Bun, Git, and Bend's native prerequisites (on this Mac, Apple
+Clang and Metal). The system Bend installation is left unchanged.
 
-```
+```sh
 cd bend-swarm
 scripts/setup
 scripts/build
-scripts/run
+scripts/run-cloth   # 3D cloth
+# scripts/run      # 131,072 boids
 ```
 
-On macOS you can also open `build/Bend Swarm.app`. The launcher requires a real GPU; run the binary with `--gpu off` explicitly for a CPU-only session. G changes the root dispatch in the app; when the runtime was started with `--gpu off`, GPU-labeled roots still fall back to CPU, so use the normal launcher for backend demonstrations.
+On macOS, the build also creates `build/Bend Cloth.app` and
+`build/Bend Swarm.app`. Launchers require a GPU; run `build/cloth --gpu off` or
+`build/swarm --gpu off` explicitly for a CPU-only session. G changes dispatch
+inside the app; a runtime started with `--gpu off` always executes on CPU.
 
-- **Mouse left/right:** attract/repel; release to restore ordinary flocking.
-- **G:** CPU/GPU, **Space:** pause, **R:** deterministic reset, **H:** HUD.
-- **[ / ]:** halve/double population, from 1024 to 1048576; starts at 131072.
+### Cloth
+
+![Native Bend cloth after three simulated seconds](results/cloth-preview.png)
+
+A 32×32 sheet with two opposite pinned corners, gravity, wind, structural/shear/
+bending constraints, sphere/floor contact and spatial vertex self-contact.
+A pure Bend triangle renderer provides perspective, shading and depth occlusion.
+The native window displays a 512² framebuffer at 1024².
+
+- **Drag the fabric:** grab a nearby vertex and move it in the view plane.
+- **Space:** pause. **R:** reset. **W:** wind. **G:** CPU/GPU. **H:** details.
 - **Escape:** close.
 
-The HUD reports computation milliseconds, excluding HUD and presentation. Population capacity support is not a real-time performance guarantee. Boids maintain a cruising speed of 20–60 world units per simulated second. Dense crowds make exact boids expensive; no neighbor caps hide that cost.
+Two fixed 1/120-second substeps run per displayed frame; simulation slows with
+low display frame rate. This is a small PBD cloth example. Vertex self-contact
+is approximate, not continuous triangle collision detection or a calibrated
+material model. CPU is faster for this small workload on the measured M2 Pro;
+G lets you compare both paths.
 
-## Measured on this Mac
+### Swarm
 
-Apple M2 Pro (10 CPU / 16 GPU cores), 1024×1024, 120 warmup + 600 sampled frames:
+- **Left/right mouse:** attract/repel; release to resume ordinary flocking.
+- **G:** CPU/GPU. **Space:** pause. **R:** reset. **H:** details.
+- **[ / ]:** halve/double population, from 1024 to 1048576.
+- **Escape:** close.
 
-| Genuine boids | Metal frame median | Frame p95 |
-|---:|---:|---:|
-| 131,072 | 36.32 ms | 40.87 ms |
-| 262,144 | 98.67 ms | 115.63 ms |
+Boids maintain a cruising speed of 20–60 world units per simulated second and
+cross cell, image-tile and world boundaries. Every neighbor inside the radius
+contributes; there are no hidden candidate caps. Capacity is not a real-time
+performance guarantee.
 
-These are complete **headless computation** timings, including grid construction, flocking/integration, screen binning and Bend tile rendering. They exclude HUD/display and are not window FPS. These results include the 20–60 world-unit/s cruising constraint; the older stopping-flock results are retained in the performance log. The initial plan uses binary depth 14; results change with density and scene evolution. See `docs/PERF.md` for stage timings, CPU results, failed configurations and raw records.
+## Generic spatial API
 
-## Programming shape
+The public API is [engine/spatial.bend](engine/spatial.bend), documented in
+[SPATIAL_API.md](docs/SPATIAL_API.md). Its lifecycle is:
 
-```bend
-# One implementation, chosen root:
-case True{}: Boids.step!(depth, count, buffers)
-case False{}: Boids.step(depth, count, buffers)
+```text
+create index → build(source, index) → snapshot
+snapshot + output → stencil(~read, ~begin, ~visit, ~finish, …) → step
+release(step) → original source + updated output + reusable index + statistics
 ```
 
-The prototype uses concrete SoA buffers and scalar parameters. Public high-order stencil ergonomics will follow measured primitives. There is no ECS, no foreign simulation kernel, and no foreign principal renderer. A tiny host-only effect supplies microsecond timing; Bend's existing Window effects handle presentation.
+Layouts support 2D/3D, bounded/periodic domains, arbitrary query radii and partial
+populations. Snapshots retain ownership of indexed state. Typed layouts prevent
+accidental layout mismatches. Callbacks are statically specialized; each output
+region reads the previous state and writes its own output slots.
+
+Both [boids](demos/swarm/boids.bend) and [cloth](demos/cloth/physics.bend) use the
+same stencil with their own state and equations. The old specialized boids
+kernel remains as a reference. Unsafe sharing stays inside documented engine
+primitives; callback ownership obligations are tested contracts, not formal
+race-freedom guarantees.
 
 ## Verify and measure
 
-```
+```sh
 scripts/test
 scripts/test --native
 python3 scripts/bench.py --agents 131072 --backend gpu
-python3 scripts/sweep.py --agents 65536 131072 262144 --depths 8 10 12 14
+python3 scripts/bench-cloth.py --backend gpu
+python3 scripts/bench-cloth.py --backend cpu
+scripts/preview-cloth
 ```
 
-Tests include an independent numerical oracle, 48 clustered/periodic scenes, coincident and partial-active cases, grid membership/permutation/offsets, CPU/Metal agreement, 120-frame cell/quadrant/world-edge crossing checks (positions, pixel buffer and image tree), deterministic pixel collisions, map/reduce/scan, and structural proofs. Unsafe-sharing invariants are tested contracts, not formal race-freedom guarantees.
+Tests cover independent all-pairs oracles, 120 generic spatial cases, CPU/Metal
+agreement, 120-frame boids boundary/image regressions, cloth pins/gravity/contact/
+stretch, perspective picking, full-frame triangle coverage/depth and structural
+proofs. Native GPU checks require an available Metal device.
 
-Results and scope: [performance](docs/PERF.md), [environment](docs/ENVIRONMENT.md), [findings](docs/FINDINGS.md), [architecture](docs/ARCHITECTURE.md), [original brief](docs/BRIEF.md). Raw measurements are in `results/`.
+On this Apple M2 Pro, a sequential 120-warmup/600-sample comparison measured
+**33.11 ms** median for 131,072 boids through the generic API and **38.61 ms**
+for the preserved specialized executable. These are complete headless frame
+costs, excluding HUD and presentation. See [PERF.md](docs/PERF.md) and raw
+`results/` records for cloth measurements, scope and historical runs. There is
+no million-boids-at-60-Hz claim.
 
-## Next research gates
-
-1. Compare shared arrays, owned-cell scheduling and local halos on complete frame cost.
-2. Compare safe spatial organization against the atomic backend; add a reusable parallel scan if measurements justify it.
-3. Sweep tile sizes/render fork geometry and retain a measured plan cache.
-4. Broaden structural laws to indexing, scan and permutation; extend native fuzz coverage.
-5. Measure presentation/HUD overhead and peak heap; cache HUD updates safely.
-6. Record the shareable demo; add Particle Life only after Swarm is stable and benchmarked.
-
-The current spatial grid and stencil are specialized to 2D periodic boids. They are not yet the final generic Spatial API. The fundamental unit remains an **owned parallel region**.
+The larger research brief still has open architecture experiments. The previous
+interactive Swarm Metal internal error also remains unresolved; passing these
+headless tests does not establish that its trigger is fixed. See
+[STATUS.md](docs/STATUS.md), [FINDINGS.md](docs/FINDINGS.md),
+[ARCHITECTURE.md](docs/ARCHITECTURE.md), and the [original brief](docs/BRIEF.md).

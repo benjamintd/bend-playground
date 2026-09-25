@@ -80,3 +80,37 @@ The longer default-population soak (`cruise-long-gpu-131072-d14`) also completed
 47.82 ms p95. The increased time again reflects the evolving dense flock.
 This is 1920 successful steps, not a guarantee against every input/population
 or the historical depth-10 failure.
+
+## Generic Spatial API and cloth (2026-09-25)
+
+All new numbers below are headless pipeline measurements on the same Apple M2
+Pro, ten CPU workers. They exclude the HUD, window, display synchronization and
+startup GPU compilation. The scene evolves at fixed simulation steps.
+
+| 131072 boids, depth 14, 120 warmup + 600 samples | Simulation median | Full frame median |
+|---|---:|---:|
+| Preserved specialized executable | 28.792 ms | 38.605 ms |
+| Generic API and index adapter | 23.229 ms | 33.114 ms |
+
+The executables ran sequentially in isolation. Candidate order is unspecified,
+so trajectories are numerically close initially but can diverge over time.
+These are measured results for this paired workload, not a general guarantee.
+The original stopping-flock/cruising-flock data above are preserved.
+`results/spatial-api-comparison.json` records hashes and raw CSV names.
+
+Cloth uses 1024 vertices, 1922 triangles, two 1/120-second substeps, twelve
+constraint passes per substep, a 32³ spatial grid, and a 512² framebuffer.
+The CPU path is faster at this scale. Final 120-warmup/600-sample measurements
+and their full metadata are in `results/cloth-final-{cpu,gpu}.json`.
+
+| Final cloth | Simulation median | Render median | Full frame median | Frame p95 |
+|---|---:|---:|---:|---:|
+| Metal | 40.21 ms | 11.82 ms | 52.07 ms | 53.97 ms |
+| CPU | 25.70 ms | 3.97 ms | 29.66 ms | 30.23 ms |
+
+The shorter scheduling-depth comparison (60 warmup + 180 samples) found
+GPU frame medians of 53.109 ms at depth 6, 53.742 ms at depth 8, and 53.088 ms at
+depth 10. The depth changes did not address the main cost of many short passes;
+the demo retains depth 10. Development runs and the earlier hanging-sheet
+scene remain recorded in `results/cloth-development.json`. The rendered preview
+is exported from the native Bend framebuffer, not a mockup.

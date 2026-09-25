@@ -1,0 +1,30 @@
+{
+  "date": "2026-09-25T11:15:37.502012+00:00",
+  "commands": [
+    "scripts/build",
+    "scripts/test --native",
+    "extended tests/cloth-native.bend on CPU and GPU; tests/cloth-native-check.js"
+  ],
+  "checks": {
+    "proofs": "all four existing structural laws check",
+    "spatial": "120 all-pairs 2D/3D radius/periodicity/population cases; native membership and visit counts exact",
+    "boids": "independent reference scenes plus native CPU/Metal agreement and 120-frame cell/quadrant/world crossing/image checks",
+    "cloth": "native 8x8 and 32x32 at one and 180 frames; finite, fixed pins, sphere/floor contact and stretch regression bounds; source/picking/coincident-contact unit checks",
+    "cloth_cpu_metal_max_coordinate_difference_m": {
+      "8x8_one_frame": 0,
+      "8x8_180_frames": 2.48e-05,
+      "32x32_one_frame": 0,
+      "32x32_180_frames": 0.0081429
+    },
+    "mesh": "262144 JS pixels checked against depth oracle and Image; native CPU/Metal coverage/checksum checks",
+    "ui": "native render exported and visually inspected; live window/control inspection blocked by locked Mac",
+    "known_unresolved": "previous interactive Swarm Metal internal error is not fixed by these tests"
+  },
+  "binaries": {
+    "cloth": "742c81f9cc73cd3e6ac1ed7714cba8ab6c5e2c1c7acb855ea154fa2c3cb9eb16",
+    "swarm": "9aaca3376c9704fe2a345775f8c4a69e9edd96765e5ee3738e73b415305f20d7",
+    "cloth-native": "987dd74d1ef70461bd511d413877536122ea3d829fc90ada03ee2c9225581b65",
+    "spatial-api-native": "d3aa72267a61b846135a30f3fedaf3e81c2ff0d770747c5ef087efec239a878f",
+    "mesh-native": "728a8686b375e087c7c59dad0f168974e0df29a97a1293b5306329c51782a033"
+  }
+}

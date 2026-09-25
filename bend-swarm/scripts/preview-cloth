@@ -1,0 +1,7 @@
+#!/bin/sh
+set -eu
+root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+cd "$root"
+scripts/bend benches/cloth_snapshot.bend -o build/cloth-snapshot
+./build/cloth-snapshot --gpu on --threads 10 > build/cloth.ppm
+python3 scripts/ppm-to-png.py build/cloth.ppm results/cloth-preview.png

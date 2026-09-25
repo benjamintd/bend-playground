@@ -5,6 +5,7 @@ import G from '../engine/spatial/grid.bend';
 import P from '../demos/swarm/points.bend';
 import B from '../demos/swarm/boids.bend';
 import Safe from '../engine/spatial/reference.bend';
+import Generic from './boids-generic.bend';
 for(const n of [8,32,128]) for(let seed=1;seed<=16;seed++) {
   const w=fixture(n,seed), depth=BigInt(Math.log2(n));
   let scene={$:'Scene',world:structuredClone(w),grid:G.empty(depth)};
@@ -30,6 +31,8 @@ for(const n of [8,32,128]) for(let seed=1;seed<=16;seed++) {
   const out=B.execute(false,3n,n,{$:'Buffers',old:world,next:W.empty(depth,n),offsets:grid.offsets,
     ids:grid.ids,checks:0n,mx:0,my:0,power:0});
   compare(out.next,reference); compare(out.old,w,0);
+  const generic=Generic.run(n,depth,structuredClone(w));assert.equal(generic.$,'Done');
+  compare(generic.value.output,reference);compare(generic.value.snapshot.source,w,0);
   assert.ok(out.checks>=n);
 }
 console.log('PASS: atomic grid permutation/ranges and spatial vs brute-force step (48 dense / periodic scenes).');
@@ -45,5 +48,7 @@ for(const count of [1,5,13,16]) {
   const out=B.execute(false,4n,count,{$:'Buffers',old:scene.world,next:W.empty(4n,count),offsets:scene.grid.offsets,
     ids:scene.grid.ids,checks:0n,mx:0,my:0,power:0});
   compare(out.next,want); assert.equal(out.checks,BigInt(count*count));
+  const generic=Generic.run(count,4n,structuredClone(w));assert.equal(generic.$,'Done');
+  compare(generic.value.output,want);assert.equal(generic.value.checks,BigInt(count*count));
 }
 console.log('PASS: coincident neighbors and partial active populations.');

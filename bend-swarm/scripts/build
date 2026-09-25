@@ -5,6 +5,8 @@ cd "$root"
 mkdir -p build
 scripts/bend PROOF.bend
 scripts/bend demos/swarm/main.bend -o build/swarm
+scripts/bend demos/cloth/main.bend -o build/cloth
+scripts/bend benches/cloth.bend -o build/cloth-frame
 scripts/bend benches/full_frame.bend -o build/boids-frame
 scripts/bend benches/points.bend -o build/points-frame
 scripts/bend tests/native.bend -o build/native-test
@@ -13,4 +15,8 @@ if [ "$(uname)" = Darwin ]; then
   cp build/swarm 'build/Bend Swarm.app/Contents/MacOS/swarm'
   if [ -f build/swarm.gpu ]; then cp build/swarm.gpu 'build/Bend Swarm.app/Contents/MacOS/swarm.gpu'; fi
   cp scripts/Info.plist 'build/Bend Swarm.app/Contents/Info.plist'
+  mkdir -p 'build/Bend Cloth.app/Contents/MacOS'
+  cp build/cloth 'build/Bend Cloth.app/Contents/MacOS/cloth'
+  if [ -f build/cloth.gpu ]; then cp build/cloth.gpu 'build/Bend Cloth.app/Contents/MacOS/cloth.gpu'; fi
+  cp scripts/Cloth-Info.plist 'build/Bend Cloth.app/Contents/Info.plist'
 fi

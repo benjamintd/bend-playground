@@ -63,3 +63,48 @@ dynamics. The old benchmark records remain historical, not current performance
 claims. Native oracle and crossing regressions pass with the new constraint.
 The normal-shutdown cause is still unconfirmed; the minimum-speed change is
 not a crash-recovery mechanism.
+
+A later optimized, archive-backed GUI launch **did** fail with exit 1 and
+`Internal Error (0000000e:Internal Error)` after the window had reported 30 FPS.
+The subsequent screenshot request observed the exited app; causality is not
+established. See `results/interactive-metal-failure.json`. An O1 debug build
+without a GPU archive then ran for several minutes, with moving flocks visible,
+without reproducing the error. No runtime patch or crash fix has been applied;
+optimized-vs-debug and archived-vs-live GPU compilation remain hypotheses.
+The investigation was paused when work shifted to the generic API and cloth.
+
+## Generic spatial API and first cloth example
+
+The reusable API is now implemented in `engine/spatial.bend`: typed 2D/3D
+layouts, source-owning snapshots, arbitrary-radius neighborhood folds and
+separate output ownership. The swarm's live pipeline migrated to it; its old
+specialized kernel remains as a reference. A sequential 131072-agent paired
+run measured generic/specialized median full-frame costs of 33.114/38.605 ms,
+with simulation medians 23.229/28.792 ms. This is one measured paired run, not a
+claim that every generic callback is faster. Raw samples and executable hashes
+are in `results/spatial-api-comparison.json`.
+
+The 32×32 cloth uses three persistent SoA position buffers, two pinned opposite
+corners, Verlet prediction, twelve Jacobi passes per substep, obstacle contact
+and the same spatial API for vertex self-contact. Its filled 3D renderer uses
+flat numeric triangle records, AABB bins and exclusive screen tiles. The
+compiled C inspection found no boxed Triangle, Point, Controls or Correction
+constructors in the hot program; scheduling and Image construction still have
+runtime allocation costs. No compiler/runtime patch or foreign rendering kernel
+was added.
+
+At this small population, Metal's many short passes cost more than CPU execution.
+Scheduling depths 6, 8 and 10 did not materially improve the GPU result; depth 10
+is retained. The cloth example prioritizes readable, independently testable
+passes. It is a compliant PBD sheet: twelve Jacobi iterations permit noticeable
+local stretch near pins at 32×32, and vertex self-contact does not guarantee
+triangle non-intersection. These are simulation limitations, not hidden
+candidate caps. The larger swarm's previously captured interactive GPU fault
+remains an independent unresolved runtime issue.
+
+The full-resolution cloth contact fold amplifies small CPU/GPU floating-point
+differences over time. Native tests therefore separate one-step agreement
+(1e-5 m) from 180-step agreement (0.002 m for 8×8 and 0.02 m for 32×32), while
+checking pins, finiteness and obstacle contact independently. The 32×32 strain
+regression bound is 1.5× rest edge length; this example does not claim
+inextensibility.

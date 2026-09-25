@@ -1,4 +1,5 @@
 import Base
+import ../../engine/spatial.bend as Spatial
 import ./world.bend as W
 import ./boids.bend as B
 import ./points.bend as Points
@@ -18,15 +19,17 @@ def from_points(next: W.World, p: Points.Frame) -> Frame:
 def create(+depth: Nat) -> Frame:
   from_points(W.empty(depth,U32.shln(1,depth)),Points.create(depth))
 
-def flocked(counts: Array<U32>, cursors: Array<U32>, b: B.Buffers) -> Points.Scene & W.World & Nat:
-  B.Buffers{old,next,offsets,ids,checks,_,_,_} = b
-  (Points.Scene{next,G.Grid{counts,offsets,cursors,ids}},old,checks)
+def flocked(r: W.World & W.World & Spatial.Index(B.space()) & Spatial.Statistics) -> Points.Scene & W.World & Nat:
+  (old,next,index,Spatial.Statistics{checks,_}) = r
+  (Points.Scene{next,G.from_index(~B.space(),index)},old,checks)
 
 def flock(gpu: Bool, depth: Nat, scene: Points.Scene, next: W.World,
-  mx: F32, my: F32, power: F32) -> Points.Scene & W.World & Nat:
-  Points.Scene{W.World{+n,cap,px,py,vx,vy},G.Grid{counts,offsets,cursors,ids}} = scene
-  flocked(counts,cursors,B.execute(gpu,depth,n,
-    B.Buffers{W.World{n,cap,px,py,vx,vy},next,offsets,ids,0n,mx,my,power}))
+  mx: F32, my: F32, power: F32) -> IO(Points.Scene & W.World & Nat):
+  Points.Scene{W.World{+n,+cap,px,py,vx,vy},grid} = scene
+  do IO<Points.Scene & W.World & Nat>:
+    result : Spatial.Step(B.space(),W.World,W.World) <- Spatial.require(~Spatial.Step(B.space(),W.World,W.World),
+      B.run(gpu,depth,B.Context{mx,my,power},G.snapshot(~W.World,n,cap,W.World{n,cap,px,py,vx,vy},grid),next))
+    return flocked(Spatial.release(~B.space(),~W.World,~W.World,result))
 
 def measured(m: Metrics, next: W.World, p: Points.Frame) -> Frame:
   Points.Frame{scene,pixels,image,_} = p
@@ -58,7 +61,7 @@ def step(+gpu: Bool, +depth: Nat, mx: F32, my: F32, power: F32, f: Frame) -> IO(
     +t2 : Nat <- Time.micros()
     scene : Points.Scene = Points.scatter(gpu,depth,scene)
     +t3 : Nat <- Time.micros()
-    r : Points.Scene & W.World & Nat = flock(gpu,depth,scene,next,mx,my,power)
+    r : Points.Scene & W.World & Nat <- flock(gpu,depth,scene,next,mx,my,power)
     t4 : Nat <- Time.micros()
     after_flock(gpu,depth,pixels,old,t0,t1,t2,t3,t4,r)
 

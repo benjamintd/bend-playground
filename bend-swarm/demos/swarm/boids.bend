@@ -1,4 +1,6 @@
 import Base
+import ../../engine/spatial.bend as Spatial
+import ../../engine/spatial/layout.bend as L
 import ./world.bend as W
 import ../../engine/core/math.bend as M
 import ../../engine/parallel/regions.bend as Region
@@ -189,3 +191,33 @@ def execute(gpu: Bool, depth: Nat, n: U32, b: Buffers) -> Buffers:
   match gpu:
     case True{}: step!(depth,n,b)
     case False{}: step(depth,n,b)
+
+# Generic spatial application: the kernel sees samples and relative distances,
+# and never sees bins, offsets, cell sizes, or the index representation.
+
+def space() -> L.Layout:
+  L.Layout{2,7n,7n,0n,8.0,0.0,0.0,0.0,True{}}
+
+type Context is Data:
+  Context{mx: F32, my: F32, power: F32}
+
+def position(s: W.Sample) -> L.Point:
+  W.Sample{x,y,_,_} = s
+  L.Point{x,y,0.0}
+
+def begin(i: U32, self: W.Sample, c: Context) -> Forces:
+  zero()
+
+def visit(i: U32, self: W.Sample, j: U32, other: W.Sample, d: L.Delta, c: Context, f: Forces) -> Forces:
+  W.Sample{_,_,vx,vy} = other
+  L.Delta{dx,dy,_,d2} = d
+  accepted(True{},dx,dy,d2,vx,vy,f)
+
+def finish(i: U32, self: W.Sample, c: Context, f: Forces, output: W.World) -> W.World:
+  Context{mx,my,power} = c
+  W.write(i,output,integrate(self,f,mx,my,power))
+
+def run(gpu: Bool, depth: Nat, c: Context, snapshot: Spatial.Snapshot(space(),W.World), output: W.World)
+  -> Result<String,Spatial.Step(space(),W.World,W.World)>:
+  Spatial.stencil(~space(),~W.World,~W.World,~W.Sample,~Forces,~Context,
+    ~W.read,~position,~begin,~visit,~finish,~W.join,~W.join,gpu,depth,8.0,False{},c,snapshot,output)

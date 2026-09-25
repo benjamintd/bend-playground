@@ -1,0 +1,99 @@
+{
+  "recorded": "2026-09-25T11:09:53.647995+00:00",
+  "cpu": "Apple M2 Pro",
+  "gpu": [
+    {
+      "sppci_model": "Apple M2 Pro",
+      "sppci_cores": "16"
+    }
+  ],
+  "memory_gb": 16.0,
+  "os": "macOS-15.7.4-arm64-arm-64bit",
+  "bend_version": [
+    "2.0.27",
+    "95317d952c8fe5be18ef49f916b2a57250cfb0aa"
+  ],
+  "agents": 131072,
+  "depth": 14,
+  "threads": 10,
+  "warmup": 120,
+  "resolution": [
+    1024,
+    1024
+  ],
+  "scope": "Sequential isolated headless runs; old executable was preserved before migrating the live pipeline. Includes image reclamation, excludes HUD/presentation. A single paired comparison, not a general speed guarantee.",
+  "runs": [
+    {
+      "csv": "spatial-specialized-gpu.csv",
+      "date": "2026-09-25T10:58:08.306317+00:00",
+      "binary_sha256": "856cea21dab9c59c93cef4b24cc7b53c01668a90bc5c4df5f345ee0a6f66a1a9",
+      "samples": 600,
+      "summary": {
+        "histogram_ms": {
+          "median": 1.575,
+          "p95": 2.1
+        },
+        "scan_ms": {
+          "median": 0.018,
+          "p95": 0.026
+        },
+        "scatter_ms": {
+          "median": 1.5705,
+          "p95": 2.075
+        },
+        "simulation_ms": {
+          "median": 28.792,
+          "p95": 36.42
+        },
+        "screen_binning_ms": {
+          "median": 3.377,
+          "p95": 4.271
+        },
+        "render_ms": {
+          "median": 2.827,
+          "p95": 3.567
+        },
+        "frame_ms": {
+          "median": 38.605000000000004,
+          "p95": 46.13
+        }
+      }
+    },
+    {
+      "csv": "spatial-generic-gpu.csv",
+      "date": "2026-09-25T10:58:31.397581+00:00",
+      "binary_sha256": "3e91452dccebb11919131f5a8a79868fac9b33e7f81ce52223f3b5b61e7cfe9b",
+      "samples": 600,
+      "summary": {
+        "histogram_ms": {
+          "median": 1.579,
+          "p95": 2.164
+        },
+        "scan_ms": {
+          "median": 0.018,
+          "p95": 0.023
+        },
+        "scatter_ms": {
+          "median": 1.573,
+          "p95": 2.161
+        },
+        "simulation_ms": {
+          "median": 23.229,
+          "p95": 29.489
+        },
+        "screen_binning_ms": {
+          "median": 3.3395,
+          "p95": 4.311
+        },
+        "render_ms": {
+          "median": 2.8245,
+          "p95": 3.528
+        },
+        "frame_ms": {
+          "median": 33.1135,
+          "p95": 39.524
+        }
+      }
+    }
+  ]
+}

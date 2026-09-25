@@ -4,7 +4,7 @@ root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 cd "$root"
 export BEND_NO_TELEMETRY=1
 scripts/bend PROOF.bend
-for suite in parallel spatial render; do
+for suite in parallel spatial spatial-api render mesh cloth; do
   bun --preload ./.toolchain/bend/bend2/main.ts "tests/$suite.js"
 done
 if [ "${1:-}" = --native ]; then
@@ -16,4 +16,10 @@ if [ "${1:-}" = --native ]; then
   ./build/crossings-test --gpu off > build/crossings-cpu.csv
   ./build/crossings-test --gpu on > build/crossings-gpu.csv
   bun --preload ./.toolchain/bend/bend2/main.ts tests/crossings-check.js
+  for suite in spatial-api cloth mesh; do
+    scripts/bend "tests/$suite-native.bend" -o "build/$suite-native"
+    ./build/"$suite-native" --gpu off > "build/$suite-cpu.csv"
+    ./build/"$suite-native" --gpu on > "build/$suite-gpu.csv"
+    bun --preload ./.toolchain/bend/bend2/main.ts "tests/$suite-native-check.js"
+  done
 fi

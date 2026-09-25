@@ -1,0 +1,74 @@
+{
+  "date": "2026-09-25T11:15:36.391727+00:00",
+  "command": [
+    "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/cloth-frame",
+    "--gpu",
+    "on",
+    "--threads",
+    "10",
+    "--",
+    "10",
+    "120",
+    "600"
+  ],
+  "os": "macOS-15.7.4-arm64-arm-64bit",
+  "cpu": "Apple M2 Pro",
+  "gpu": [
+    {
+      "sppci_model": "Apple M2 Pro",
+      "sppci_cores": "16"
+    }
+  ],
+  "memory_gb": 16.0,
+  "backend": "gpu",
+  "threads": 10,
+  "bend_version": [
+    "2.0.27",
+    "95317d952c8fe5be18ef49f916b2a57250cfb0aa"
+  ],
+  "binary_sha256": "89ee4262f3251898f26640d02f06d6d02eaff4e2374bf1014d34ae01130c5e06",
+  "source_sha256": "7600af01efdc4986042317cedfc37b00aaf4a6cd6d6e5265dab43f130cdfcbf3",
+  "vertices": 1024,
+  "triangles": 1922,
+  "resolution": [
+    512,
+    512
+  ],
+  "substeps": 2,
+  "substep_dt": 0.008333333333333333,
+  "constraint_iterations": 12,
+  "spatial_cells": [
+    32,
+    32,
+    32
+  ],
+  "spatial_cell_size": 0.25,
+  "contact_radius": 0.035,
+  "pins": "opposite corners, initial height 1.55 m",
+  "wind": 1.5,
+  "fork_depth": 10,
+  "warmup": 120,
+  "samples": 600,
+  "summary": {
+    "simulation_ms": {
+      "median": 40.2085,
+      "p95": 41.471,
+      "minimum": 38.334,
+      "maximum": 44.187
+    },
+    "render_ms": {
+      "median": 11.824,
+      "p95": 13.122,
+      "minimum": 10.057,
+      "maximum": 17.039
+    },
+    "frame_ms": {
+      "median": 52.0745,
+      "p95": 53.968,
+      "minimum": 49.984,
+      "maximum": 57.863
+    }
+  },
+  "stderr": "bend: compiling the GPU program (/Users/benjamintd/Personal/bend-playground/bend-swarm/build/cloth-frame.gpu is missing or stale)\n",
+  "scope": "headless simulation, spatial self-contact, mesh projection/binning/raster and old-image reclamation; excludes HUD, window and display"
+}

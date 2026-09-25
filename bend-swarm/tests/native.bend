@@ -1,4 +1,6 @@
 import Base
+import ./boids-generic.bend as Generic
+import ../engine/spatial.bend as Spatial
 import ../demos/swarm/world.bend as W
 import ../demos/swarm/boids.bend as B
 import ../demos/swarm/points.bend as P
@@ -30,22 +32,15 @@ def output(n: Nat, +i: U32, w: W.World) -> IO(Unit):
         w : W.World <- output_row(W.read(i,w))
         output(p,(i + 1 : U32),w)
 
-def finished(b: B.Buffers) -> IO(Unit):
-  B.Buffers{_,next,_,_,_,_,_,_} = b
+def released(r: W.World & W.World & Spatial.Index(B.space()) & Spatial.Statistics) -> IO(Unit):
+  (_,next,_,_) = r
   output(128n,0,next)
 
-def simulate(s: P.Scene) -> IO(Unit):
-  P.Scene{w,G.Grid{_,offsets,_,ids}} = s
-  finished(B.execute(True{},5n,128,B.Buffers{w,W.empty(7n,128),offsets,ids,0n,0.0,0.0,0.0}))
+def finished(result: Spatial.Step(B.space(),W.World,W.World)) -> IO(Unit):
+  released(Spatial.release(~B.space(),~W.World,~W.World,result))
 
 def main() -> IO(Unit):
   do IO<Unit>:
-    s : P.Scene = P.Scene{fixture(128n,0,W.empty(7n,128)),G.empty(7n)}
-    barrier : Nat <- IO.now()
-    s : P.Scene = P.histogram(True{},5n,s)
-    barrier : Nat <- IO.now()
-    s : P.Scene = P.scan(s)
-    barrier : Nat <- IO.now()
-    s : P.Scene = P.scatter(True{},5n,s)
-    barrier : Nat <- IO.now()
-    simulate(s)
+    result : Spatial.Step(B.space(),W.World,W.World) <- Spatial.require(~Spatial.Step(B.space(),W.World,W.World),
+      Generic.run(128,7n,fixture(128n,0,W.empty(7n,128))))
+    finished(result)

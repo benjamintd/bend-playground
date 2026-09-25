@@ -1,0 +1,11 @@
+{
+  "date": "2026-09-25T10:10:00Z",
+  "binary_sha256": "fa51369448d5cf10feece873f88bab110253c043fba20ff94cbd0b91ca0f22e9",
+  "agents": 131072,
+  "fork_depth": 14,
+  "hud": true,
+  "backend": "Metal",
+  "exit_status": 1,
+  "stderr": "bend: Internal Error (0000000e:Internal Error)",
+  "context": "Native interactive window after reopening; CUA getApp saw 30 FPS, subsequent screenshot request reported app quit. Headless 1920-step test passed. Failure trigger not yet established."
+}
