@@ -1,0 +1,62 @@
+{
+  "date": "2026-09-25T14:52:02.669225+00:00",
+  "command": [
+    "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/meadow-frame",
+    "--gpu",
+    "off",
+    "--threads",
+    "10",
+    "--",
+    "cpu",
+    "raw"
+  ],
+  "os": "macOS-15.7.4-arm64-arm-64bit",
+  "cpu": "Apple M2 Pro",
+  "gpu": [
+    {
+      "sppci_model": "Apple M2 Pro",
+      "sppci_cores": "16"
+    }
+  ],
+  "memory_gb": 16.0,
+  "bend_version": [
+    "2.0.27",
+    "95317d952c8fe5be18ef49f916b2a57250cfb0aa"
+  ],
+  "source_sha256": "0fbbfbf61b04aab97cd9dab0f81a24c2df7324ecc3f9e9add5220ab284f2dec9",
+  "binary_sha256": "addfd6626f5a630d59a5b9e060445e385f4c96e39912b9b37964577b420c027e",
+  "demo": "meadow",
+  "backend": "cpu",
+  "effects": "raw",
+  "threads": 10,
+  "warmup": 120,
+  "samples": 600,
+  "count": 4096,
+  "resolution": [
+    1024,
+    1024
+  ],
+  "dt": 0.016666666666666666,
+  "scope": "Headless simulation, geometry/index, raster, selected effects and old-image reclamation. Excludes window/HUD/pacing. No other demo or test running; ordinary desktop apps remain active.",
+  "summary": {
+    "simulation_ms": {
+      "median": 0.258,
+      "p95": 0.495,
+      "minimum": 0.169,
+      "maximum": 4.734
+    },
+    "render_ms": {
+      "median": 13.215499999999999,
+      "p95": 24.431,
+      "minimum": 9.999,
+      "maximum": 68.56
+    },
+    "frame_ms": {
+      "median": 13.498999999999999,
+      "p95": 24.714,
+      "minimum": 10.17,
+      "maximum": 68.815
+    }
+  },
+  "stderr": ""
+}

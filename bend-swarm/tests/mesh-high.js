@@ -24,6 +24,9 @@ for(let y=0;y<1024;y++) for(let x=0;x<1024;x++) {
   assert.equal(pixel(r.snd,x,y),got,'high Image coverage');
   assert.equal(r.fst.background[x+y*1024].depth,1000,'background depth retained');
   assert.equal(r.fst.background[x+y*1024].color,66051,'background color stays immutable');
+  const resolved=r.fst.background[1048576+x+y*1024];
+  assert.equal(resolved.color,got,'postprocess source contains current raster color');
+  assert.ok(Math.abs(resolved.depth-z)<.00001,'postprocess source contains current camera depth');
   count+=got!==66051;sum=(sum+got)>>>0;
 }
 console.log(`PASS: 1048576 high-resolution pixels and Image ownership; checksum ${sum}, visible ${count}.`);

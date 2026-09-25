@@ -1,0 +1,62 @@
+{
+  "date": "2026-09-25T14:53:11.769303+00:00",
+  "command": [
+    "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/life-frame",
+    "--gpu",
+    "on",
+    "--threads",
+    "10",
+    "--",
+    "gpu",
+    "aa"
+  ],
+  "os": "macOS-15.7.4-arm64-arm-64bit",
+  "cpu": "Apple M2 Pro",
+  "gpu": [
+    {
+      "sppci_model": "Apple M2 Pro",
+      "sppci_cores": "16"
+    }
+  ],
+  "memory_gb": 16.0,
+  "bend_version": [
+    "2.0.27",
+    "95317d952c8fe5be18ef49f916b2a57250cfb0aa"
+  ],
+  "source_sha256": "0fbbfbf61b04aab97cd9dab0f81a24c2df7324ecc3f9e9add5220ab284f2dec9",
+  "binary_sha256": "046acdb94c59e786aac086a259a92c96661ccda5225e3ce2b6efd444bd58b687",
+  "demo": "life",
+  "backend": "gpu",
+  "effects": "aa",
+  "threads": 10,
+  "warmup": 120,
+  "samples": 600,
+  "count": 8192,
+  "resolution": [
+    1024,
+    1024
+  ],
+  "dt": 0.016666666666666666,
+  "scope": "Headless simulation, geometry/index, raster, selected effects and old-image reclamation. Excludes window/HUD/pacing. No other demo or test running; ordinary desktop apps remain active.",
+  "summary": {
+    "simulation_ms": {
+      "median": 4.128,
+      "p95": 4.849,
+      "minimum": 3.949,
+      "maximum": 9.868
+    },
+    "render_ms": {
+      "median": 6.272,
+      "p95": 7.096,
+      "minimum": 5.931,
+      "maximum": 8.704
+    },
+    "frame_ms": {
+      "median": 10.4215,
+      "p95": 11.747,
+      "minimum": 9.915,
+      "maximum": 17.973
+    }
+  },
+  "stderr": "bend: compiling the GPU program (/Users/benjamintd/Personal/bend-playground/bend-swarm/build/life-frame.gpu is missing or stale)\n"
+}

@@ -20,7 +20,7 @@ def frames(+high: Bool, n: Nat, +tick: U32, r: Window & F.Frame & App.Controls) 
       (w,f,_) = r
       do IO<Unit>:
         +start : Nat <- Time.micros()
-        r : Window & F.Frame & App.Controls <- App.advance(tick,(tick * 2 : U32),2,start,w,(f,App.Controls{False{},False{},False{},False{},True{},True{},256.0,256.0,False{},4294967295,7.5,0.5,0.5,high}))
+        r : Window & F.Frame & App.Controls <- App.advance(tick,(tick * 2 : U32),2,start,w,(f,App.Controls{False{},False{},False{},False{},True{},True{},256.0,256.0,False{},4294967295,7.5,0.5,0.5,high,False{},False{}}))
         end : Nat <- Time.micros()
         r : Window & F.Frame & App.Controls <- report((tick >= 120 : U32),Time.elapsed(start,end),r)
         frames(high,k,(tick + 1 : U32),r)
@@ -29,7 +29,7 @@ def bench(+high: Bool) -> IO(Unit):
     w : Window <- IO.try(Window,Window.open("BEND CLOTH | display benchmark",1024,1024))
     f : F.Frame <- F.create(Bool.pick(Nat,high,6n,5n))
     Unit <- IO.print("simulation_us,render_us,frame_us")
-    frames(high,720n,0,(w,f,App.Controls{False{},False{},False{},False{},True{},True{},256.0,256.0,False{},4294967295,7.5,0.5,0.5,high}))
+    frames(high,720n,0,(w,f,App.Controls{False{},False{},False{},False{},True{},True{},256.0,256.0,False{},4294967295,7.5,0.5,0.5,high,False{},False{}}))
 
 
 def args(xs: List<String>) -> IO(Unit):

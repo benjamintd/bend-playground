@@ -1,0 +1,69 @@
+{
+  "date": "2026-09-25T15:25:32.264890+00:00",
+  "command": [
+    "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/meadow-frame",
+    "--gpu",
+    "on",
+    "--threads",
+    "10",
+    "--",
+    "gpu",
+    "raw",
+    "high"
+  ],
+  "os": "macOS-15.7.4-arm64-arm-64bit",
+  "cpu": "Apple M2 Pro",
+  "gpu": [
+    {
+      "sppci_model": "Apple M2 Pro",
+      "sppci_cores": "16"
+    }
+  ],
+  "memory_gb": 16.0,
+  "bend_version": [
+    "2.0.27",
+    "95317d952c8fe5be18ef49f916b2a57250cfb0aa"
+  ],
+  "source_sha256": "8efa48b5af4b9adef2e35e48849cc0961814c6215266a05b40da652313523436",
+  "binary_sha256": "839299b531d27af8170c7203b01215031f13e96dbe60fc89147ae17f19d082f2",
+  "demo": "meadow",
+  "backend": "gpu",
+  "effects": "raw",
+  "threads": 10,
+  "warmup": 120,
+  "samples": 600,
+  "count": 4096,
+  "quality": "high",
+  "resolution": [
+    2048,
+    2048
+  ],
+  "raster_resolution": [
+    2048,
+    2048
+  ],
+  "dt": 0.016666666666666666,
+  "scope": "Headless simulation, geometry/index, raster, selected effects and old-image reclamation. Excludes window/HUD/pacing. No concurrent tests or builds from this task. Other demos and background jobs were active; not an idle-machine benchmark.",
+  "summary": {
+    "simulation_ms": {
+      "median": 1.0775000000000001,
+      "p95": 1.58,
+      "minimum": 0.919,
+      "maximum": 5.628
+    },
+    "render_ms": {
+      "median": 45.382,
+      "p95": 57.056,
+      "minimum": 32.78,
+      "maximum": 61.205
+    },
+    "frame_ms": {
+      "median": 46.447500000000005,
+      "p95": 58.435,
+      "minimum": 33.802,
+      "maximum": 62.25
+    }
+  },
+  "stderr": "bend: compiling the GPU program (/Users/benjamintd/Personal/bend-playground/bend-swarm/build/meadow-frame.gpu is missing or stale)\n",
+  "load_observation": "During this series: two Bend Turn demo processes using ~117% and ~91% CPU, a separate Python job ~153%, VM ~73%, plus indexing/window server. Their exact load varied."
+}

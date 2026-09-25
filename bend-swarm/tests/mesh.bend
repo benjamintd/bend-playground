@@ -6,14 +6,14 @@ def background(x: U32, y: U32) -> M.Fragment:
 
 def built(gpu: Bool, r: Array<M.Triangle> & M.Index) -> M.Drawing & Image:
   (tris,M.Index{_,offsets,_,ids,_}) = r
-  M.render(gpu,M.Drawing{tris,offsets,ids,Array.new(U32,18n,0),M.backdrop(~False{},~background,Array.new(M.Fragment,18n,M.Fragment{0.0,0}))},Pix{0})
+  M.render(gpu,M.Drawing{tris,offsets,ids,Array.new(U32,18n,0),M.backdrop(~False{},~background,Array.new(M.Fragment,19n,M.Fragment{0.0,0}))},Pix{0})
 
 def render(+gpu: Bool, n: U32, tris: Array<M.Triangle>) -> M.Drawing & Image:
   built(gpu,M.build(gpu,n,tris,M.empty()))
 
 def built_high(gpu: Bool, r: Array<M.Triangle> & M.Index) -> M.Drawing & Image:
   (tris,M.Index{_,offsets,_,ids,_}) = r
-  M.render_size(~True{},gpu,M.Drawing{tris,offsets,ids,Array.new(U32,20n,0),M.backdrop(~True{},~background,Array.new(M.Fragment,20n,M.Fragment{0.0,0}))},Pix{0})
+  M.render_size(~True{},gpu,M.Drawing{tris,offsets,ids,Array.new(U32,20n,0),M.backdrop(~True{},~background,Array.new(M.Fragment,21n,M.Fragment{0.0,0}))},Pix{0})
 def render_high(+gpu: Bool, n: U32, tris: Array<M.Triangle>) -> M.Drawing & Image:
   built_high(gpu,M.build_quality(True{},gpu,n,tris,M.empty()))
 

@@ -1,0 +1,37 @@
+{
+  "status": "Historical exploratory measurements, superseded by meadow-final records.",
+  "warmup": 60,
+  "samples": 120,
+  "resolution": [
+    1024,
+    1024
+  ],
+  "known_limitations": [
+    "Source and binary hashes were not captured at execution; not reconstructed afterward.",
+    "Square meadow layout before final circular composition and integer phase correction.",
+    "The gpu-aa run overlapped other compilation/testing and is unsuitable for a backend comparison."
+  ],
+  "runs": {
+    "meadow-cpu-raw": {
+      "samples": 120,
+      "frame_median_ms": 9.8655
+    },
+    "meadow-cpu-aa": {
+      "samples": 120,
+      "frame_median_ms": 15.68
+    },
+    "meadow-cpu-dof": {
+      "samples": 120,
+      "frame_median_ms": 15.5335
+    },
+    "meadow-cpu-aa-fast": {
+      "samples": 120,
+      "frame_median_ms": 21.0295,
+      "note": "Branch-heavy filtering experiment; slower in this run, reverted. Desktop load uncontrolled."
+    },
+    "meadow-gpu-aa": {
+      "samples": 120,
+      "frame_median_ms": 19.594
+    }
+  }
+}

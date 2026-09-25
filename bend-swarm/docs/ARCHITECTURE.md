@@ -96,8 +96,40 @@ contains no simulation or rendering computation.
 The mesh renderer retains a persistent `Array<Fragment>` backdrop alongside
 pixels. `Mesh.backdrop` fills color and camera depth once using a caller-supplied
 Bend callback; the caller must refill it when the camera or static scene changes.
-Raster workers only read the backdrop and rejoin the same allocation. This
-removes repeated analytic sphere/floor calculations without weakening occlusion.
-At 1024² the two-word Fragment payload costs 16 MiB; at 512² it costs 4 MiB.
+Raster workers read the first half and exclusively write resolved color/depth
+to the second half. This removes repeated analytic sphere/floor calculations
+without weakening occlusion and makes current depth available to effects.
+At 2048² the two-word Fragment buffer costs 128 MiB for both halves.
+At 1024² it costs 32 MiB; at 512² it
+costs 8 MiB. The static-backdrop-only version used half this payload.
 Pixels, Image nodes and runtime overhead are additional. This is a payload
 estimate, not measured peak heap use.
+
+## Shared demo and rendering components
+
+`engine/platform/player.bend` owns native presentation, normalized pointer input,
+presets, pause/reset, backend selection, HUD and pacing for the meadow and
+Particle Life. The caller supplies state creation and a frame callback. State
+is affine and persists across frames. Each displayed frame advances one fixed
+1/60-second step; below 60 FPS simulation time slows. Cloth retains its separate
+bounded elapsed-time accumulator because its solver requires substeps.
+
+`engine/render/camera.bend` provides perspective projection and matching camera
+rays. `engine/geometry/curve.bend` provides quadratic curves and tangents.
+`engine/fields/wind.bend` samples coherent traveling gusts. The meadow stores
+four floats per blade, updates independent bounded springs, and emits six
+ribbon triangles plus two optional flower triangles per blade. Root phase is
+wrapped with integer arithmetic before float conversion to avoid CPU/Metal
+large-angle rounding differences. Wind and pointer forces do not move roots.
+
+Particle Life has two persistent flat particle arrays and two reusable indices:
+a simulation grid with 32-world-unit cells and a screen index with 8-world-unit
+cells. At 2048² the screen index is unchanged; output tiles and sprite radii double. Six species
+select an attraction coefficient; a short-range repulsion core prevents collapse.
+The generic stencil sums every neighbor inside the radius. Screen rebuilding
+uses updated positions. No per-particle allocations occur in either demo.
+
+The shared mesh finish pass and periodic sprite renderer are documented in
+[RENDERING.md](RENDERING.md). Effects run in Bend on either backend. Their
+immutable source and disjoint output ownership are runtime-tested contracts,
+with unsafe sharing confined to the engine's region/tile trees.

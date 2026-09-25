@@ -139,3 +139,87 @@ The high-quality display test does not sustain 60 FPS. A CPU-physics/Metal-rende
 headless comparison measured 25.640 ms median and was rejected as the default.
 The interactive clock limits catch-up to two steps and drops excess wall time
 after stalls; headless tests always simulate both steps.
+
+## Initial spatial filter, meadow and Particle Life (2026-09-25)
+
+These earlier scene runs used 120 warmup frames and 600 samples, 1024², ten CPU workers,
+on the M2 Pro. Runs were sequential with no concurrent demo, tests or builds;
+ordinary desktop apps remained active. These are complete headless pipelines,
+including image reclamation and the selected effects, excluding window/HUD and
+presentation. No sustained window-FPS claim follows from them.
+
+| Scene / backend / effects | Simulation median | Draw median | Frame median | Frame p95 |
+|---|---:|---:|---:|---:|
+| 4,096 grass blades / CPU / off | 0.258 ms | 13.215 ms | 13.499 ms | 24.714 ms |
+| Meadow / CPU / edge smoothing | 0.250 ms | 18.918 ms | 19.163 ms | 29.607 ms |
+| Meadow / CPU / smoothing + focus | 0.247 ms | 17.565 ms | 17.810 ms | 23.592 ms |
+| Meadow / Metal / edge smoothing | 0.935 ms | 19.319 ms | 20.282 ms | 21.992 ms |
+| 8,192 Particle Life / CPU / smooth sprites | 2.088 ms | 9.433 ms | 11.484 ms | 13.831 ms |
+| Particle Life / Metal / smooth sprites | 4.128 ms | 6.272 ms | 10.422 ms | 11.747 ms |
+
+Records: `meadow-final-{cpu-raw,cpu-aa,cpu-dof,gpu-aa}` and
+`life-final-{cpu-aa,gpu-aa}` in `results/`, with raw CSV, machine settings,
+source/binary hashes and commands. Life uses preset 2 (chasers), seed 42; the
+scene evolves during the run. Meadow uses the breeze preset without pointer
+force. GPU numerical reduction order can change Life trajectories over time.
+
+At this stage meadow started on CPU with effects **off** because the filtered 1024² pipeline
+already exceeds the 16.67 ms budget before presentation. A/D enable the effects
+explicitly. Life starts on Metal with analytic sprite coverage enabled. These
+are choices for this machine and scene, not general backend rankings. The focus
+pass replaces edge filtering at blurred pixels; it is not an extra serial blur
+after AA. Its lower median here is not proof that enabling focus saves time,
+given desktop variability and different work per pixel.
+
+Retaining current depth/color for effects also changes the raw cloth renderer.
+With both effects disabled, standard cloth measured **14.717 ms median / 18.892
+ms p95** (simulation 11.319, draw 3.391); high measured **16.509 / 20.125 ms**
+(simulation 10.920, draw 5.539). See `cloth-depth-{cpu,high-cpu}`. The physics
+algorithm is unchanged from the previous section. These are separate runs
+under desktop load, so the higher simulation timings do not establish an
+effect-induced physics regression. High quality still does not guarantee 60 FPS.
+
+Earlier 120-sample meadow runs are preserved in `meadow-exploratory.json` and
+their CSV files. They used a different scene layout; one Metal run overlapped
+builds/tests, and an attempted branch-based filter change was reverted. They
+are not used for the final defaults or a claimed speedup.
+
+
+## Four-sample geometry coverage and 2048² (2026-09-25)
+
+A now selects four independently depth-tested samples per pixel for cloth and
+meadow. Q switches meadow and Particle Life from 1024² to 2048² while retaining
+the simulation state. Life retains analytic sprite-edge coverage. The previous
+spatial-filter table describes an earlier implementation, not the current A key.
+
+These runs use 120 warmups and 600 samples, ten CPU workers, and include the
+complete headless pipeline with image reclamation. They exclude window/HUD and
+presentation. Other Bend Turn demos and substantial unrelated background jobs
+were active; these are **loaded-desktop measurements**, not idle-machine results.
+This task ran no tests or builds concurrently. Small differences across runs
+should not be interpreted as stable backend rankings.
+
+| Scene / output / backend / effects | Frame median | Frame p95 |
+|---|---:|---:|
+| Meadow / 1024² / CPU / off | 15.856 ms | 30.392 ms |
+| Meadow / 1024² / CPU / four-sample AA | 28.494 ms | 65.020 ms |
+| Meadow / 1024² / Metal / four-sample AA | 25.288 ms | 29.270 ms |
+| Meadow / 2048² / CPU / off | 39.143 ms | 61.216 ms |
+| Meadow / 2048² / Metal / off | 46.448 ms | 58.435 ms |
+| Particle Life / 1024² / Metal / analytic edges | 10.794 ms | 12.029 ms |
+| Particle Life / 2048² / Metal / analytic edges | 17.765 ms | 22.945 ms |
+
+Records: `meadow-quality-{cpu-raw,cpu-2048,gpu-2048}`,
+`meadow-coverage-{cpu-aa,gpu-aa}`, and `life-quality-gpu-{1024,2048}`.
+Each has raw CSV plus command, source/binary hash and machine metadata. The
+small final cleanup removes an always-disabled resolve wrapper; these recorded
+hashes identify the measured executable before that nonfunctional cleanup.
+
+An initial supersampling route built a complete 2048² intermediate Image before
+resolving to 1024². It measured 83.662 ms median / 190.304 ms p95 on CPU
+(`meadow-quality-cpu-ssaa`) and was rejected for interactive AA. Direct coverage
+uses the selected output-size buffers and resolves four samples locally. The
+independent four-to-one Image resolver remains available for exports.
+
+Neither meadow AA nor 2048² quality establishes sustained 60 FPS. Meadow retains
+1024² with effects off by default; Life retains 1024² with analytic edges on.

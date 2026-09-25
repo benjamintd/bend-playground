@@ -4,7 +4,7 @@ root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 cd "$root"
 export BEND_NO_TELEMETRY=1
 scripts/bend PROOF.bend
-for suite in parallel spatial spatial-api render mesh mesh-high grid-surface cloth cloth-contact cloth-input cloth-visual; do
+for suite in parallel spatial spatial-api render mesh mesh-high grid-surface cloth cloth-contact cloth-input cloth-visual meadow life splats post downsample coverage; do
   bun --preload ./.toolchain/bend/bend2/main.ts "tests/$suite.js"
 done
 if [ "${1:-}" = --native ]; then
@@ -22,6 +22,23 @@ if [ "${1:-}" = --native ]; then
     ./build/"$suite-native" --gpu on > "build/$suite-gpu.csv"
     bun --preload ./.toolchain/bend/bend2/main.ts "tests/$suite-native-check.js"
   done
+  scripts/bend tests/showcase-native.bend -o build/showcase-native
+  ./build/showcase-native --gpu off --threads 10 > build/showcase-cpu.csv
+  ./build/showcase-native --gpu on --threads 10 > build/showcase-gpu.csv
+  bun --preload ./.toolchain/bend/bend2/main.ts tests/showcase-native-check.js
+  scripts/bend tests/life-image-native.bend -o build/life-image-native
+  ./build/life-image-native --gpu off --threads 10 > build/life-image-cpu.csv
+  ./build/life-image-native --gpu on --threads 10 > build/life-image-gpu.csv
+  scripts/bend tests/quality-native.bend -o build/quality-native
+  ./build/quality-native --gpu off --threads 10 > build/quality-cpu.csv
+  ./build/quality-native --gpu on --threads 10 > build/quality-gpu.csv
+  scripts/bend tests/splats-high-native.bend -o build/splats-high-native
+  ./build/splats-high-native --gpu off --threads 10 > build/splats-high-cpu.csv
+  ./build/splats-high-native --gpu on --threads 10 > build/splats-high-gpu.csv
+  python3 tests/quality-check.py
+  scripts/bend tests/life-grid-native.bend -o build/life-grid-native
+  ./build/life-grid-native --gpu on --threads 10 > build/life-grid-gpu.csv
+  bun --preload ./.toolchain/bend/bend2/main.ts tests/life-grid-check.js
   scripts/bend tests/cloth-soak.bend -o build/cloth-soak
   ./build/cloth-soak --gpu off --threads 10 > build/cloth-soak.csv
   python3 tests/cloth-surface-check.py build/cloth-soak.csv

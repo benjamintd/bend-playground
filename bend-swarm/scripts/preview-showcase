@@ -1,0 +1,9 @@
+#!/bin/sh
+set -eu
+root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+cd "$root"
+demo=${1:-meadow}
+case "$demo" in meadow|life) ;; *) exit 2;; esac
+scripts/bend "benches/${demo}_snapshot.bend" -o "build/$demo-snapshot"
+./build/"$demo-snapshot" --gpu off --threads 10 > "build/$demo-preview.ppm"
+python3 scripts/ppm-to-png.py "build/$demo-preview.ppm" "results/$demo-preview.png"

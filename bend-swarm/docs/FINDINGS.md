@@ -1,5 +1,61 @@
 # Findings
 
+## Geometry coverage, resolution and grid investigation (2026-09-25)
+
+The shared mesh renderer now supports 512², 1024² and 2048² output. Four-sample
+geometry AA resolves each sample's depth before averaging color, without a
+larger framebuffer. A first intermediate-Image supersampling route measured
+83.662 ms median on CPU and was rejected; direct coverage measured 28.494 ms
+on CPU and 25.288 ms on Metal. Desktop load was substantial and the runs were
+not interleaved. These measurements do not establish 60 FPS. Particle Life's
+2048² pipeline measured 17.765 ms median on Metal before presentation.
+
+Native CPU and Metal tests check all 4,194,304 Image pixels against the output
+buffer, independent coverage/depth probes, exact four-to-one resolve and sprite
+coverage across tile/torus seams. Q preserves the physical state while changing
+render buffers and the macOS presentation surface dimensions. The host effect
+only changes presentation metadata; rendering math remains Bend.
+
+The reported grid-like particle grouping remains visually unexplained. Moving
+a dense constellation across cell boundaries leaves the computed forces
+unchanged within tolerance. After 600 native Metal steps with 8,192 particles,
+482 next-step probes matched an independent all-pairs calculation with maximum
+error 0.000129 (tolerance 0.0004). The full rendered Image also matches its pixel
+buffer. These checks found no cell-boundary force or Image-assembly error; they
+do not prove the observed visual artifact is resolved.
+
+## Meadow, Particle Life and shared effects (2026-09-25)
+
+These examples exercise reusable engine components: camera/rays, curves, wind,
+native input/presentation, the spatial stencil, mesh finishing and periodic
+sprites. No foreign simulation or rendering kernel was introduced. Meadow has
+4,096 independent spring-driven blades; Life has 8,192 interacting particles
+with six species and no neighborhood cap.
+
+The initial golden-angle root placement multiplied a large floating angle
+before adding jitter. After 240 steps the maximum CPU/Metal grass difference
+was 0.001416, above the regression tolerance. Integer turn wrapping before F32
+conversion reduced the measured difference to 0.000001621 without relaxing the
+test. Both backends also pass the independent Life force, edge/focus-filter and
+periodic sprite probes. The raster oracle checks every current color/depth
+output and immutability of the static half at 1024².
+
+The initial full-image spatial filter was material work: meadow CPU frame
+medians were 13.499 ms raw and 19.163 ms with smoothing. Metal smoothing measured
+20.282 ms. This scene does not support a 60-FPS claim with effects enabled, so
+they start off. Life's analytic sprite edges measured 10.422 ms for the entire
+Metal frame versus 11.484 ms on CPU. See PERF.md and raw records for p95 values
+and measurement limits. A branch-heavy filtering experiment was slower in an
+earlier exploratory run and was reverted; no universal compiler conclusion is
+drawn from that desktop measurement.
+
+The mesh finish pass retains resolved camera depth in a second persistent
+Fragment region, avoiding a second scene evaluation. Postprocessing reads this
+immutable region and builds Image output in its own tile tree. The initial effects were
+deliberately small: spatial edge smoothing and depth-aware nine-tap defocus,
+without temporal history, HDR or physically accurate bokeh. Particle glow is
+analytic sprite falloff, not a bloom pipeline.
+
 ## 2026-09-25 — Phase 0
 
 Installed 2.0.5 is too old for the requested APIs. Project-local upstream 2.0.27 works without altering the system installation or compiler. GPU smoke test passes on Metal; the application sandbox reports no GPU, so benchmarks explicitly request `--gpu on`.

@@ -1,0 +1,65 @@
+{
+  "recorded_at": "2026-09-25T15:41:15.600044+00:00",
+  "compiler_pin": [
+    "2.0.27",
+    "95317d952c8fe5be18ef49f916b2a57250cfb0aa"
+  ],
+  "tests": {
+    "native_mesh_cpu_and_metal": "passed: independent 512 and 1024 framebuffer checksums",
+    "native_showcase_cpu_and_metal": "passed: 240-step grass, independent Life equations, postprocess probes and periodic sprites",
+    "native_quality_cpu_and_metal": "passed: 2048 mesh, exact four-to-one resolve, four-sample subpixel coverage and full Image comparison",
+    "native_sprites_2048_cpu_and_metal": "passed: 925 independently predicted lit pixels and full 4194304-pixel Image comparison",
+    "native_life_image_cpu_and_metal": "passed: 1048576 Image pixels match raster buffer after 120 steps",
+    "native_life_grid_metal": "passed: 482 independent all-pairs probes after 600 steps of 8192 particles; maximum error 0.00012883262537766",
+    "js_suites_and_laws": "passed: includes 121 independent subpixel coverage/depth probes"
+  },
+  "grass_count": 4096,
+  "grass_steps": 240,
+  "postprocess_oracle_samples": 1021,
+  "periodic_sprite_lit_pixels": 257,
+  "files": {
+    "results/showcase-native-cpu.csv": {
+      "sha256": "33b9d71d5effda7c692c8d18b66a11fff27a00ec0ae8c0e5f440913480c8ce06",
+      "rows": 5214
+    },
+    "results/showcase-native-gpu.csv": {
+      "sha256": "dc02bb77e960cf900290a28dbdc4022554b12dbd5d7897b1405643dc69b97d06",
+      "rows": 5214
+    },
+    "results/quality-native-cpu.csv": {
+      "sha256": "41ba2bb9f6fb8788e293df641a5b9f7c1e7df6099e0fbdaabce70d2a55477dfa",
+      "rows": 12
+    },
+    "results/quality-native-gpu.csv": {
+      "sha256": "41ba2bb9f6fb8788e293df641a5b9f7c1e7df6099e0fbdaabce70d2a55477dfa",
+      "rows": 12
+    },
+    "results/splats-high-native-cpu.csv": {
+      "sha256": "378df946a68d6df2c0965fa6841ca506b794aa35bd5fe3907a09cc3fbfd415a7",
+      "rows": 2
+    },
+    "results/splats-high-native-gpu.csv": {
+      "sha256": "378df946a68d6df2c0965fa6841ca506b794aa35bd5fe3907a09cc3fbfd415a7",
+      "rows": 2
+    },
+    "results/life-image-native-cpu.csv": {
+      "sha256": "6de4cd02c7c6c5775860e4da047279ffc7b45be47a787e94b92fad131a88eed3",
+      "rows": 1
+    },
+    "results/life-image-native-gpu.csv": {
+      "sha256": "6de4cd02c7c6c5775860e4da047279ffc7b45be47a787e94b92fad131a88eed3",
+      "rows": 1
+    },
+    "results/life-grid-native-gpu.csv": {
+      "sha256": "d210dc89d2ca0e2452a0560eed0e2f0ec2c127b9d62f3bb34894cf15f3858487",
+      "rows": 16384
+    }
+  },
+  "max_grass_cpu_metal_difference": 1.6210000000002611e-06,
+  "max_life_cpu_metal_difference": 0.0,
+  "live_macos_checks": {
+    "meadow": "passed: A coverage, D focus, Q 1024/2048 and back, clean exit",
+    "particle_life": "passed: Q 1024/2048 and back with visually unchanged paused positions; resumed at 2048 with analytic edges",
+    "performance_note": "Transient window title readings are not benchmark results."
+  }
+}

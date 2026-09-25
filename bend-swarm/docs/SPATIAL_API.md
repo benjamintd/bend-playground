@@ -119,6 +119,20 @@ stages delegate to the same generic index. The old `Boids.execute` kernel remain
 as a specialized reference for tests and historical comparisons, while the live
 swarm uses `Boids.run` and `Spatial.stencil`.
 
+## Particle Life example
+
+`demos/life/simulation.bend` uses flat `Particle{x,y,vx,vy}` records and a
+`Force{x,y}` accumulator. A periodic 2D layout has 32-pixel cells and a matching
+32-pixel query radius. `visit` chooses a species-pair coefficient, applies a
+repulsion core and sums force from every accepted neighbor. `finish` applies
+pointer force, damping and a speed cap into its own output slot. `release`
+recovers both arrays and the index for swapping without cloning.
+
+Rendering builds a second snapshot at an 8-pixel cell size from updated
+positions. The generic `engine/render/splats.bend` consumes that snapshot with
+a sprite callback. It returns the original source and reusable screen index
+along with pixels and Image; the simulation is independent of sprite rendering.
+
 ## Execution and validation
 
 `gpu` selects a bang at each parallel root. `depth` controls region subdivision

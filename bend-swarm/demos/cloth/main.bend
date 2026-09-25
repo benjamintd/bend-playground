@@ -1,5 +1,6 @@
 import Base
 import ./frame.bend as F
+import ../../engine/render/post.bend as Post
 import ./simulation.bend as S
 import ./physics.bend as P
 import ./world.bend as W
@@ -15,40 +16,46 @@ import ../../engine/core/time.bend as Time
 
 type Controls is Data:
   Controls{gpu: Bool, paused: Bool, reset: Bool, quit: Bool, wind: Bool, hud: Bool,
-    mx: F32, my: F32, picking: Bool, grab: U32, grab_depth: F32, scale_x: F32, scale_y: F32, high: Bool}
+    mx: F32, my: F32, picking: Bool, grab: U32, grab_depth: F32, scale_x: F32, scale_y: F32, high: Bool, aa: Bool, dof: Bool}
 
 def event(e: Event, c: Controls) -> Controls:
   match e:
     case Close{}:
-      Controls{g,p,r,_,w,h,x,y,k,i,d, +sx, +sy, +high} = c
-      Controls{g,p,r,True{},w,h,x,y,k,i,d, sx, sy, high}
+      Controls{g,p,r,_,w,h,x,y,k,i,d, +sx, +sy, +high,aa,dof} = c
+      Controls{g,p,r,True{},w,h,x,y,k,i,d, sx, sy, high,aa,dof}
     case Key{27,True{}}:
-      Controls{g,p,r,_,w,h,x,y,k,i,d, +sx, +sy, +high} = c
-      Controls{g,p,r,True{},w,h,x,y,k,i,d, sx, sy, high}
+      Controls{g,p,r,_,w,h,x,y,k,i,d, +sx, +sy, +high,aa,dof} = c
+      Controls{g,p,r,True{},w,h,x,y,k,i,d, sx, sy, high,aa,dof}
     case Key{103,True{}}:
-      Controls{g,p,r,q,w,h,x,y,k,i,d, +sx, +sy, +high} = c
-      Controls{Bool.not(g),p,r,q,w,h,x,y,k,i,d, sx, sy, high}
+      Controls{g,p,r,q,w,h,x,y,k,i,d, +sx, +sy, +high,aa,dof} = c
+      Controls{Bool.not(g),p,r,q,w,h,x,y,k,i,d, sx, sy, high,aa,dof}
     case Key{32,True{}}:
-      Controls{g,p,r,q,w,h,x,y,k,i,d, +sx, +sy, +high} = c
-      Controls{g,Bool.not(p),r,q,w,h,x,y,k,i,d, sx, sy, high}
+      Controls{g,p,r,q,w,h,x,y,k,i,d, +sx, +sy, +high,aa,dof} = c
+      Controls{g,Bool.not(p),r,q,w,h,x,y,k,i,d, sx, sy, high,aa,dof}
     case Key{114,True{}}:
-      Controls{g,p,_,q,w,h,x,y,_,_,d, +sx, +sy, +high} = c
-      Controls{g,p,True{},q,w,h,x,y,False{},4294967295,d, sx, sy, high}
+      Controls{g,p,_,q,w,h,x,y,_,_,d, +sx, +sy, +high,aa,dof} = c
+      Controls{g,p,True{},q,w,h,x,y,False{},4294967295,d, sx, sy, high,aa,dof}
     case Key{119,True{}}:
-      Controls{g,p,r,q,w,h,x,y,k,i,d, +sx, +sy, +high} = c
-      Controls{g,p,r,q,Bool.not(w),h,x,y,k,i,d, sx, sy, high}
+      Controls{g,p,r,q,w,h,x,y,k,i,d, +sx, +sy, +high,aa,dof} = c
+      Controls{g,p,r,q,Bool.not(w),h,x,y,k,i,d, sx, sy, high,aa,dof}
     case Key{113,True{}}:
-      Controls{g,p,_,q,w,h,x,y,_,_,d,sx,sy,high} = c
-      Controls{g,p,True{},q,w,h,x,y,False{},4294967295,d,sx,sy,Bool.not(high)}
+      Controls{g,p,_,q,w,h,x,y,_,_,d,sx,sy,high,aa,dof} = c
+      Controls{g,p,True{},q,w,h,x,y,False{},4294967295,d,sx,sy,Bool.not(high),aa,dof}
+    case Key{97,True{}}:
+      Controls{g,p,r,q,w,h,x,y,k,i,d,sx,sy,high,aa,dof} = c
+      Controls{g,p,r,q,w,h,x,y,k,i,d,sx,sy,high,Bool.not(aa),dof}
+    case Key{100,True{}}:
+      Controls{g,p,r,q,w,h,x,y,k,i,d,sx,sy,high,aa,dof} = c
+      Controls{g,p,r,q,w,h,x,y,k,i,d,sx,sy,high,aa,Bool.not(dof)}
     case Key{104,True{}}:
-      Controls{g,p,r,q,w,h,x,y,k,i,d, +sx, +sy, +high} = c
-      Controls{g,p,r,q,w,Bool.not(h),x,y,k,i,d, sx, sy, high}
+      Controls{g,p,r,q,w,h,x,y,k,i,d, +sx, +sy, +high,aa,dof} = c
+      Controls{g,p,r,q,w,Bool.not(h),x,y,k,i,d, sx, sy, high,aa,dof}
     case Move{mx,my}:
-      Controls{g,p,r,q,w,h,_,_,k,i,d, +sx, +sy, +high} = c
-      Controls{g,p,r,q,w,h,(U32.to_f32(mx) * sx : F32),(U32.to_f32(my) * sy : F32),k,i,d, sx, sy, high}
+      Controls{g,p,r,q,w,h,_,_,k,i,d, +sx, +sy, +high,aa,dof} = c
+      Controls{g,p,r,q,w,h,(U32.to_f32(mx) * sx : F32),(U32.to_f32(my) * sy : F32),k,i,d, sx, sy, high,aa,dof}
     case Mouse{mx,my,0,down}:
-      Controls{g,p,r,q,w,h,_,_,_,_,d, +sx, +sy, +high} = c
-      Controls{g,p,r,q,w,h,(U32.to_f32(mx) * sx : F32),(U32.to_f32(my) * sy : F32),down,4294967295,d, sx, sy, high}
+      Controls{g,p,r,q,w,h,_,_,_,_,d, +sx, +sy, +high,aa,dof} = c
+      Controls{g,p,r,q,w,h,(U32.to_f32(mx) * sx : F32),(U32.to_f32(my) * sy : F32),down,4294967295,d, sx, sy, high,aa,dof}
     case _: c
 
 def events(es: List<Event>, c: Controls) -> Controls:
@@ -59,10 +66,10 @@ def events(es: List<Event>, c: Controls) -> Controls:
 def selected(side: U32, previous: W.Positions, scratch: W.Positions, spatial: Spatial.Index(P.space()),
   samples: Array<Surface.Sample>, checks: Nat, neighbors: Nat, tris: Array<M.Triangle>, index: M.Index, pixels: Array<U32>, background: Array<M.Fragment>, image: Image,
   sim: U32, render: U32, c: Controls, r: W.Positions & Input.Pick) -> F.Frame & Controls:
-  Controls{g,p,restart,q,w,h,x,y,_,_,_, +sx, +sy, +high} = c
+  Controls{g,p,restart,q,w,h,x,y,_,_,_, +sx, +sy, +high,aa,dof} = c
   (current,Input.Pick{i,_,depth}) = r
   (F.Frame{S.State{side,current,previous,scratch,spatial,samples,checks,neighbors},tris,index,pixels,background,image,sim,render},
-    Controls{g,p,restart,q,w,h,x,y,False{},i,depth, sx, sy, high})
+    Controls{g,p,restart,q,w,h,x,y,False{},i,depth, sx, sy, high,aa,dof})
 
 def select(on: Bool, x: F32, y: F32, c: Controls, f: F.Frame) -> F.Frame & Controls:
   match on:
@@ -76,7 +83,7 @@ def select(on: Bool, x: F32, y: F32, c: Controls, f: F.Frame) -> F.Frame & Contr
 # until the batch ended could attempt to pick at a point already off the cloth.
 def select_current(r: F.Frame & Controls) -> F.Frame & Controls:
   (f,+c) = r
-  Controls{_,_,_,_,_,_,x,y,pick,_,_,_,_,_} = c
+  Controls{_,_,_,_,_,_,x,y,pick,_,_,_,_,_,aa,dof} = c
   select(pick,x,y,c,f)
 def event_frame(e: Event, r: F.Frame & Controls) -> F.Frame & Controls:
   (f,c) = r
@@ -104,12 +111,12 @@ def milliseconds(us: U32) -> String:
   +tenths = (us / 100 : U32)
   U32.show((tenths / 10 : U32)) ++ "." ++ U32.show((tenths % 10 : U32))
 def label(c: Controls, sim: U32, render: U32) -> String:
-  Controls{g,p,_,_,wind,_,_,_,_,grab,_,_,_,high} = c
+  Controls{g,p,_,_,wind,_,_,_,_,grab,_,_,_,high,aa,dof} = c
   "BEND CLOTH\n" ++ Bool.pick(String,g,"METAL\n","CPU\n")
     ++ "1024 SIM POINTS\n" ++ Bool.pick(String,high,"7938 TRIANGLES\n1024 PIXELS\n","1922 TRIANGLES\n512 PIXELS\n")
     ++ "SIM " ++ milliseconds(sim) ++ " MS\nDRAW " ++ milliseconds(render) ++ " MS\n"
     ++ Bool.pick(String,p,"PAUSED\n",Bool.pick(String,U32.is_ne(grab,4294967295),"PULLING\n","DRAG TO PULL\n"))
-    ++ "SPACE PAUSE\nR RESET\nW WIND\nG BACKEND\nQ QUALITY\nH DETAILS"
+    ++ "SPACE PAUSE\nR RESET\nW WIND\nG BACKEND\nQ QUALITY\nA SMOOTH EDGES\nD FOCUS\nH DETAILS"
 
 def overlay(on: Bool, text: String, image: Image) -> Image:
   match on:
@@ -133,7 +140,7 @@ def displayed(tick: U32, +start: Nat, state: S.State, tris: Array<M.Triangle>, i
 
 
 def show(tick: U32, +start: Nat, +c: Controls, w: Window, f: F.Frame) -> IO(Window & F.Frame & Controls):
-  Controls{_,_,_,_,_,h,_,_,_,_,_, +sx, +sy, +high} = c
+  Controls{_,_,_,_,_,h,_,_,_,_,_, +sx, +sy, +high,aa,dof} = c
   F.Frame{state,tris,index,pixels,background,image,+sim,+render} = f
   do IO<Window & F.Frame & Controls>:
     r : Window & Image & List<Event> <- Window.frame(w,overlay(h,label(c,sim,render),image))
@@ -141,9 +148,9 @@ def show(tick: U32, +start: Nat, +c: Controls, w: Window, f: F.Frame) -> IO(Wind
 
 def advance(+tick: U32, time: U32, steps: U32, start: Nat, w: Window, r: F.Frame & Controls) -> IO(Window & F.Frame & Controls):
   (f,+c) = r
-  Controls{gpu,paused,_,_,wind,_,x,y,_,id,depth, +sx, +sy, +high} = c
+  Controls{+gpu,paused,_,_,wind,_,x,y,_,id,depth, +sx, +sy, +high,aa,dof} = c
   do IO<Window & F.Frame & Controls>:
-    f : F.Frame <- F.step_count(gpu,10n,paused,U32.to_nat(steps),physical(32,(U32.to_f32(time) / 120.0 : F32),wind,id,V.target(x,y,depth)),f)
+    f : F.Frame <- F.step_effects(Post.Settings{aa,dof,7.5,4.0},gpu,gpu,10n,paused,U32.to_nat(steps),physical(32,(U32.to_f32(time) / 120.0 : F32),wind,id,V.target(x,y,depth)),f)
     show(tick,start,c,w,f)
 
 def reset(on: Bool, high: Bool, f: F.Frame) -> IO(F.Frame):
@@ -157,7 +164,7 @@ def loop(n: Nat, +tick: U32, +time: U32, last: Nat, lag: U32, r: Window & F.Fram
       (w,_,_) = r
       Window.close(w)
     case 1n+k:
-      (w,f,Controls{g,+p,+restart,quit,wind,h,+x,+y,+pick,i,d, +sx, +sy, +high}) = r
+      (w,f,Controls{g,+p,+restart,quit,wind,h,+x,+y,+pick,i,d, +sx, +sy, +high,aa,dof}) = r
       match quit:
         case True{}: Window.close(w)
         case False{}:
@@ -169,7 +176,7 @@ def loop(n: Nat, +tick: U32, +time: U32, last: Nat, lag: U32, r: Window & F.Fram
             +steps : U32 = U32.min((pending / 8333 : U32),2)
             f : F.Frame <- reset(restart,high,f)
             r : Window & F.Frame & Controls <- advance(tick,time,steps,start,w,
-              select(pick,x,y,Controls{g,p,False{},False{},wind,h,x,y,pick,i,d, sx, sy, high},f))
+              select(pick,x,y,Controls{g,p,False{},False{},wind,h,x,y,pick,i,d, sx, sy, high,aa,dof},f))
             loop(k,(tick + 1 : U32),(time + steps : U32),start,(pending % 8333 : U32),r)
 
 def started(r: Window & U32 & U32, f: F.Frame) -> IO(Unit):
@@ -177,7 +184,7 @@ def started(r: Window & U32 & U32, f: F.Frame) -> IO(Unit):
   do IO<Unit>:
     now : Nat <- Time.micros()
     loop(4294967295n,0,0,now,16666,(w,f,Controls{False{},False{},False{},False{},True{},True{},256.0,256.0,False{},4294967295,7.5,
-      (512.0 / U32.to_f32(width) : F32),(512.0 / U32.to_f32(height) : F32),False{}}))
+      (512.0 / U32.to_f32(width) : F32),(512.0 / U32.to_f32(height) : F32),False{},False{},False{}}))
 def main() -> IO(Unit):
   do IO<Unit>:
     w : Window <- IO.try(Window,Window.open("BEND CLOTH | drag fabric | Q quality | G backend",1024,1024))

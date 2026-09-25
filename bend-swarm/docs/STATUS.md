@@ -1,8 +1,9 @@
 # Status against the brief
 
-This is the measured foundation, generic spatial API, swarm and first 3D cloth example. The full research brief still has open experiments.
+This is the measured foundation, generic spatial API and four native examples. The full research brief still has open experiments.
 
 Completed:
+
 - Phase 0 upstream reconnaissance, exact pin, GPU/native-window proof.
 - Reusable balanced region/map/reduce primitives; safe scan and partition helpers.
 - Seeded SoA state, active count/capacity separation, buffer reuse.
@@ -17,17 +18,27 @@ Completed:
 - 3D cloth with persistent buffers, pinned corners, Verlet prediction, stretch/shear/bending constraints, sphere/floor contact, vertex/face and edge/edge self-contact, wind and perspective dragging.
 - Pure Bend filled-triangle renderer, tile ownership, perspective depth, native pixel oracle and exported preview.
 - Smooth high-quality cloth tessellation separate from physical resolution, cached static depth/color, event-ordered picking and bounded catch-up.
+- Wind-driven meadow using reusable curves, camera projection, wind and native presentation.
+- Six-species Particle Life through the generic spatial stencil, with a reusable periodic additive sprite renderer.
+- Shared retained depth, four-sample geometry anti-aliasing and optional depth-aware defocus for cloth and meadow; analytic particle edge coverage.
+- 2048² mesh/sprite output, live resolution changes without resetting simulation, and a reusable four-to-one Image resolve.
 
 Still open:
+
 - Standalone parallel microbenchmark matrix for every primitive.
 - Cell-owned and halo architecture shootout, safe-sort performance comparison.
 - Parallel scan performance experiment, tile-size/render-plan sweep and autotune cache.
 - Neighbor throughput in HUD (available in benchmark JSON), separate integration timing.
 - Measured peak heap / allocation cost, safe cached HUD refresh.
 - Graceful runtime recovery from GPU faults at unvalidated large populations.
-- Streak/triangle/density modes, species interactions, predator/obstacles.
+- Swarm streak/density modes and predator/obstacle interactions.
 - Stronger scan/permutation/index proofs; extended native random-seed testing.
-- Wind-driven meadow, Particle Life, demo recording, and any million-agent performance claim.
+
+Still open for visual investigation: the reported grid-like Particle Life grouping. Cell-translation force checks, a 600-step native all-pairs probe, and full-image assembly tests pass; they have not established the visual cause.
+
+Further rendering work:
+
+- Temporal anti-aliasing, HDR/linear-light rendering, richer lighting, demo recording, and any million-agent performance claim.
 
 Known failure: depth 10 at 262144 agents failed twice during warmup with a Metal
 internal error; depth 14 completes 720 frames. The current reproduction is still
