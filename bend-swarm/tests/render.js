@@ -1,0 +1,11 @@
+import assert from 'node:assert/strict';
+import R from '../engine/render/particles.bend';
+const px=[1,1,2,7],py=[1,1,2,7],offsets=Array(32768).fill(4); offsets[0]=0;
+const render = ids => R.tile(0,0,{$:'Buffers',px:[...px],py:[...py],offsets:[...offsets],ids,pixels:Array(1048576).fill(0)},{$:'Pix',color:0});
+const a=render([0,1,2,3]),b=render([3,2,1,0]);
+assert.deepEqual(a.snd,b.snd,'overlapping points are independent of scatter order');
+assert.equal(a.fst.pixels[1025],Math.max(R.color(0),R.color(1)));
+assert.equal(a.fst.pixels[7+7*1024],R.color(3));
+assert.equal(a.fst.pixels[0],395279);
+assert.equal(a.fst.pixels[8],0,'tile must not write outside its owned region');
+console.log('PASS: deterministic collisions, expected pixels, exclusive tile writes.');
