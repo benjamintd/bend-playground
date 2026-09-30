@@ -1,0 +1,405 @@
+[
+  {
+    "name": "cloth-cpu-raw",
+    "capture": "results/engine-tiles-control-image-cloth-cpu-raw.csv",
+    "binary_sha256": "780dc4bcfa24393d7106a658285241e92e0c51c3826e56b93f96fee0e32df506",
+    "args": [
+      "cloth",
+      "cpu",
+      "raw",
+      "standard",
+      "40",
+      "120"
+    ],
+    "gpu": "off",
+    "samples": 120,
+    "us": {
+      "sim_gpu": {
+        "median": 0.0,
+        "p95": 0
+      },
+      "geometry_gpu": {
+        "median": 0.0,
+        "p95": 0
+      },
+      "binning_gpu": {
+        "median": 0.0,
+        "p95": 0
+      },
+      "raster_gpu": {
+        "median": 0.0,
+        "p95": 0
+      },
+      "post_gpu": {
+        "median": 0.0,
+        "p95": 0
+      },
+      "simulation_us": {
+        "median": 14777.0,
+        "p95": 17410
+      },
+      "geometry_us": {
+        "median": 141.0,
+        "p95": 315
+      },
+      "binning_us": {
+        "median": 155.0,
+        "p95": 240
+      },
+      "raster_us": {
+        "median": 3355.0,
+        "p95": 5274
+      },
+      "post_us": {
+        "median": 0.0,
+        "p95": 0
+      },
+      "work_us": {
+        "median": 18622.0,
+        "p95": 21532
+      },
+      "frame_us": {
+        "median": 18632.0,
+        "p95": 21538
+      }
+    }
+  },
+  {
+    "name": "cloth-metal-dof",
+    "capture": "results/engine-tiles-control-image-cloth-metal-dof.csv",
+    "binary_sha256": "780dc4bcfa24393d7106a658285241e92e0c51c3826e56b93f96fee0e32df506",
+    "args": [
+      "cloth",
+      "render",
+      "dof",
+      "standard",
+      "40",
+      "120"
+    ],
+    "gpu": "on",
+    "samples": 120,
+    "us": {
+      "sim_gpu": {
+        "median": 0.0,
+        "p95": 0
+      },
+      "geometry_gpu": {
+        "median": 1.0,
+        "p95": 1
+      },
+      "binning_gpu": {
+        "median": 1.0,
+        "p95": 1
+      },
+      "raster_gpu": {
+        "median": 1.0,
+        "p95": 1
+      },
+      "post_gpu": {
+        "median": 1.0,
+        "p95": 1
+      },
+      "simulation_us": {
+        "median": 15113.0,
+        "p95": 17309
+      },
+      "geometry_us": {
+        "median": 1594.5,
+        "p95": 1686
+      },
+      "binning_us": {
+        "median": 2896.0,
+        "p95": 3004
+      },
+      "raster_us": {
+        "median": 4043.5,
+        "p95": 4316
+      },
+      "post_us": {
+        "median": 4553.5,
+        "p95": 4679
+      },
+      "work_us": {
+        "median": 27896.0,
+        "p95": 30645
+      },
+      "frame_us": {
+        "median": 27905.5,
+        "p95": 30653
+      }
+    }
+  },
+  {
+    "name": "meadow-cpu-raw",
+    "capture": "results/engine-tiles-control-image-meadow-cpu-raw.csv",
+    "binary_sha256": "780dc4bcfa24393d7106a658285241e92e0c51c3826e56b93f96fee0e32df506",
+    "args": [
+      "meadow",
+      "cpu",
+      "raw",
+      "standard",
+      "40",
+      "120"
+    ],
+    "gpu": "off",
+    "samples": 120,
+    "us": {
+      "sim_gpu": {
+        "median": 0.0,
+        "p95": 0
+      },
+      "geometry_gpu": {
+        "median": 0.0,
+        "p95": 0
+      },
+      "binning_gpu": {
+        "median": 0.0,
+        "p95": 0
+      },
+      "raster_gpu": {
+        "median": 0.0,
+        "p95": 0
+      },
+      "post_gpu": {
+        "median": 0.0,
+        "p95": 0
+      },
+      "simulation_us": {
+        "median": 296.5,
+        "p95": 622
+      },
+      "geometry_us": {
+        "median": 822.5,
+        "p95": 4117
+      },
+      "binning_us": {
+        "median": 1628.0,
+        "p95": 1950
+      },
+      "raster_us": {
+        "median": 12853.0,
+        "p95": 14831
+      },
+      "post_us": {
+        "median": 0.0,
+        "p95": 0
+      },
+      "work_us": {
+        "median": 16107.0,
+        "p95": 18144
+      },
+      "frame_us": {
+        "median": 16112.0,
+        "p95": 18149
+      }
+    }
+  },
+  {
+    "name": "meadow-metal-raw",
+    "capture": "results/engine-tiles-control-image-meadow-metal-raw.csv",
+    "binary_sha256": "780dc4bcfa24393d7106a658285241e92e0c51c3826e56b93f96fee0e32df506",
+    "args": [
+      "meadow",
+      "gpu",
+      "raw",
+      "standard",
+      "40",
+      "120"
+    ],
+    "gpu": "on",
+    "samples": 120,
+    "us": {
+      "sim_gpu": {
+        "median": 1.0,
+        "p95": 1
+      },
+      "geometry_gpu": {
+        "median": 1.0,
+        "p95": 1
+      },
+      "binning_gpu": {
+        "median": 1.0,
+        "p95": 1
+      },
+      "raster_gpu": {
+        "median": 1.0,
+        "p95": 1
+      },
+      "post_gpu": {
+        "median": 1.0,
+        "p95": 1
+      },
+      "simulation_us": {
+        "median": 1258.5,
+        "p95": 1349
+      },
+      "geometry_us": {
+        "median": 1208.5,
+        "p95": 1342
+      },
+      "binning_us": {
+        "median": 3288.0,
+        "p95": 3532
+      },
+      "raster_us": {
+        "median": 7288.0,
+        "p95": 8791
+      },
+      "post_us": {
+        "median": 0.0,
+        "p95": 0
+      },
+      "work_us": {
+        "median": 13153.5,
+        "p95": 14691
+      },
+      "frame_us": {
+        "median": 13159.5,
+        "p95": 14699
+      }
+    }
+  },
+  {
+    "name": "meadow-metal-dof",
+    "capture": "results/engine-tiles-control-image-meadow-metal-dof.csv",
+    "binary_sha256": "780dc4bcfa24393d7106a658285241e92e0c51c3826e56b93f96fee0e32df506",
+    "args": [
+      "meadow",
+      "gpu",
+      "dof",
+      "standard",
+      "40",
+      "120"
+    ],
+    "gpu": "on",
+    "samples": 120,
+    "us": {
+      "sim_gpu": {
+        "median": 1.0,
+        "p95": 1
+      },
+      "geometry_gpu": {
+        "median": 1.0,
+        "p95": 1
+      },
+      "binning_gpu": {
+        "median": 1.0,
+        "p95": 1
+      },
+      "raster_gpu": {
+        "median": 1.0,
+        "p95": 1
+      },
+      "post_gpu": {
+        "median": 1.0,
+        "p95": 1
+      },
+      "simulation_us": {
+        "median": 1290.0,
+        "p95": 1364
+      },
+      "geometry_us": {
+        "median": 1213.0,
+        "p95": 1339
+      },
+      "binning_us": {
+        "median": 3280.0,
+        "p95": 3498
+      },
+      "raster_us": {
+        "median": 17982.0,
+        "p95": 19501
+      },
+      "post_us": {
+        "median": 11738.0,
+        "p95": 12058
+      },
+      "work_us": {
+        "median": 35581.0,
+        "p95": 36996
+      },
+      "frame_us": {
+        "median": 35589.5,
+        "p95": 37003
+      }
+    }
+  },
+  {
+    "name": "points-cpu",
+    "capture": "results/engine-tiles-control-image-points-cpu.csv",
+    "binary_sha256": "b831f45f27d2cd95cad16030650c8bd644d32a76c28d187e079deab1d6ba4009",
+    "args": [
+      "17",
+      "14",
+      "40",
+      "120"
+    ],
+    "gpu": "off",
+    "samples": 120,
+    "us": {
+      "update_us": {
+        "median": 5332.5,
+        "p95": 8827
+      },
+      "histogram_us": {
+        "median": 4976.0,
+        "p95": 6297
+      },
+      "scan_us": {
+        "median": 25.0,
+        "p95": 40
+      },
+      "scatter_us": {
+        "median": 6073.0,
+        "p95": 6433
+      },
+      "render_us": {
+        "median": 8870.0,
+        "p95": 9525
+      },
+      "frame_us": {
+        "median": 24487.0,
+        "p95": 27905
+      }
+    }
+  },
+  {
+    "name": "points-metal",
+    "capture": "results/engine-tiles-control-image-points-metal.csv",
+    "binary_sha256": "b831f45f27d2cd95cad16030650c8bd644d32a76c28d187e079deab1d6ba4009",
+    "args": [
+      "17",
+      "14",
+      "40",
+      "120"
+    ],
+    "gpu": "on",
+    "samples": 120,
+    "us": {
+      "update_us": {
+        "median": 1387.5,
+        "p95": 2415
+      },
+      "histogram_us": {
+        "median": 1236.0,
+        "p95": 1858
+      },
+      "scan_us": {
+        "median": 23.0,
+        "p95": 38
+      },
+      "scatter_us": {
+        "median": 1226.5,
+        "p95": 1629
+      },
+      "render_us": {
+        "median": 2190.5,
+        "p95": 3072
+      },
+      "frame_us": {
+        "median": 6098.0,
+        "p95": 8724
+      }
+    }
+  }
+]

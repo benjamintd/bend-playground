@@ -1,4 +1,5 @@
 import Base
+import ../engine/platform/arguments.bend as Arguments
 import ../demos/swarm/points.bend as P
 
 def num(default: Nat, value: Maybe<&2, U32>) -> Nat:
@@ -24,5 +25,5 @@ def args(xs: List<String>) -> IO(Unit):
 
 def main() -> IO(Unit):
   do IO<Unit>:
-    xs : List<String> <- IO.args()
+    xs : List<String> <- Arguments.read()
     args(xs)

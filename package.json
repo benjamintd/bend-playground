@@ -1,0 +1,16 @@
+{
+  "name": "bend-playground",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Bend graphics engine, TURN puzzle game, and seven browser demos",
+  "scripts": {
+    "build": "cd bend-swarm && scripts/setup && scripts/build-web && bun tests/web-build.js",
+    "preview": "cd bend-swarm && bun scripts/serve-web.js"
+  },
+  "engines": {
+    "node": "22.x"
+  },
+  "devDependencies": {
+    "bun": "1.2.13"
+  }
+}

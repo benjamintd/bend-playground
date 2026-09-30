@@ -1,0 +1,60 @@
+{
+  "date": "2026-09-28T07:54:12.340949+00:00",
+  "source_sha256": "9a960cdb934753451e5e7ed6f5948986b940180c4c7f7798fa59bec2dd5bf80c",
+  "native": [
+    {
+      "command": [
+        "build/mesh-native",
+        "--gpu",
+        "off",
+        "--threads",
+        "10"
+      ],
+      "binary_sha256": "0362d29e9ec1e08ddd52a5ff3d4d8d1f3bc8ca2dac28682825abdcbb170bfd4c",
+      "stdout": "2262777350,65536\n1146474304,262144\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "build/mesh-native",
+        "--gpu",
+        "on",
+        "--threads",
+        "10"
+      ],
+      "binary_sha256": "0362d29e9ec1e08ddd52a5ff3d4d8d1f3bc8ca2dac28682825abdcbb170bfd4c",
+      "stdout": "2262777350,65536\n1146474304,262144\n",
+      "stderr": "bend: compiling the GPU program (/Users/benjamintd/Personal/bend-playground/bend-swarm/build/mesh-native.gpu is missing or stale)\n"
+    },
+    {
+      "command": [
+        "build/quality-native",
+        "--gpu",
+        "off",
+        "--threads",
+        "10"
+      ],
+      "binary_sha256": "47e9357df00a3962f40343512b4dafdf271b123f0c980d6689b7a007178852ad",
+      "stdout": "pixel,2098176,16777215\npixel,2097252,16711680\npixel,0,0\nimage,4194304,0\npixel,524800,16777215\npixel,524338,8323072\npixel,0,0\nimage,1048576,0\npixel,524800,16777215\npixel,524338,8323072\npixel,0,0\nimage,1048576,0\n",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "build/quality-native",
+        "--gpu",
+        "on",
+        "--threads",
+        "10"
+      ],
+      "binary_sha256": "47e9357df00a3962f40343512b4dafdf271b123f0c980d6689b7a007178852ad",
+      "stdout": "pixel,2098176,16777215\npixel,2097252,16711680\npixel,0,0\nimage,4194304,0\npixel,524800,16777215\npixel,524338,8323072\npixel,0,0\nimage,1048576,0\npixel,524800,16777215\npixel,524338,8323072\npixel,0,0\nimage,1048576,0\n",
+      "stderr": "bend: compiling the GPU program (/Users/benjamintd/Personal/bend-playground/bend-swarm/build/quality-native.gpu is missing or stale)\n"
+    }
+  ],
+  "js": "Full scripts/test passed, including 22272 block/scalar fragments and 262144 spatially varying background pixels with retained depth.",
+  "build": "scripts/build passed; macOS app bundles rebuilt.",
+  "scope": "Native mesh and quality fixtures rebuilt and rerun on CPU/Metal; quality-check also reads unchanged sprite/Life fixture outputs from earlier builds.",
+  "test_log_sha256": "4f253059daa9a690b7924898143742e1597a29e8370409bbbf585bd02c1e6280",
+  "build_log_sha256": "9c00c748386c89864fb35006599a68cf9c53751c72b108b6529344d6084a1d9e",
+  "live_macos": "Rebuilt Bend Meadow app launched and visually inspected. Transient title FPS was not used as benchmark evidence."
+}

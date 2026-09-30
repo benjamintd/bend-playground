@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#080f1b">
+  <meta name="description" content="TURN — 26 little worlds. Jump, rotate your perspective, and find the way out. A puzzle game made in Bend.">
+  <title>TURN — A matter of perspective</title>
+  <link rel="stylesheet" href="./style.css">
+  <link rel="icon" href="./icon.svg" type="image/svg+xml">
+</head>
+<body>
+  <main>
+    <div class="stage">
+      <canvas id="game" width="1024" height="1024" tabindex="0" aria-label="TURN puzzle game. Left and right arrows to move, up or space to jump, R to rotate, H for a hint. Backspace restarts. Tab opens chapters."></canvas>
+      <div id="loading" role="status">TURN<span>A little shift in perspective…</span></div>
+      <div id="paused" hidden>Take your time.<span>Tap the world to continue.</span></div>
+    </div>
+    <nav class="actions" aria-label="Game actions">
+      <button id="hint" title="H">Hint <kbd>H</kbd><span id="hints-left">3 left</span></button>
+      <button id="restart" title="Backspace">Restart <kbd>⌫</kbd></button>
+      <button id="chapters" title="Tab">Chapters <kbd>Tab</kbd></button>
+      <button id="help" aria-expanded="false" aria-controls="instructions">How to play <span>?</span></button>
+    </nav>
+    <div class="touch-controls" aria-label="Touch controls">
+      <button data-key="ArrowLeft" aria-label="Move left">←</button>
+      <button data-key="ArrowRight" aria-label="Move right">→</button>
+      <button data-key="ArrowUp" aria-label="Jump">↑ <small>Jump</small></button>
+      <button data-key="KeyR" aria-label="Rotate">↻ <small>Turn</small></button>
+      <button data-key="Enter" id="play-chapter" hidden>Play</button>
+    </div>
+    <p id="announcement" class="sr-only" aria-live="polite"></p>
+    <section id="instructions" hidden>
+      <p>Reach the glowing exit. Every visible wall is solid. Rotate the world to find another way through.</p>
+      <p><b>← → / A D</b> move · <b>↑ / W / Space</b> jump · <b>R</b> rotate · <b>↓ / S</b> fall faster.</p>
+      <p>After a turn, time freezes. Press R again to choose another view, or press a movement key to ease back into motion. Violet rings mark where a turn can start.</p>
+      <p><b>H</b> reveals the next rotation on a tested solution route. You have three hints per level; reading the same hint again is free. An airborne marker means jump first. If an earlier turn took you off that route, restart to follow it. Gold seals and turn targets are optional.</p>
+      <p>In Chapters: arrows choose, Q/E change page, Enter plays. Progress is saved on this device.</p>
+    </section>
+    <footer><a href="/" style="color:inherit;text-decoration:none">← All worlds</a> <span>·</span> 26 small worlds <span>·</span> Made in Bend</footer>
+  </main>
+  <script type="module" src="./game.js"></script>
+</body>
+</html>

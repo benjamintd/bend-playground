@@ -1,0 +1,192 @@
+{
+  "date": "2026-09-28T08:39:35.676155+00:00",
+  "os": "macOS-15.7.4-arm64-arm-64bit",
+  "cpu": "Apple M2 Pro",
+  "gpu": [
+    {
+      "sppci_model": "Apple M2 Pro",
+      "sppci_cores": "16"
+    }
+  ],
+  "memory_gb": 16.0,
+  "bend_version": [
+    "2.0.27",
+    "95317d952c8fe5be18ef49f916b2a57250cfb0aa"
+  ],
+  "source_sha256": {
+    "before": "6e05c823511c74203efa035e7822b4b1fc8f876094d1112ad3581e27f9e3df92",
+    "after": "ed23a09c33fc7b052cb54c9a5c5317865faaf79bdf91618632ab1308fa34bf92"
+  },
+  "binaries": {
+    "before": {
+      "path": "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/quality-before/meadow-frame",
+      "sha256": "59efc38b44248d243e3ff2bf3b4c537e2249d265252e720f19791ca409c3cb08",
+      "gpu_sha256": null
+    },
+    "after": {
+      "path": "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/meadow-quality",
+      "sha256": "03475e48a13e28861c63e804c79959867c2f6f74213b975f2198afc3a43f6d57",
+      "gpu_sha256": null
+    }
+  },
+  "demo": "meadow",
+  "backend": "gpu",
+  "effects": "dof",
+  "resolution": 1024,
+  "scene": {
+    "seed": 42,
+    "preset": 1
+  },
+  "threads": 10,
+  "warmup": 120,
+  "samples": 600,
+  "scope": "Headless full frame including old Image reclamation; excludes window/HUD/display. Sequential processes, alternating pair order. Each run restarts the same seeded scene. GPU simulation may diverge numerically; these are evolving scenes, not frozen render-only probes.",
+  "runs": [
+    {
+      "kind": "pair",
+      "pair": 0,
+      "label": "before",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/quality-before/meadow-frame",
+        "--gpu",
+        "on",
+        "--threads",
+        "10",
+        "--",
+        "gpu",
+        "dof"
+      ],
+      "date": "2026-09-28T08:39:36.124184+00:00",
+      "returncode": 0,
+      "stderr": "bend: compiling the GPU program (/Users/benjamintd/Personal/bend-playground/bend-swarm/build/quality-before/meadow-frame.gpu is missing or stale)\n",
+      "csv": "quality-dof-gpu-pair0-before.csv",
+      "summary": {
+        "simulation_ms": {
+          "median": 1.0085,
+          "p95": 1.166
+        },
+        "render_ms": {
+          "median": 24.762,
+          "p95": 26.958
+        },
+        "frame_ms": {
+          "median": 25.7765,
+          "p95": 28.102
+        }
+      }
+    },
+    {
+      "kind": "pair",
+      "pair": 0,
+      "label": "after",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/meadow-quality",
+        "--gpu",
+        "on",
+        "--threads",
+        "10",
+        "--",
+        "gpu",
+        "dof"
+      ],
+      "date": "2026-09-28T08:39:55.504519+00:00",
+      "returncode": 0,
+      "stderr": "bend: compiling the GPU program (/Users/benjamintd/Personal/bend-playground/bend-swarm/build/meadow-quality.gpu is missing or stale)\n",
+      "csv": "quality-dof-gpu-pair0-after.csv",
+      "summary": {
+        "simulation_ms": {
+          "median": 1.0375,
+          "p95": 1.501
+        },
+        "render_ms": {
+          "median": 32.894000000000005,
+          "p95": 36.4
+        },
+        "frame_ms": {
+          "median": 33.946,
+          "p95": 37.795
+        }
+      }
+    },
+    {
+      "kind": "pair",
+      "pair": 1,
+      "label": "after",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/meadow-quality",
+        "--gpu",
+        "on",
+        "--threads",
+        "10",
+        "--",
+        "gpu",
+        "dof"
+      ],
+      "date": "2026-09-28T08:40:33.231594+00:00",
+      "returncode": 0,
+      "stderr": "bend: compiling the GPU program (/Users/benjamintd/Personal/bend-playground/bend-swarm/build/meadow-quality.gpu is missing or stale)\n",
+      "csv": "quality-dof-gpu-pair1-after.csv",
+      "summary": {
+        "simulation_ms": {
+          "median": 1.163,
+          "p95": 1.846
+        },
+        "render_ms": {
+          "median": 36.503,
+          "p95": 40.044
+        },
+        "frame_ms": {
+          "median": 37.795500000000004,
+          "p95": 41.561
+        }
+      }
+    },
+    {
+      "kind": "pair",
+      "pair": 1,
+      "label": "before",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/quality-before/meadow-frame",
+        "--gpu",
+        "on",
+        "--threads",
+        "10",
+        "--",
+        "gpu",
+        "dof"
+      ],
+      "date": "2026-09-28T08:41:00.910891+00:00",
+      "returncode": 0,
+      "stderr": "bend: compiling the GPU program (/Users/benjamintd/Personal/bend-playground/bend-swarm/build/quality-before/meadow-frame.gpu is missing or stale)\n",
+      "csv": "quality-dof-gpu-pair1-before.csv",
+      "summary": {
+        "simulation_ms": {
+          "median": 1.113,
+          "p95": 1.555
+        },
+        "render_ms": {
+          "median": 25.832,
+          "p95": 28.93
+        },
+        "frame_ms": {
+          "median": 26.9675,
+          "p95": 30.139
+        }
+      }
+    }
+  ],
+  "median_of_run_medians": {
+    "before": {
+      "simulation_ms": 1.06075,
+      "render_ms": 25.297,
+      "frame_ms": 26.372
+    },
+    "after": {
+      "simulation_ms": 1.10025,
+      "render_ms": 34.6985,
+      "frame_ms": 35.87075
+    }
+  },
+  "candidate": "Exploratory 36-fetch bilinear gather, superseded by the mathematically equivalent 25-texel kernel. The after binary was saved as build/meadow-bilinear36 before replacement.",
+  "post_source_sha256": "49ff7bf1f031f7efe3c2019c141ecb732cfe70560d93b04ad17b2e673cce74cf"
+}

@@ -1,4 +1,6 @@
 import Base
+import ../../engine/parallel/policy.bend as Policy
+import ../../engine/profile/frame.bend as Profile
 import ./frame.bend as F
 import ../../engine/render/post.bend as Post
 import ./simulation.bend as S
@@ -39,8 +41,8 @@ def event(e: Event, c: Controls) -> Controls:
       Controls{g,p,r,q,w,h,x,y,k,i,d, +sx, +sy, +high,aa,dof} = c
       Controls{g,p,r,q,Bool.not(w),h,x,y,k,i,d, sx, sy, high,aa,dof}
     case Key{113,True{}}:
-      Controls{g,p,_,q,w,h,x,y,_,_,d,sx,sy,high,aa,dof} = c
-      Controls{g,p,True{},q,w,h,x,y,False{},4294967295,d,sx,sy,Bool.not(high),aa,dof}
+      Controls{g,p,r,q,w,h,x,y,k,i,d,sx,sy,high,aa,dof} = c
+      Controls{g,p,r,q,w,h,x,y,k,i,d,sx,sy,Bool.not(high),aa,dof}
     case Key{97,True{}}:
       Controls{g,p,r,q,w,h,x,y,k,i,d,sx,sy,high,aa,dof} = c
       Controls{g,p,r,q,w,h,x,y,k,i,d,sx,sy,high,Bool.not(aa),dof}
@@ -105,18 +107,19 @@ def caption(refresh: Bool, us: U32, w: Window) -> IO(Window):
   match refresh:
     case False{}: IO.pure(Window,w)
     case True{}: Window.set_title(w,"BEND CLOTH | " ++ U32.show((1000000 / U32.max(us,1) : U32))
-      ++ " FPS | drag fabric | SPACE pause | R reset | W wind | G CPU/GPU | Q quality | H details")
+      ++ " FPS | drag fabric | SPACE pause | R reset | W wind | G RENDERER | Q resolution | H details")
 
 def milliseconds(us: U32) -> String:
   +tenths = (us / 100 : U32)
   U32.show((tenths / 10 : U32)) ++ "." ++ U32.show((tenths % 10 : U32))
 def label(c: Controls, sim: U32, render: U32) -> String:
   Controls{g,p,_,_,wind,_,_,_,_,grab,_,_,_,high,aa,dof} = c
-  "BEND CLOTH\n" ++ Bool.pick(String,g,"METAL\n","CPU\n")
-    ++ "1024 SIM POINTS\n" ++ Bool.pick(String,high,"7938 TRIANGLES\n1024 PIXELS\n","1922 TRIANGLES\n512 PIXELS\n")
+  "BEND CLOTH\n" ++ Bool.pick(String,g,"METAL DRAW\n","CPU DRAW\n")
+    ++ "CPU SIM 1024\n" ++ Bool.pick(String,high,"7938 TRIANGLES\n1024 PIXELS\n","1922 TRIANGLES\n512 PIXELS\n")
+    ++ Bool.pick(String,aa,"AA 4X\n","AA OFF\n") ++ Bool.pick(String,dof,"DOF ON\n","DOF OFF\n")
     ++ "SIM " ++ milliseconds(sim) ++ " MS\nDRAW " ++ milliseconds(render) ++ " MS\n"
     ++ Bool.pick(String,p,"PAUSED\n",Bool.pick(String,U32.is_ne(grab,4294967295),"PULLING\n","DRAG TO PULL\n"))
-    ++ "SPACE PAUSE\nR RESET\nW WIND\nG BACKEND\nQ QUALITY\nA SMOOTH EDGES\nD FOCUS\nH DETAILS"
+    ++ "SPACE PAUSE\nR RESET W WIND\nG RENDERER\nQ RESOLUTION\nA EDGES D FOCUS\nH DETAILS"
 
 def overlay(on: Bool, text: String, image: Image) -> Image:
   match on:
@@ -139,23 +142,32 @@ def displayed(tick: U32, +start: Nat, state: S.State, tris: Array<M.Triangle>, i
     return window_events(w,events_frame(es,(F.Frame{state,tris,index,pixels,background,image,sim,render},c)))
 
 
-def show(tick: U32, +start: Nat, +c: Controls, w: Window, f: F.Frame) -> IO(Window & F.Frame & Controls):
-  Controls{_,_,_,_,_,h,_,_,_,_,_, +sx, +sy, +high,aa,dof} = c
-  F.Frame{state,tris,index,pixels,background,image,+sim,+render} = f
+def profile_label(c: Controls, profile: Profile.Sample) -> String:
+  Controls{_,p,_,_,_,_,_,_,_,_,_,_,_,high,aa,dof} = c
+  "BEND CLOTH\n" ++ Bool.pick(String,high,"1024 PX\n","512 PX\n")
+    ++ Bool.pick(String,aa,"AA ON ","AA OFF ") ++ Bool.pick(String,dof,"DOF ON\n","DOF OFF\n")
+    ++ Profile.label(profile) ++ Bool.pick(String,p,"PAUSED\n","DRAG TO PULL\n")
+    ++ "G RENDERER\nQ RESOLUTION\nA EDGES D FOCUS\nSPACE PAUSE\nH DETAILS"
+def show_profiled(tick: U32, +start: Nat, +c: Controls, w: Window, r: F.Frame & Profile.Sample) -> IO(Window & F.Frame & Controls):
+  Controls{_,_,_,_,_,h,_,_,_,_,_,sx,sy,+high,aa,dof} = c
+  (F.Frame{state,tris,index,pixels,background,image,sim,render},profile) = r
   do IO<Window & F.Frame & Controls>:
-    r : Window & Image & List<Event> <- Window.frame(w,overlay(h,label(c,sim,render),image))
+    w : Window <- Viewport.resolution(w,Bool.pick(U32,high,1024,512))
+    r : Window & Image & List<Event> <- Window.frame(w,overlay(h,profile_label(c,profile),image))
     displayed(tick,start,state,tris,index,pixels,background,sim,render,c,r)
 
+# The 1024-point contact solver is much faster on CPU. G selects only the
+# renderer; GPU simulation remains available in the explicit benchmark API.
 def advance(+tick: U32, time: U32, steps: U32, start: Nat, w: Window, r: F.Frame & Controls) -> IO(Window & F.Frame & Controls):
   (f,+c) = r
   Controls{+gpu,paused,_,_,wind,_,x,y,_,id,depth, +sx, +sy, +high,aa,dof} = c
   do IO<Window & F.Frame & Controls>:
-    f : F.Frame <- F.step_effects(Post.Settings{aa,dof,7.5,4.0},gpu,gpu,10n,paused,U32.to_nat(steps),physical(32,(U32.to_f32(time) / 120.0 : F32),wind,id,V.target(x,y,depth)),f)
-    show(tick,start,c,w,f)
+    f : F.Frame & Profile.Sample <- F.step_policy(Post.Settings{aa,dof,7.5,4.0},Policy.cloth(gpu),paused,U32.to_nat(steps),physical(32,(U32.to_f32(time) / 120.0 : F32),wind,id,V.target(x,y,depth)),f)
+    show_profiled(tick,start,c,w,f)
 
 def reset(on: Bool, high: Bool, f: F.Frame) -> IO(F.Frame):
   match on:
-    case False{}: IO.pure(F.Frame,f)
+    case False{}: IO.pure(F.Frame,F.ensure(high,f))
     case True{}: F.create(Bool.pick(Nat,high,6n,5n))
 
 def loop(n: Nat, +tick: U32, +time: U32, last: Nat, lag: U32, r: Window & F.Frame & Controls) -> IO(Unit):
@@ -187,7 +199,7 @@ def started(r: Window & U32 & U32, f: F.Frame) -> IO(Unit):
       (512.0 / U32.to_f32(width) : F32),(512.0 / U32.to_f32(height) : F32),False{},False{},False{}}))
 def main() -> IO(Unit):
   do IO<Unit>:
-    w : Window <- IO.try(Window,Window.open("BEND CLOTH | drag fabric | Q quality | G backend",1024,1024))
+    w : Window <- IO.try(Window,Window.open("BEND CLOTH | drag fabric | Q resolution | G renderer",1024,1024))
     f : F.Frame <- F.create(5n)
     r : Window & U32 & U32 <- Viewport.dimensions(w)
     started(r,f)

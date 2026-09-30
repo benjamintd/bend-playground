@@ -1,0 +1,207 @@
+{
+  "engine/spatial.bend": {
+    "lines": 52,
+    "code": 38,
+    "sha256": "414913a62dfea0d06442a0095de229016f26f72e14bc4188ff8950fdcfec97f2"
+  },
+  "engine/parallel/scan.bend": {
+    "lines": 19,
+    "code": 14,
+    "sha256": "066a2d489671ed133ef061c64a06a0d181120821888dc69962454adf29763dd9"
+  },
+  "engine/parallel/map.bend": {
+    "lines": 23,
+    "code": 18,
+    "sha256": "a5c1195fd0427a5fc7850e3be426e384242cc8e23bc5bb9f007ffa01edd4fe28"
+  },
+  "engine/parallel/policy.js": {
+    "lines": 2,
+    "code": 2,
+    "sha256": "15d7f4c842a78a1a6e59661ca576cb782f01c574702c3068e98d1de2c0c60038"
+  },
+  "engine/parallel/regions.bend": {
+    "lines": 18,
+    "code": 12,
+    "sha256": "b9e0bab9f7d9e92409b1f8231ab2bf74b307b419bbe7f9fc277bbacadca22a85"
+  },
+  "engine/parallel/partition.bend": {
+    "lines": 26,
+    "code": 19,
+    "sha256": "9d6ee8c3703e799782d50b7c00bf5b7ff1aad136df061480545664ff9c1a0d21"
+  },
+  "engine/parallel/policy.c": {
+    "lines": 7,
+    "code": 6,
+    "sha256": "69f833eaddc5a025c11dbe7c060778a17ab0a4ddfc3e8cbcaade53a227456170"
+  },
+  "engine/parallel/reduce.bend": {
+    "lines": 28,
+    "code": 22,
+    "sha256": "be7249791e203ee398d93f4013058dd454e73574fc0f6e94c1873e7b84eb7163"
+  },
+  "engine/parallel/policy.bend": {
+    "lines": 24,
+    "code": 19,
+    "sha256": "29ff71fe1f0ce0b6e6a6bad275c857c070c26ba3febac21d607eaaecbc62487c"
+  },
+  "engine/parallel/plan.bend": {
+    "lines": 12,
+    "code": 8,
+    "sha256": "583d3dfb2792d72f67c17d0a87a3968545f373fa037f701a43229c428cdb4213"
+  },
+  "engine/core/time.bend": {
+    "lines": 9,
+    "code": 6,
+    "sha256": "020f120b92e28bcd438d6909da82571de734188864527c0bc3112612e5c18abf"
+  },
+  "engine/core/time.js": {
+    "lines": 2,
+    "code": 2,
+    "sha256": "0c111dad85fac5569b1fe100d229efcb76899a9b93572be75a75cf0c0fb72c9b"
+  },
+  "engine/core/time.c": {
+    "lines": 6,
+    "code": 6,
+    "sha256": "3bc0e690b0942c0a229b78a8a3325508585f2f3b770d6b7cf3e4b284ba514a32"
+  },
+  "engine/core/vec3.bend": {
+    "lines": 44,
+    "code": 42,
+    "sha256": "69932b48bb45e47d40b704d4cad45ac7b66203e075a6d37381296d970961de70"
+  },
+  "engine/core/math.bend": {
+    "lines": 24,
+    "code": 19,
+    "sha256": "c508967caabb15144fa88782aaee214c683fb04a9c01ba534b08b9ea48a1a3e5"
+  },
+  "engine/platform/resolution.c": {
+    "lines": 15,
+    "code": 12,
+    "sha256": "c43b2f42cb28bba32dcf427ef2fdcf0f02c127372b8d6af98e67bbff979600fa"
+  },
+  "engine/platform/player.bend": {
+    "lines": 119,
+    "code": 116,
+    "sha256": "51e93259218a399f577b251dd22bd0f1077b617552270d813a39353e117b463b"
+  },
+  "engine/platform/resolution.js": {
+    "lines": 2,
+    "code": 2,
+    "sha256": "3f4267f03f480c053f9d1256267f3f22220c1b6d13d8f92970169ae51a0cedfb"
+  },
+  "engine/platform/viewport.bend": {
+    "lines": 10,
+    "code": 7,
+    "sha256": "8da520437a0aa1ffc1db47ce42158bf5dbcf42b2198f67200738ae02089bbd2f"
+  },
+  "engine/platform/arguments.bend": {
+    "lines": 8,
+    "code": 3,
+    "sha256": "c2a68eacd246e74d4366e199f14ed617fdf34e482b74e9e6c5bd61adcbc15e72"
+  },
+  "engine/platform/viewport.js": {
+    "lines": 2,
+    "code": 2,
+    "sha256": "8bb96a6c9c98c54dd454fe72f0c1d90dd32841bc29f6f439024d89045262d548"
+  },
+  "engine/platform/viewport.c": {
+    "lines": 22,
+    "code": 16,
+    "sha256": "c246b8365b443f3caebfa51d2a68645cbd661ced84d821a1dd9f79a3e883f56b"
+  },
+  "engine/render/finish.bend": {
+    "lines": 81,
+    "code": 75,
+    "sha256": "a8bd6f5c0c1443a1247891d6bf4822b4779d311cb82e355217ea23c3778dd724"
+  },
+  "engine/render/post.bend": {
+    "lines": 188,
+    "code": 171,
+    "sha256": "67afa6bad33b30cb00ddd36fb8424bb66eadf321118a919a49f887f493ecff5c"
+  },
+  "engine/render/hud.bend": {
+    "lines": 95,
+    "code": 83,
+    "sha256": "3ca0d17e14cc17dd730c09408c016563aafa79218728cfa6085d7a9d86b10f9b"
+  },
+  "engine/render/particles.bend": {
+    "lines": 172,
+    "code": 133,
+    "sha256": "37c0ac7c4af21ec187fe832d1dcad286df627671d06fca2737d863ba4063a14d"
+  },
+  "engine/render/coverage.bend": {
+    "lines": 63,
+    "code": 61,
+    "sha256": "461eeab0a307a51273b6af87893eed29bf78f2b418bb0ede019f931b12008cfc"
+  },
+  "engine/render/downsample.bend": {
+    "lines": 49,
+    "code": 45,
+    "sha256": "3b107f8e79f71af7b57230fb9f8ed390daf247f9c1f04d22a16d685ff3e30db8"
+  },
+  "engine/render/color.bend": {
+    "lines": 13,
+    "code": 12,
+    "sha256": "f6c6cd8018f1ba6a6d40ef1f99665e96c41d96ccbce3ae84dcc6ab516f870782"
+  },
+  "engine/render/mesh.bend": {
+    "lines": 479,
+    "code": 392,
+    "sha256": "c12b58ef51e4e8001d10b90f1118bf6dbfb1e55c09285862434a13e96f905c0b"
+  },
+  "engine/render/splats.bend": {
+    "lines": 142,
+    "code": 134,
+    "sha256": "ac704958b6b1134c322ff24d13471c95e2ae9362601b746aef05df254fb7e7e8"
+  },
+  "engine/render/camera.bend": {
+    "lines": 32,
+    "code": 29,
+    "sha256": "32026fbdf2eff3c63d010e80c3c418c5353b4bb98fd41be2b53829d596f91c46"
+  },
+  "engine/profile/frame.bend": {
+    "lines": 32,
+    "code": 28,
+    "sha256": "722f8435c9611450752723f9429cfae604ca90d74e247cb7c8b00486c106bf8b"
+  },
+  "engine/fields/wind.bend": {
+    "lines": 9,
+    "code": 7,
+    "sha256": "2bc9b99a5ce1fdda85ca314fb21541cc60502d2af87af87fb763ca605f988d6e"
+  },
+  "engine/geometry/grid_surface.bend": {
+    "lines": 47,
+    "code": 41,
+    "sha256": "1dde382e078ed85f705300858c9d1292d0be93067dbe5be984a10b7e769538d1"
+  },
+  "engine/geometry/curve.bend": {
+    "lines": 9,
+    "code": 8,
+    "sha256": "4cf81460205e9941ea10f276c750b498bcc1abe3494cb5fa998387ab8eb74a19"
+  },
+  "engine/spatial/grid.bend": {
+    "lines": 72,
+    "code": 50,
+    "sha256": "2e635e5ba5bc0a75be3c2eaa54d2c00f839d5d0a89167e6ccf2bbd7602b6c6b5"
+  },
+  "engine/spatial/reference.bend": {
+    "lines": 14,
+    "code": 9,
+    "sha256": "899624029490fd73835cf3df4c1135157ad5028272416ec05eb1ef2f1eb2f184"
+  },
+  "engine/spatial/layout.bend": {
+    "lines": 74,
+    "code": 57,
+    "sha256": "06dfd7610f2f9ba9fafdd3f0538e5b09aed959c47b0d835bbe504d7745708863"
+  },
+  "engine/spatial/internal/index.bend": {
+    "lines": 159,
+    "code": 126,
+    "sha256": "c8dcac16e96e68c830df946024c1c1966bfd1c22505a56d53bcb9194fe72b30b"
+  },
+  "engine/spatial/internal/stencil.bend": {
+    "lines": 225,
+    "code": 192,
+    "sha256": "12f759c6da36074965dd4deec5898b1005e3bd297fc269e09da2db74b67a383c"
+  }
+}

@@ -1,0 +1,204 @@
+{
+  "date": "2026-09-28T08:35:07.925316+00:00",
+  "os": "macOS-15.7.4-arm64-arm-64bit",
+  "cpu": "Apple M2 Pro",
+  "gpu": [
+    {
+      "sppci_model": "Apple M2 Pro",
+      "sppci_cores": "16"
+    }
+  ],
+  "memory_gb": 16.0,
+  "bend_version": [
+    "2.0.27",
+    "95317d952c8fe5be18ef49f916b2a57250cfb0aa"
+  ],
+  "source_sha256": {
+    "before": null,
+    "after": null
+  },
+  "binaries": {
+    "before": {
+      "path": "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/meadow-quality-unfused",
+      "sha256": "2cfd62fbc2ceb3136b07de00916239a729c684c7435af5e5e9da86375da2f411",
+      "gpu_sha256": null
+    },
+    "after": {
+      "path": "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/meadow-quality-aa",
+      "sha256": "2fa165de9e50637578cfdceb83f0b2378ccc02dc1a76010d2131ee5e0f99361e",
+      "gpu_sha256": null
+    }
+  },
+  "demo": "meadow",
+  "backend": "gpu",
+  "effects": "aa",
+  "resolution": 1024,
+  "scene": {
+    "seed": 42,
+    "preset": 1
+  },
+  "threads": 10,
+  "warmup": 120,
+  "samples": 600,
+  "scope": "Headless full frame including old Image reclamation; excludes window/HUD/display. Sequential processes, alternating pair order. Each run restarts the same seeded scene. GPU simulation may diverge numerically; these are evolving scenes, not frozen render-only probes.",
+  "runs": [
+    {
+      "kind": "pair",
+      "pair": 0,
+      "label": "before",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/meadow-quality-unfused",
+        "--gpu",
+        "on",
+        "--threads",
+        "10",
+        "--",
+        "gpu",
+        "aa"
+      ],
+      "date": "2026-09-28T08:35:08.469522+00:00",
+      "returncode": 0,
+      "stderr": "bend: compiling the GPU program (/Users/benjamintd/Personal/bend-playground/bend-swarm/build/meadow-quality-unfused.gpu is missing or stale)\n",
+      "csv": "quality-fusion-gpu-pair0-before.csv",
+      "summary": {
+        "simulation_ms": {
+          "median": 1.009,
+          "p95": 1.454
+        },
+        "render_ms": {
+          "median": 25.5635,
+          "p95": 28.259
+        },
+        "frame_ms": {
+          "median": 26.608,
+          "p95": 29.545
+        }
+      }
+    },
+    {
+      "kind": "pair",
+      "pair": 0,
+      "label": "after",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/meadow-quality-aa",
+        "--gpu",
+        "on",
+        "--threads",
+        "10",
+        "--",
+        "gpu",
+        "aa"
+      ],
+      "date": "2026-09-28T08:35:42.135249+00:00",
+      "returncode": 0,
+      "stderr": "bend: compiling the GPU program (/Users/benjamintd/Personal/bend-playground/bend-swarm/build/meadow-quality-aa.gpu is missing or stale)\n",
+      "csv": "quality-fusion-gpu-pair0-after.csv",
+      "summary": {
+        "simulation_ms": {
+          "median": 1.027,
+          "p95": 1.314
+        },
+        "render_ms": {
+          "median": 24.9755,
+          "p95": 30.631
+        },
+        "frame_ms": {
+          "median": 26.028,
+          "p95": 31.801
+        }
+      }
+    },
+    {
+      "kind": "pair",
+      "pair": 1,
+      "label": "after",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/meadow-quality-aa",
+        "--gpu",
+        "on",
+        "--threads",
+        "10",
+        "--",
+        "gpu",
+        "aa"
+      ],
+      "date": "2026-09-28T08:36:01.749741+00:00",
+      "returncode": 0,
+      "stderr": "bend: compiling the GPU program (/Users/benjamintd/Personal/bend-playground/bend-swarm/build/meadow-quality-aa.gpu is missing or stale)\n",
+      "csv": "quality-fusion-gpu-pair1-after.csv",
+      "summary": {
+        "simulation_ms": {
+          "median": 1.023,
+          "p95": 1.11
+        },
+        "render_ms": {
+          "median": 28.028,
+          "p95": 32.095
+        },
+        "frame_ms": {
+          "median": 29.067,
+          "p95": 33.126
+        }
+      }
+    },
+    {
+      "kind": "pair",
+      "pair": 1,
+      "label": "before",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/meadow-quality-unfused",
+        "--gpu",
+        "on",
+        "--threads",
+        "10",
+        "--",
+        "gpu",
+        "aa"
+      ],
+      "date": "2026-09-28T08:36:22.674666+00:00",
+      "returncode": 0,
+      "stderr": "bend: compiling the GPU program (/Users/benjamintd/Personal/bend-playground/bend-swarm/build/meadow-quality-unfused.gpu is missing or stale)\n",
+      "csv": "quality-fusion-gpu-pair1-before.csv",
+      "summary": {
+        "simulation_ms": {
+          "median": 1.013,
+          "p95": 1.554
+        },
+        "render_ms": {
+          "median": 25.491500000000002,
+          "p95": 29.953
+        },
+        "frame_ms": {
+          "median": 26.5315,
+          "p95": 31.236
+        }
+      }
+    }
+  ],
+  "median_of_run_medians": {
+    "before": {
+      "simulation_ms": 1.011,
+      "render_ms": 25.527500000000003,
+      "frame_ms": 26.56975
+    },
+    "after": {
+      "simulation_ms": 1.025,
+      "render_ms": 26.50175,
+      "frame_ms": 27.5475
+    }
+  },
+  "source_note": "The original harness supplied working-tree hashes, which did not identify these saved candidates. Cleared those fields. Binary digests and exact implementation hashes below identify this comparison.",
+  "implementation_sha256": {
+    "before": {
+      "coverage.bend": "dbd99f41787ff04a1fd68c99f22a4ee9e873fc55efaf0ca70ee0d7f76cb49bdf",
+      "finish.bend": "617e9270e97cd2f09efb989aec463fa40d2eb2531a3e5b1749b3fb747b93df25",
+      "post.bend": "49ff7bf1f031f7efe3c2019c141ecb732cfe70560d93b04ad17b2e673cce74cf"
+    },
+    "after": {
+      "coverage.bend": "dbd99f41787ff04a1fd68c99f22a4ee9e873fc55efaf0ca70ee0d7f76cb49bdf",
+      "finish.bend": "c567db4c195233bf73a15bf2351c336dcdf885743169b07e0b1b62e8a33b2471",
+      "post.bend": "241f763e2cc182923b209cbcd243d70b723c99321668803f13c37f79fd1604b3"
+    }
+  },
+  "decision": "Rejected: same rotated AA pattern, split versus fused Image construction; one pair slightly faster, one slower. No repeatable GPU win."
+}

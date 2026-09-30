@@ -2,7 +2,7 @@ import csv, math
 from pathlib import Path
 expected_quality=[['pixel','2098176','16777215'],['pixel','2097252','16711680'],['pixel','0','0'],['image','4194304','0'],
  ['pixel','524800','16777215'],['pixel','524338','8323072'],['pixel','0','0'],['image','1048576','0']]
-expected_quality += expected_quality[-4:]
+expected_quality += [['pixel','524800','16777215'],['pixel','524338','4128768'],['pixel','0','0'],['image','1048576','0']]*2
 # Independent additive coverage oracle at doubled resolution, evaluating only
 # potentially touched pixels but including the complete background in sums.
 fixture=[(.25,.5,5304258),(1023.8,1023.8,16758619),(7.9,8.1,15429309),(511.9,512.1,6921215),

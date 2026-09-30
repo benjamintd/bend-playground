@@ -1,0 +1,270 @@
+{
+  "date": "2026-09-28T07:39:40.593991+00:00",
+  "os": "macOS-15.7.4-arm64-arm-64bit",
+  "cpu": "Apple M2 Pro",
+  "gpu": [
+    {
+      "sppci_model": "Apple M2 Pro",
+      "sppci_cores": "16"
+    }
+  ],
+  "memory_gb": 16.0,
+  "bend_version": [
+    "2.0.27",
+    "95317d952c8fe5be18ef49f916b2a57250cfb0aa"
+  ],
+  "source_sha256": {
+    "before": "784c8a7f35219db349bfe4b0571ee2e747de2df4f838f928cd627f9812cf8544",
+    "after": "75fa374d5b1b77fe89646acfe1f48f42e498f304820e896f1965adec282b3161"
+  },
+  "binaries": {
+    "before": {
+      "path": "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/cloth-before",
+      "sha256": "c848b4d3386d0f93404c0638e71cb467ca64882aa56a72953e07ca27df8488a2",
+      "gpu_sha256": null
+    },
+    "after": {
+      "path": "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/cloth-frame",
+      "sha256": "9c960bd096134354abc1091637f0e0c03b8df98f925fc0d456c47a629f226d39",
+      "gpu_sha256": null
+    }
+  },
+  "demo": "cloth",
+  "backend": "cpu",
+  "effects": "raw",
+  "resolution": 1024,
+  "scene": {
+    "substeps": 2,
+    "substep_dt": 0.008333333333333333,
+    "physics_vertices": 1024
+  },
+  "threads": 10,
+  "warmup": 120,
+  "samples": 600,
+  "scope": "Headless full frame including old Image reclamation; excludes window/HUD/display. Sequential processes, alternating pair order. Each run restarts the same seeded scene. GPU simulation may diverge numerically; these are evolving scenes, not frozen render-only probes.",
+  "runs": [
+    {
+      "kind": "pair",
+      "pair": 0,
+      "label": "before",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/cloth-before",
+        "--gpu",
+        "off",
+        "--threads",
+        "10",
+        "--",
+        "6",
+        "0",
+        "120",
+        "600"
+      ],
+      "date": "2026-09-28T07:39:41.039673+00:00",
+      "returncode": 0,
+      "stderr": "",
+      "csv": "culling-rejected-cloth-cpu-raw-pair0-before.csv",
+      "summary": {
+        "simulation_ms": {
+          "median": 12.2725,
+          "p95": 17.007
+        },
+        "render_ms": {
+          "median": 7.761,
+          "p95": 11.296
+        },
+        "frame_ms": {
+          "median": 19.8475,
+          "p95": 28.337
+        }
+      }
+    },
+    {
+      "kind": "pair",
+      "pair": 0,
+      "label": "after",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/cloth-frame",
+        "--gpu",
+        "off",
+        "--threads",
+        "10",
+        "--",
+        "6",
+        "0",
+        "120",
+        "600"
+      ],
+      "date": "2026-09-28T07:39:56.337219+00:00",
+      "returncode": 0,
+      "stderr": "",
+      "csv": "culling-rejected-cloth-cpu-raw-pair0-after.csv",
+      "summary": {
+        "simulation_ms": {
+          "median": 10.1025,
+          "p95": 14.371
+        },
+        "render_ms": {
+          "median": 6.374,
+          "p95": 9.235
+        },
+        "frame_ms": {
+          "median": 16.5565,
+          "p95": 23.821
+        }
+      }
+    },
+    {
+      "kind": "pair",
+      "pair": 1,
+      "label": "after",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/cloth-frame",
+        "--gpu",
+        "off",
+        "--threads",
+        "10",
+        "--",
+        "6",
+        "0",
+        "120",
+        "600"
+      ],
+      "date": "2026-09-28T07:40:09.767767+00:00",
+      "returncode": 0,
+      "stderr": "",
+      "csv": "culling-rejected-cloth-cpu-raw-pair1-after.csv",
+      "summary": {
+        "simulation_ms": {
+          "median": 9.759,
+          "p95": 12.2
+        },
+        "render_ms": {
+          "median": 6.1945,
+          "p95": 7.482
+        },
+        "frame_ms": {
+          "median": 15.906500000000001,
+          "p95": 19.872
+        }
+      }
+    },
+    {
+      "kind": "pair",
+      "pair": 1,
+      "label": "before",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/cloth-before",
+        "--gpu",
+        "off",
+        "--threads",
+        "10",
+        "--",
+        "6",
+        "0",
+        "120",
+        "600"
+      ],
+      "date": "2026-09-28T07:40:21.856203+00:00",
+      "returncode": 0,
+      "stderr": "",
+      "csv": "culling-rejected-cloth-cpu-raw-pair1-before.csv",
+      "summary": {
+        "simulation_ms": {
+          "median": 9.6755,
+          "p95": 11.173
+        },
+        "render_ms": {
+          "median": 6.128,
+          "p95": 7.017
+        },
+        "frame_ms": {
+          "median": 15.795,
+          "p95": 18.037
+        }
+      }
+    },
+    {
+      "kind": "pair",
+      "pair": 2,
+      "label": "before",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/cloth-before",
+        "--gpu",
+        "off",
+        "--threads",
+        "10",
+        "--",
+        "6",
+        "0",
+        "120",
+        "600"
+      ],
+      "date": "2026-09-28T07:40:33.373837+00:00",
+      "returncode": 0,
+      "stderr": "",
+      "csv": "culling-rejected-cloth-cpu-raw-pair2-before.csv",
+      "summary": {
+        "simulation_ms": {
+          "median": 9.6745,
+          "p95": 11.515
+        },
+        "render_ms": {
+          "median": 6.174,
+          "p95": 7.095
+        },
+        "frame_ms": {
+          "median": 15.8625,
+          "p95": 18.7
+        }
+      }
+    },
+    {
+      "kind": "pair",
+      "pair": 2,
+      "label": "after",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/cloth-frame",
+        "--gpu",
+        "off",
+        "--threads",
+        "10",
+        "--",
+        "6",
+        "0",
+        "120",
+        "600"
+      ],
+      "date": "2026-09-28T07:40:45.089383+00:00",
+      "returncode": 0,
+      "stderr": "",
+      "csv": "culling-rejected-cloth-cpu-raw-pair2-after.csv",
+      "summary": {
+        "simulation_ms": {
+          "median": 9.7715,
+          "p95": 12.025
+        },
+        "render_ms": {
+          "median": 6.1905,
+          "p95": 7.539
+        },
+        "frame_ms": {
+          "median": 15.9665,
+          "p95": 19.467
+        }
+      }
+    }
+  ],
+  "median_of_run_medians": {
+    "before": {
+      "simulation_ms": 9.6755,
+      "render_ms": 6.174,
+      "frame_ms": 15.8625
+    },
+    "after": {
+      "simulation_ms": 9.7715,
+      "render_ms": 6.1945,
+      "frame_ms": 15.9665
+    }
+  },
+  "status": "Rejected: repeated and quieter-desktop comparisons did not establish a performance gain."
+}

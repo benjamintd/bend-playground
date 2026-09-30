@@ -1,0 +1,18 @@
+{
+  "date": "2026-09-28T09:36:27.214308+00:00",
+  "observation": "During pair 1 after, a separate Bend Turn window used about 206% CPU, a virtualization service 121%, and another Python worker 39%; WindowServer and desktop services also active. These were not launched by this task and were not stopped.",
+  "implication": "Runs measure a loaded, changing desktop. Avoid attributing whole-frame changes or p95 outliers solely to the routing edit. No concurrent builds/tests/demo windows from this task during headless comparisons.",
+  "memory_observation": {
+    "swap_used_mb": 18424.81,
+    "swap_total_mb": 19456,
+    "memory_free_percent": 25,
+    "note": "Point-in-time system readings; swap occupancy alone does not quantify current paging rate. A separate Turn window was relaunched during these runs."
+  },
+  "paging_probe": {
+    "delay_between_vm_stat_calls_seconds": 1,
+    "swapin_pages": 16737,
+    "swapout_pages": 6916,
+    "pageins": 2299,
+    "pageouts": 45
+  }
+}

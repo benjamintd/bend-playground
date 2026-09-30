@@ -1,0 +1,124 @@
+{
+  "date": "2026-09-28T08:53:41.230126+00:00",
+  "os": "macOS-15.7.4-arm64-arm-64bit",
+  "cpu": "Apple M2 Pro",
+  "gpu": [
+    {
+      "sppci_model": "Apple M2 Pro",
+      "sppci_cores": "16"
+    }
+  ],
+  "memory_gb": 16.0,
+  "bend_version": [
+    "2.0.27",
+    "95317d952c8fe5be18ef49f916b2a57250cfb0aa"
+  ],
+  "source_sha256": {
+    "before": "6e05c823511c74203efa035e7822b4b1fc8f876094d1112ad3581e27f9e3df92",
+    "after": "1f1166d24e7528a43a2818265944e015a813a1cc5e1d0c2281c9d2ef93d43d3a"
+  },
+  "binaries": {
+    "before": {
+      "path": "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/quality-before/meadow-frame",
+      "sha256": "59efc38b44248d243e3ff2bf3b4c537e2249d265252e720f19791ca409c3cb08",
+      "gpu_sha256": null
+    },
+    "after": {
+      "path": "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/meadow-frame",
+      "sha256": "48fb59fbd84ed51314d862ca1c2a2aacd6bd73bec09e56ac9cee2c0ab3fa0318",
+      "gpu_sha256": null
+    }
+  },
+  "demo": "meadow",
+  "backend": "cpu",
+  "effects": "aa",
+  "resolution": 1024,
+  "scene": {
+    "seed": 42,
+    "preset": 1
+  },
+  "threads": 10,
+  "warmup": 120,
+  "samples": 600,
+  "scope": "Headless full frame including old Image reclamation; excludes window/HUD/display. Sequential processes, alternating pair order. Each run restarts the same seeded scene. GPU simulation may diverge numerically; these are evolving scenes, not frozen render-only probes.",
+  "runs": [
+    {
+      "kind": "pair",
+      "pair": 0,
+      "label": "before",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/quality-before/meadow-frame",
+        "--gpu",
+        "off",
+        "--threads",
+        "10",
+        "--",
+        "cpu",
+        "aa"
+      ],
+      "date": "2026-09-28T08:53:41.816725+00:00",
+      "returncode": 0,
+      "stderr": "",
+      "csv": "quality-aa-cpu-final-pair0-before.csv",
+      "summary": {
+        "simulation_ms": {
+          "median": 0.347,
+          "p95": 0.894
+        },
+        "render_ms": {
+          "median": 54.9395,
+          "p95": 87.253
+        },
+        "frame_ms": {
+          "median": 55.383,
+          "p95": 87.682
+        }
+      }
+    },
+    {
+      "kind": "pair",
+      "pair": 0,
+      "label": "after",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/meadow-frame",
+        "--gpu",
+        "off",
+        "--threads",
+        "10",
+        "--",
+        "cpu",
+        "aa"
+      ],
+      "date": "2026-09-28T08:54:28.595655+00:00",
+      "returncode": 0,
+      "stderr": "",
+      "csv": "quality-aa-cpu-final-pair0-after.csv",
+      "summary": {
+        "simulation_ms": {
+          "median": 0.3645,
+          "p95": 1.224
+        },
+        "render_ms": {
+          "median": 59.150000000000006,
+          "p95": 97.342
+        },
+        "frame_ms": {
+          "median": 59.727000000000004,
+          "p95": 97.693
+        }
+      }
+    }
+  ],
+  "median_of_run_medians": {
+    "before": {
+      "simulation_ms": 0.347,
+      "render_ms": 54.9395,
+      "frame_ms": 55.383
+    },
+    "after": {
+      "simulation_ms": 0.3645,
+      "render_ms": 59.150000000000006,
+      "frame_ms": 59.727000000000004
+    }
+  }
+}

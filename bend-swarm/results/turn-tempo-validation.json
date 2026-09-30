@@ -1,0 +1,35 @@
+{
+  "date": "2026-09-28T20:12:01.951397+00:00",
+  "status": "passed",
+  "scope": "Game-local frozen view selection and a smooth half-second resumption of fixed-step physics.",
+  "rotation_wall_ticks": 84,
+  "simulation_hz": 120,
+  "resume_wall_ticks": 60,
+  "game_laws_checked": 44,
+  "campaign_laws_checked": 52,
+  "new_timing_laws_checked": 7,
+  "native_solution_replays": 26,
+  "native_input_ticks": 44177,
+  "all_routes_collect_all_seals_within_par": true,
+  "mixed_control_ticks": 26000,
+  "decorated_scenes_checked": 806,
+  "peak_triangles": 21383,
+  "native_persistent_buffer_frames": 25,
+  "native_pixel_comparison": "every pixel",
+  "native_tempo_checks": [
+    "XY -> YZ -> ZX -> XY preserves the exact position, including embedded intermediate views",
+    "1200 idle ticks remain frozen",
+    "fresh input resumes over 60 wall ticks"
+  ],
+  "input_checks": [
+    "WASD, all arrows and Space release frozen time",
+    "held keys and key repeat do not release frozen time",
+    "input during rotation queues resumption",
+    "menus, loss of focus and reset preserve the intended state",
+    "rings admit a view-selection chain until movement resumes"
+  ],
+  "engine_api_changes": false,
+  "presentation_check": "Native frozen/resuming screenshots inspected; the live automation preview was occluded according to macOS, so rendering correctly remained paused.",
+  "proof_scope": "Timing-clock laws and cell-space route certificates; continuous movement validated by independent tests and native keyboard replays.",
+  "app_sha256": "2c327ae1112018fa46197840fe11d29fe3250bdb86687793c47aa5fe81588c47"
+}

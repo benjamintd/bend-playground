@@ -223,3 +223,260 @@ independent four-to-one Image resolver remains available for exports.
 
 Neither meadow AA nor 2048² quality establishes sustained 60 FPS. Meadow retains
 1024² with effects off by default; Life retains 1024² with analytic edges on.
+
+
+## Four-pixel mesh candidate reuse (2026-09-28)
+
+The regular mesh rasterizer now loads each tile candidate once per 2×2 pixel
+block. Each of the four pixels still resolves its own background, depth,
+lighting and ties. Triangle/index reads are divided by four; sample count,
+geometry, simulation and image quality are unchanged. This applies to the
+regular raster path and the raster stage before depth of field. Four-sample AA
+uses a separate path and has no claimed speedup here.
+
+Apple M2 Pro, ten CPU workers, 120 warmups and 600 measured frames **per run**.
+Each row summarizes three pairs, alternating AB/BA/AB; numbers are medians of
+the three run medians. Meadow also has an A/A baseline control. All effects
+were off. Every run restarts the same scene; meadow uses preset 1 and seed 42.
+These are complete headless frames, including old Image reclamation, excluding
+window/HUD/display and startup.
+
+| Workload | Draw median, before → after (ms) | Frame median, before → after (ms) |
+|---|---:|---:|
+| Meadow 1024² / CPU | 18.922 → 17.180 | 19.496 → 17.791 |
+| Meadow 1024² / Metal | 16.483 → 11.232 | 17.583 → 12.241 |
+| High cloth 1024² / CPU | 8.495 → 6.016 | 24.463 → 17.562 |
+
+The Metal meadow frame improved in all three pairs: **18.444 → 12.670**,
+**17.583 → 12.241**, and **15.642 → 12.111 ms**, reductions of 31.3%, 30.4%
+and 22.6%. The median-of-run-medians reduction is **30.4%** for the full frame
+and **31.9%** for drawing in this measured workload. This does not establish
+a sustained window frame rate or the same gain on other hardware/scenes.
+
+**CPU results are noisy observations, not stable speedup claims.** The meadow
+CPU pairs changed by +27.6%, +15.1%, and −10.1% (positive means faster), while
+the A/A baseline moved from 12.566 to 15.064 ms. Cloth drawing improved in each
+pair, but unmodified physics varied markedly: its median across baseline runs
+was 15.897 ms versus 11.389 ms across updated runs. The apparent cloth total
+gain therefore cannot be attributed entirely to rendering. During these runs,
+a separate Bend Turn snapshot job and macOS services consumed CPU. No builds
+or tests from this task ran concurrently with timed samples.
+
+Raw samples, per-run p95, machine details, source/binary hashes, timestamps and
+commands are in `results/blocks-final-{meadow-cpu,meadow-gpu,cloth-cpu}.json`
+and their named CSVs. Short exploratory comparisons are preserved as
+`blocks-exploratory-{cpu,gpu}`. Rejected alternatives are documented in
+FINDINGS.md; their measurements are not used as the baseline for this claim.
+
+### Reproduce the paired comparison
+
+Keep binaries built before and after the edit. The recorded baseline is the
+renderer from `f819d30`; its complete workspace source hash is below. Use the
+corresponding source hash if capturing another baseline.
+
+```sh
+# Compile these on the before and after source versions, respectively:
+scripts/bend benches/meadow.bend -o build/meadow-before
+scripts/bend benches/meadow.bend -o build/meadow-frame
+python3 scripts/compare-showcase.py \
+  --before build/meadow-before --after build/meadow-frame \
+  --before-source-sha256 784c8a7f35219db349bfe4b0571ee2e747de2df4f838f928cd627f9812cf8544 \
+  --demo meadow --backend gpu --effects raw --pairs 3 --control \
+  --tag meadow-paired-local
+```
+
+The helper also supports CPU, high resolution and the cloth benchmark. For
+cloth use `--demo cloth --effects raw`; `--quality high` selects the 1024²
+visual mesh with the same 1024-point physics. It launches runs sequentially
+and saves each CSV and metadata immediately, including failed native runs.
+
+Validation: the full JS suite and structural proofs pass, including 22,272
+block/scalar fragment comparisons and a 512² raster with independently varying
+background depth/color. Rebuilt native CPU/Metal fixtures pass at 512², 1024²
+and 2048², including complete Image/array comparisons and thin-line coverage.
+See `results/blocks-validation.json`. `scripts/build` rebuilt the demo binaries
+and macOS app bundles; the rebuilt Meadow window was also inspected.
+
+
+## Antialiasing and defocus quality pass (2026-09-28)
+
+These changes prioritize coverage and blur continuity. They do **not** establish
+60 FPS with effects. Same Apple M2 Pro, 10 workers, 120 warmup + 600 samples,
+seed 42 / preset 1, 1024-square Meadow, no window or HUD. Runs are sequential
+and pair order alternates. Raw CSVs and binary/source metadata are retained.
+
+| Comparison, Metal, median of two run medians | Before frame | After frame |
+| --- | ---: | ---: |
+| Old rounded defocus → continuous 25-texel filter | 26.307 ms | 32.339 ms |
+| New rotated AA, copying finish → Image-only finish | 30.485 ms | 30.524 ms |
+
+The smoother defocus adds about **6 ms** in these paired measurements. This is
+a quality/cost tradeoff, not a performance improvement. The 25-texel filter has
+the same weights as nine bilinear samples while gathering at most 25 texels
+instead of 36; zero weights skip reads. The earlier 36-fetch prototype measured
+35.871 ms/frame in a separate two-pair comparison, but that is not an isolated
+claim about the savings from collapsing duplicate texels.
+
+The defocus data (`quality-final-dof-gpu`) was collected before adding the
+Image-only AA specialization; the specialization changes only the AA-without-
+defocus route. `quality-aa-present-final` compares that final specialization
+with the same rotated pattern and original copying finish. There is **no clear
+GPU timing improvement**: both versions shifted from about 26 to 35 ms between
+pairs, with simulation timing shifting too. Keeping the simpler Image-only
+route avoids unnecessary buffer reads/writes without claiming an FPS gain.
+
+A more invasive single-pass coverage/Image fusion was rejected: one pair was
+slightly faster and another slower (`quality-fusion-gpu` and
+`quality-fusion-rejected.patch`). `quality-aa-exploratory`,
+`quality-final-aa-gpu` (before Image-only specialization), and `quality-dof-gpu`
+(the earlier 36-fetch prototype) are exploratory records, not the final paths.
+
+The single CPU AA comparison (`quality-aa-cpu-final`) measured 55.383 ms before
+and 59.727 ms after (p95 87.682 / 97.693 ms). This noisy single pair does not
+support a speedup claim. All quality-pass timing records above used 2.0.27.
+
+The final source passes the proof suite, all JS correctness suites, native
+CPU/Metal geometry/Image checks, and 1021 native depth-filter oracle probes.
+`quality-validation.json` records the checked source files and image exports.
+The frozen visual comparison is [quality-comparison.html](../results/quality-comparison.html).
+
+## Active Cloth routing and desktop load (2026-09-28)
+
+The interactive Cloth app now always runs its 1024-point physics on CPU.
+G selects only the renderer. The solver still uses twelve constraint passes
+per substep, up to two substeps per frame, and the same surface contacts.
+No reduction in physical resolution or collision work was used for this change.
+
+A short active 512² probe (12 warmup, 30 samples, raw rendering, 10 workers)
+measured 9.312 ms CPU physics versus 91.566 ms Metal physics. The corresponding
+whole-frame medians were 12.486 and 97.001 ms. These early probes excluded a
+window and are not sustained interactive FPS claims.
+
+Longer routing comparisons used 120 warmup + 600 samples, alternating order,
+512² raw rendering, Metal drawing in both versions, and the same 2.0.27 pin.
+The saved pre-fix binary uses Metal physics; the updated one uses CPU physics.
+
+| Pair | Before frame median / p95 | After frame median / p95 |
+| --- | ---: | ---: |
+| 0, before then after | 128.924 / 145.339 ms | 87.727 / 320.390 ms |
+| 1, after then before | 279.154 / 565.827 ms | 114.242 / 290.587 ms |
+
+Both medians favor CPU physics, but these are **loaded-desktop results**.
+A separate Bend Turn window, virtualization and Python work were active;
+Turn was relaunched during the measurements. Swap occupancy was 18.4 GB, and
+a one-second paging probe observed 16,737 swap-in and 6,916 swap-out pages.
+The large change between baseline runs and the worse first-pair p95 prevent
+claiming a stable speedup ratio or that all stutters are solved.
+
+The native standard window completed 600 samples with HUD, two active substeps
+and display pacing: 54.259 ms median (about 18.4 FPS), 166.586 ms p95. This
+particular run used `--gpu off`, not the GPU-enabled app launcher's runtime.
+The subsequent Metal/AA window exited with status 0 after 469 samples, so it
+is recorded as incomplete, not as a crash or a complete benchmark. High-quality
+window timings and the CPU-drawing/GPU-enabled default window were not completed.
+Native correctness and Image tests at all supported resolutions did pass.
+
+Raw samples, commands, binary hashes and partial-run status are in
+`results/cloth-routing-final.json`; the load observations are in
+`cloth-routing-load-note.json`. No builds, tests or other demo instances from
+this task ran concurrently with the timed processes. The pre-existing desktop
+workloads were left running. `scripts/bench-cloth-interactive.py` reproduces the
+comparison using `--before <saved-cloth-frame>`, and `--window --window-default`
+measures presentation. Close a test window to stop a window run early.
+
+The global Bend install is 2.0.32. The project remains on 2.0.27 by user choice
+because even its small GPU smoke test fails to compile on Metal with 2.0.32;
+see `results/bend-upgrade-validation.json` and `repros/metal-2.0.32-issue.md`.
+
+## Per-stage policy and profiler (2026-09-28)
+
+Two alternating orders compared the saved pre-change binaries with the new
+policy/timing path, using the same raw settings and ten runtime threads. Cloth
+used 12 warmup + 30 measured frames per run; Meadow used 120 + 600. No
+concurrent builds/tests or verification windows were running during these runs;
+other desktop work was not stopped. These measure headless frame cost.
+
+| Scene / dispatch | Pair 0 before → after (ms) | Pair 1 before → after (ms) |
+| --- | ---: | ---: |
+| cloth / cpu | 12.070 → 12.310 | 12.258 → 12.223 |
+| cloth / hybrid | 16.049 → 16.668 | 15.919 → 15.934 |
+| meadow / cpu | 10.943 → 10.284 | 10.746 → 10.821 |
+| meadow / gpu | 12.293 → 11.899 | 12.033 → 12.082 |
+
+Here `cloth / hybrid` means the pre-existing CPU simulation + all-GPU drawing
+policy (`Policy.cloth(True{})`), not the new CPU-geometry `Policy.hybrid()`
+preset. The first pair ran before then after; the second ran after then before.
+Variation between orders is comparable to the observed changes; this does not
+establish a speedup or a precise timer-only overhead. It measures the combined
+policy, stage-boundary and timing change. Timers remain active with H hidden.
+
+The native mixed-policy checks were pixel-exact in this run, including all eight
+bin/raster/post choices, all four effect combinations, repeated Image reuse, and
+512/1024/2048 targets on both CPU and Metal. The proof/JS suite passed. Cloth,
+Meadow, Particle Life and profiler binaries rebuilt successfully. Live Cloth
+checks covered G/A/D/Q/H and pause; live Meadow verified H/G labels. These were
+functional window checks, not a sustained interactive FPS benchmark.
+
+Short profiler captures (12 warmup + 30 samples) show where work goes:
+CPU-physics/geometry Cloth with Metal AA+DoF had 17.892 ms median frame time;
+CPU-physics/geometry Meadow with Metal AA had 23.966 ms. These are different
+quality settings from the raw comparisons above. See `results/policy-profile-*.csv`
+and their text reports for individual stages. Forced CPU fallback and a genuine
+CPU-only executable both reported all CPU stage choices.
+
+Raw paired captures and command/binary hashes: `results/policy-comparison.json`.
+Validation scope: `results/policy-validation.json`. API and timing definitions:
+[EXECUTION.md](EXECUTION.md).
+
+## Shared engine simplification (2026-09-28)
+
+The image/tile/spatial consolidation and depth-filter experiment have separate
+raw captures under `results/engine-*`. The [engine review](ENGINE_REVIEW.md)
+records source counts, paired measurements, controls and validation. Reproduce
+selected cases with `python3 scripts/bench-engine.py --help`; keep builds and
+other tests stopped during the timed runs. These are headless frame and
+host-elapsed stage measurements, not hardware GPU timestamps or window FPS.
+
+
+## Camera demos and compatibility (2026-09-28)
+
+The new 1024² scenes use CPU geometry/binning and selectable CPU/Metal raster.
+Twenty warmup frames and sixty measured frames follow a deterministic moving
+camera; the voxel run edits a four-chunk boundary after warmup. Times below are
+median / p95 host-elapsed work, excluding window presentation and pacing.
+
+| Scene | Metal work (ms) | CPU work (ms) |
+| --- | ---: | ---: |
+| Monochrome | 14.694 / 20.527 | 25.434 / 30.161 |
+| Voxels | 12.112 / 14.627 | 19.959 / 23.177 |
+
+The retained legacy Meadow renderer was compared against a saved pre-camera
+binary in before/after/after/before order, with 30 warmup + 120 measured frames.
+
+| Pair | Frame before → after (ms) | Raster before → after (ms) |
+| --- | ---: | ---: |
+| 0 | 14.877 → 13.741 | 7.489 → 7.915 |
+| 1 | 16.851 → 13.813 | 9.616 → 7.747 |
+
+This task's builds/tests had finished during timing. Separate Turn campaign tests
+and builds, plus ordinary desktop work, remained active. Baseline variation is
+large enough that these runs do not establish a precise speedup or overhead.
+The corrected legacy raster timings are within the observed baseline range.
+Commands, binary hashes and all raw captures: `results/camera-performance.json`.
+
+An initial shared dynamic sampler added camera work to the old pixel path;
+preliminary raster captures rose from about 9.7–9.9 ms to 12.4–12.5 ms. Its
+rejected patch is `results/camera-unified-raster-rejected.patch`. A subsequent
+curried-function selector accidentally left per-pixel closure allocation in
+generated code and failed the real Meadow all-GPU workload. The final selector
+uses a first-order conditional and restores scalar calls with constant camera
+mode. See [the preserved reproduction](../repros/camera-closure-selector.md).
+These intermediate binaries are not the final apps.
+
+Final validation passed the proof/JS engine suite, native mesh checks, all eight
+execution policies and four effect combinations on CPU/Metal, and twelve full
+camera framebuffers. CPU and Metal were pixel-identical in all six paired
+captures; Monochrome contained only black and white, including at 2048². The
+image-export helper now prepends fixed-size pixel strings in reverse traversal,
+avoiding quadratic row copying; an old/new full export compared byte-for-byte.
+Scope and source/binary hashes: `results/camera-validation.json`.

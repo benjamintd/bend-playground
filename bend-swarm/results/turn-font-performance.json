@@ -1,0 +1,24 @@
+{
+  "description": "25 native rotation frames per sample; warm-up frame inside benchmark; one warm-up run per build; alternating run order. Rendering only, excludes native window presentation, simulation and 60 fps pacing. Local binaries before/after font polish; engine task also active in shared workspace.",
+  "platform": "macOS-15.7.4-arm64-arm-64bit",
+  "threads": 8,
+  "gpu": "off",
+  "microseconds_for_25_frames": {
+    "before": [
+      179309,
+      193036,
+      180757,
+      181587
+    ],
+    "after": [
+      246791,
+      259918,
+      251514,
+      244793
+    ]
+  },
+  "median_ms_per_frame": {
+    "before": 7.24688,
+    "after": 9.9661
+  }
+}

@@ -1,0 +1,90 @@
+{
+  "native": [
+    {
+      "command": [
+        "build/quality-native",
+        "--gpu",
+        "off",
+        "--threads",
+        "10"
+      ],
+      "stdout_sha256": "41ba2bb9f6fb8788e293df641a5b9f7c1e7df6099e0fbdaabce70d2a55477dfa",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "build/quality-native",
+        "--gpu",
+        "on",
+        "--threads",
+        "10"
+      ],
+      "stdout_sha256": "41ba2bb9f6fb8788e293df641a5b9f7c1e7df6099e0fbdaabce70d2a55477dfa",
+      "stderr": "bend: compiling the GPU program (/Users/benjamintd/Personal/bend-playground/bend-swarm/build/quality-native.gpu is missing or stale)\n"
+    },
+    {
+      "command": [
+        "build/mesh-native",
+        "--gpu",
+        "off",
+        "--threads",
+        "10"
+      ],
+      "stdout_sha256": "d6716430b070aa6f868435ec6c25894d84f44f05d99d5f7753cddd08bb7101c9",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "build/mesh-native",
+        "--gpu",
+        "on",
+        "--threads",
+        "10"
+      ],
+      "stdout_sha256": "d6716430b070aa6f868435ec6c25894d84f44f05d99d5f7753cddd08bb7101c9",
+      "stderr": "bend: compiling the GPU program (/Users/benjamintd/Personal/bend-playground/bend-swarm/build/mesh-native.gpu is missing or stale)\n"
+    },
+    {
+      "command": [
+        "build/showcase-native",
+        "--gpu",
+        "off",
+        "--threads",
+        "10"
+      ],
+      "stdout_sha256": "33b9d71d5effda7c692c8d18b66a11fff27a00ec0ae8c0e5f440913480c8ce06",
+      "stderr": ""
+    },
+    {
+      "command": [
+        "build/showcase-native",
+        "--gpu",
+        "on",
+        "--threads",
+        "10"
+      ],
+      "stdout_sha256": "dc02bb77e960cf900290a28dbdc4022554b12dbd5d7897b1405643dc69b97d06",
+      "stderr": ""
+    }
+  ],
+  "meadow_snapshot": {
+    "pixels": 1048576,
+    "byte_identical": true,
+    "ppm_sha256": "1f47f3d945fa1d5ff854c7f06ab4c628cd399b5b813d9ce618af9a4085d747ab"
+  },
+  "js_suites": "scripts/test passed, including 169248 polygon clipping intersections across 512/1024/2048 and both windings.",
+  "bend_version": [
+    "2.0.27",
+    "95317d952c8fe5be18ef49f916b2a57250cfb0aa"
+  ],
+  "native_binary_sha256": {
+    "quality": "977390bc945af4c56daf798bb0202a5fad9875e1b71250314ab85cb296da8bb4",
+    "mesh": "64976440efdf6228ff38b564be959d9a1a311ad11e37a3c8e7b31bd1df738192",
+    "showcase": "eb9736f1e2abc2e147bf45ea8e994d524f59e1f6a6e462e3a21192018e403659"
+  },
+  "snapshot_binary_sha256": {
+    "before": "4d9b9be4f6488b58aaa3397fceb56b464191d68465c0fa9bb4ec4a054e2d40d1",
+    "after": "8e41435dfcd4bf609a37250155c17395e4f23c76192bff59fe954d54e5f5f1bf"
+  },
+  "image_check_note": "The quality checker also reads the unchanged sprite/Life fixtures from existing build outputs. Six listed native mesh, coverage and showcase commands were rerun for this change."
+}

@@ -1,4 +1,6 @@
 import Base
+import ./tiles.bend as Tiles
+import ./image.bend as ImageBuffer
 import ../spatial.bend as Spatial
 import ../spatial/internal/index.bend as Index
 import ../spatial/layout.bend as L
@@ -98,7 +100,7 @@ def image_done(~S: Type, s: S, offsets: Array<U32>, ids: Array<U32>, settings: S
   (Buffers{s,offsets,ids,pixels,settings},image)
 def tile_done(~scale: Nat,~S: Type, x: U32, y: U32, b: Buffers<S>) -> Buffers<S> & Image:
   Buffers{s,offsets,ids,pixels,settings} = b
-  image_done(~S,s,offsets,ids,settings,M.square_leaf_level(~Nat.add(1n,scale),True{},x,y,pixels))
+  image_done(~S,s,offsets,ids,settings,ImageBuffer.leaf(~Nat.add(1n,scale),True{},x,y,pixels))
 def tile(~scale: Nat,~S: Type, ~read: @+i:U32 -> S -> S & Splat, +x: U32, +y: U32, b: Buffers<S>, old: Image) -> Buffers<S> & Image:
   Buffers{s,offsets,ids,pixels,settings} = b
   tile_done(~scale,~S,x,y,cells(~scale,~S,~read,9n,x,y,Buffers{s,offsets,ids,clear(~scale,U32.to_nat(U32.shln(64,Nat.add(scale,scale))),x,y,pixels),settings}))
@@ -106,29 +108,12 @@ def join(~S: Type, ~merge: S -> S -> S, a: Buffers<S>, b: Buffers<S>) -> Buffers
   Buffers{as,ao,ai,ap,c} = a
   Buffers{bs,bo,bi,bp,_} = b
   Buffers{merge(as,bs),Array.join(U32,ao,bo),Array.join(U32,ai,bi),Array.join(U32,ap,bp),c}
-def joined(~S: Type, ~merge: S -> S -> S, a: Buffers<S> & Image, b: Buffers<S> & Image, c: Buffers<S> & Image, d: Buffers<S> & Image) -> Buffers<S> & Image:
-  (ab,ai) = a
-  (bb,bi) = b
-  (cb,ci) = c
-  (db,di) = d
-  (join(~S,~merge,join(~S,~merge,ab,bb),join(~S,~merge,cb,db)),Qua{ai,bi,ci,di})
-# Read-only source/ranges/IDs, disjoint pixel tiles, same-allocation joins.
-@unsafe
-def tree(~scale: Nat,~S: Type, ~read: @+i:U32 -> S -> S & Splat, ~merge: S -> S -> S, +n: Nat, +x: U32, +y: U32, +b: Buffers<S>, old: M.Four) -> Buffers<S> & Image:
-  match n:
-    case 0n:
-      M.Four{a,c,d,e} = old
-      tile(~scale,~S,~read,x,y,b,Qua{a,c,d,e})
-    case 1n+k:
-      M.Four{a,c,d,e} = old
-      +h = U32.shln(U32.shln(8,scale),k)
-      ra rb rc rd = tree(~scale,~S,~read,~merge,k,x,y,b,M.open(a)) tree(~scale,~S,~read,~merge,k,(x + h : U32),y,b,M.open(c))
-        tree(~scale,~S,~read,~merge,k,x,(y + h : U32),b,M.open(d)) tree(~scale,~S,~read,~merge,k,(x + h : U32),(y + h : U32),b,M.open(e))
-      joined(~S,~merge,ra,rb,rc,rd)
-def render(~scale: Nat,~S: Type, ~read: @+i:U32 -> S -> S & Splat, ~merge: S -> S -> S, gpu: Bool, b: Buffers<S>, old: Image) -> Buffers<S> & Image:
+def leaf(~scale: Nat, ~S: Type, ~read: @+i:U32 -> S -> S & Splat, x: U32, y: U32, b: Buffers<S>, old: Image) -> Buffers<S> & Image:
+  tile(~scale,~S,~read,x,y,b,old)
+def render(~scale: Nat, ~S: Type, ~read: @+i:U32 -> S -> S & Splat, ~merge: S -> S -> S, gpu: Bool, b: Buffers<S>, old: Image) -> Buffers<S> & Image:
   match gpu:
-    case True{}: tree!(~scale,~S,~read,~merge,7n,0,0,b,M.open(old))
-    case False{}: tree(~scale,~S,~read,~merge,7n,0,0,b,M.open(old))
+    case True{}: Tiles.tree!(~Buffers<S>,~U32.shln(8,scale),~leaf(~scale,~S,~read),~join(~S,~merge),7n,0,0,b,Tiles.open(old))
+    case False{}: Tiles.tree(~Buffers<S>,~U32.shln(8,scale),~leaf(~scale,~S,~read),~join(~S,~merge),7n,0,0,b,Tiles.open(old))
 def finished(~S: Type, cap: U32, counts: Array<U32>, cursors: Array<U32>, r: Buffers<S> & Image) -> S & Spatial.Index(space()) & Array<U32> & Image:
   (Buffers{s,offsets,ids,pixels,_},image) = r
   (s,Index.Index{cap,counts,offsets,cursors,ids},pixels,image)

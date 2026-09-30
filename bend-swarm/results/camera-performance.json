@@ -1,0 +1,382 @@
+{
+  "date": "2026-09-28",
+  "description": "Sequential headless runs. Host elapsed time. This task has no concurrent builds/tests; separate Turn campaign validation and user desktop work were active, so system load is not controlled. Legacy comparisons use alternating before/after order. New demos use CPU geometry/binning and selectable CPU/Metal raster.",
+  "runs": [
+    {
+      "label": "legacy-before0",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/camera-before/profile",
+        "--gpu",
+        "on",
+        "--threads",
+        "10",
+        "--",
+        "meadow",
+        "gpu",
+        "raw",
+        "standard",
+        "30",
+        "120"
+      ],
+      "binary_sha256": "b9ebbc7b5b626b71cefdc137a8f289ca66dff906f6fa963ef226c03c91df0396",
+      "metal_sha256": "c3b97b276b7dfe9618b4adf27887e1153a3ec3f332d1232db4d6575489e5b399",
+      "csv": "results/camera-final-legacy-before0.csv",
+      "samples": 120,
+      "timing": {
+        "simulation_us": {
+          "median_ms": 1.528,
+          "p95_ms": 2.622
+        },
+        "geometry_us": {
+          "median_ms": 1.474,
+          "p95_ms": 2.545
+        },
+        "binning_us": {
+          "median_ms": 3.8505,
+          "p95_ms": 6.535
+        },
+        "raster_us": {
+          "median_ms": 7.489,
+          "p95_ms": 9.652
+        },
+        "work_us": {
+          "median_ms": 14.8555,
+          "p95_ms": 20.151
+        },
+        "frame_us": {
+          "median_ms": 14.877,
+          "p95_ms": 20.176
+        }
+      }
+    },
+    {
+      "label": "legacy-after0",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/camera-profile-choice",
+        "--gpu",
+        "on",
+        "--threads",
+        "10",
+        "--",
+        "meadow",
+        "gpu",
+        "raw",
+        "standard",
+        "30",
+        "120"
+      ],
+      "binary_sha256": "1752a229e2d00fe758af890b98efe1d043623a41f4a4fe88b89e9d5b18bda1bc",
+      "metal_sha256": "5b18f2064cdbd650aebf982487e285f10711fc5a0089619045bfc025172bb935",
+      "csv": "results/camera-final-legacy-after0.csv",
+      "samples": 120,
+      "timing": {
+        "simulation_us": {
+          "median_ms": 1.229,
+          "p95_ms": 1.336
+        },
+        "geometry_us": {
+          "median_ms": 1.194,
+          "p95_ms": 1.246
+        },
+        "binning_us": {
+          "median_ms": 3.296,
+          "p95_ms": 3.403
+        },
+        "raster_us": {
+          "median_ms": 7.9145,
+          "p95_ms": 9.042
+        },
+        "work_us": {
+          "median_ms": 13.7375,
+          "p95_ms": 14.853
+        },
+        "frame_us": {
+          "median_ms": 13.7405,
+          "p95_ms": 14.86
+        }
+      }
+    },
+    {
+      "label": "legacy-after1",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/camera-profile-choice",
+        "--gpu",
+        "on",
+        "--threads",
+        "10",
+        "--",
+        "meadow",
+        "gpu",
+        "raw",
+        "standard",
+        "30",
+        "120"
+      ],
+      "binary_sha256": "1752a229e2d00fe758af890b98efe1d043623a41f4a4fe88b89e9d5b18bda1bc",
+      "metal_sha256": "5b18f2064cdbd650aebf982487e285f10711fc5a0089619045bfc025172bb935",
+      "csv": "results/camera-final-legacy-after1.csv",
+      "samples": 120,
+      "timing": {
+        "simulation_us": {
+          "median_ms": 1.246,
+          "p95_ms": 1.413
+        },
+        "geometry_us": {
+          "median_ms": 1.2185,
+          "p95_ms": 1.396
+        },
+        "binning_us": {
+          "median_ms": 3.37,
+          "p95_ms": 3.818
+        },
+        "raster_us": {
+          "median_ms": 7.7475,
+          "p95_ms": 9.098
+        },
+        "work_us": {
+          "median_ms": 13.7675,
+          "p95_ms": 15.5
+        },
+        "frame_us": {
+          "median_ms": 13.813,
+          "p95_ms": 15.508
+        }
+      }
+    },
+    {
+      "label": "legacy-before1",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/camera-before/profile",
+        "--gpu",
+        "on",
+        "--threads",
+        "10",
+        "--",
+        "meadow",
+        "gpu",
+        "raw",
+        "standard",
+        "30",
+        "120"
+      ],
+      "binary_sha256": "b9ebbc7b5b626b71cefdc137a8f289ca66dff906f6fa963ef226c03c91df0396",
+      "metal_sha256": "c3b97b276b7dfe9618b4adf27887e1153a3ec3f332d1232db4d6575489e5b399",
+      "csv": "results/camera-final-legacy-before1.csv",
+      "samples": 120,
+      "timing": {
+        "simulation_us": {
+          "median_ms": 1.543,
+          "p95_ms": 4.512
+        },
+        "geometry_us": {
+          "median_ms": 1.492,
+          "p95_ms": 2.791
+        },
+        "binning_us": {
+          "median_ms": 4.0655,
+          "p95_ms": 8.598
+        },
+        "raster_us": {
+          "median_ms": 9.6155,
+          "p95_ms": 12.485
+        },
+        "work_us": {
+          "median_ms": 16.8295,
+          "p95_ms": 32.283
+        },
+        "frame_us": {
+          "median_ms": 16.8505,
+          "p95_ms": 32.297
+        }
+      }
+    },
+    {
+      "label": "mono-metal",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/camera",
+        "--gpu",
+        "on",
+        "--threads",
+        "10",
+        "--",
+        "bench",
+        "mono",
+        "perspective",
+        "1024",
+        "20",
+        "60"
+      ],
+      "binary_sha256": "d72a7cacefcd835f109594eab16fd7f9e2b122eeadb906ba464fec77095ffe2f",
+      "metal_sha256": "eab31d5565b0f6dfad63466a117fe73f8b31dd642c931067435957ec3b4220a9",
+      "csv": "results/camera-final-mono-metal.csv",
+      "samples": 60,
+      "timing": {
+        "simulation_us": {
+          "median_ms": 0.002,
+          "p95_ms": 0.003
+        },
+        "geometry_us": {
+          "median_ms": 0.2545,
+          "p95_ms": 1.095
+        },
+        "binning_us": {
+          "median_ms": 1.2315,
+          "p95_ms": 3.347
+        },
+        "raster_us": {
+          "median_ms": 12.706,
+          "p95_ms": 16.903
+        },
+        "work_us": {
+          "median_ms": 14.6935,
+          "p95_ms": 20.527
+        }
+      },
+      "rebuilt_frames": []
+    },
+    {
+      "label": "mono-cpu",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/camera",
+        "--gpu",
+        "off",
+        "--threads",
+        "10",
+        "--",
+        "bench",
+        "mono",
+        "perspective",
+        "1024",
+        "20",
+        "60"
+      ],
+      "binary_sha256": "d72a7cacefcd835f109594eab16fd7f9e2b122eeadb906ba464fec77095ffe2f",
+      "metal_sha256": "eab31d5565b0f6dfad63466a117fe73f8b31dd642c931067435957ec3b4220a9",
+      "csv": "results/camera-final-mono-cpu.csv",
+      "samples": 60,
+      "timing": {
+        "simulation_us": {
+          "median_ms": 0.001,
+          "p95_ms": 0.002
+        },
+        "geometry_us": {
+          "median_ms": 0.0545,
+          "p95_ms": 0.09
+        },
+        "binning_us": {
+          "median_ms": 0.857,
+          "p95_ms": 0.976
+        },
+        "raster_us": {
+          "median_ms": 24.477,
+          "p95_ms": 29.198
+        },
+        "work_us": {
+          "median_ms": 25.434,
+          "p95_ms": 30.161
+        }
+      },
+      "rebuilt_frames": []
+    },
+    {
+      "label": "voxel-metal",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/camera",
+        "--gpu",
+        "on",
+        "--threads",
+        "10",
+        "--",
+        "bench",
+        "voxel",
+        "perspective",
+        "1024",
+        "20",
+        "60"
+      ],
+      "binary_sha256": "d72a7cacefcd835f109594eab16fd7f9e2b122eeadb906ba464fec77095ffe2f",
+      "metal_sha256": "eab31d5565b0f6dfad63466a117fe73f8b31dd642c931067435957ec3b4220a9",
+      "csv": "results/camera-final-voxel-metal.csv",
+      "samples": 60,
+      "timing": {
+        "simulation_us": {
+          "median_ms": 0.002,
+          "p95_ms": 0.009
+        },
+        "geometry_us": {
+          "median_ms": 0.785,
+          "p95_ms": 1.271
+        },
+        "binning_us": {
+          "median_ms": 1.09,
+          "p95_ms": 1.507
+        },
+        "raster_us": {
+          "median_ms": 10.222,
+          "p95_ms": 11.403
+        },
+        "work_us": {
+          "median_ms": 12.112,
+          "p95_ms": 14.627
+        }
+      },
+      "rebuilt_frames": [
+        {
+          "frame": 21,
+          "chunks": 4,
+          "simulation_us": 360
+        }
+      ]
+    },
+    {
+      "label": "voxel-cpu",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/camera",
+        "--gpu",
+        "off",
+        "--threads",
+        "10",
+        "--",
+        "bench",
+        "voxel",
+        "perspective",
+        "1024",
+        "20",
+        "60"
+      ],
+      "binary_sha256": "d72a7cacefcd835f109594eab16fd7f9e2b122eeadb906ba464fec77095ffe2f",
+      "metal_sha256": "eab31d5565b0f6dfad63466a117fe73f8b31dd642c931067435957ec3b4220a9",
+      "csv": "results/camera-final-voxel-cpu.csv",
+      "samples": 60,
+      "timing": {
+        "simulation_us": {
+          "median_ms": 0.002,
+          "p95_ms": 0.003
+        },
+        "geometry_us": {
+          "median_ms": 0.712,
+          "p95_ms": 0.839
+        },
+        "binning_us": {
+          "median_ms": 1.063,
+          "p95_ms": 1.307
+        },
+        "raster_us": {
+          "median_ms": 18.132,
+          "p95_ms": 21.405
+        },
+        "work_us": {
+          "median_ms": 19.959,
+          "p95_ms": 23.177
+        }
+      },
+      "rebuilt_frames": [
+        {
+          "frame": 21,
+          "chunks": 4,
+          "simulation_us": 238
+        }
+      ]
+    }
+  ]
+}

@@ -4,10 +4,23 @@ root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 cd "$root"
 export BEND_NO_TELEMETRY=1
 scripts/bend PROOF.bend
-for suite in parallel spatial spatial-api render mesh mesh-high grid-surface cloth cloth-contact cloth-input cloth-visual meadow life splats post downsample coverage; do
+for suite in parallel spatial spatial-api render mesh mesh-high mesh-blocks grid-surface cloth cloth-contact cloth-input cloth-visual meadow life splats post downsample coverage policy image tiles batch cadence camera voxels camera-demos; do
   bun --preload ./.toolchain/bend/bend2/main.ts "tests/$suite.js"
 done
 if [ "${1:-}" = --native ]; then
+  mkdir -p build
+  scripts/bend tests/policy-runtime.bend -o build/policy-runtime
+  ./build/policy-runtime > build/policy-runtime.txt
+  python3 -c 'from pathlib import Path; assert Path("build/policy-runtime.txt").read_text().strip() == "0,0,0,0,0,0,0,0,0,0,0"'
+  scripts/bend tests/policy-native.bend -o build/policy-native
+  ./build/policy-native --gpu off --threads 10 > build/policy-cpu.csv
+  ./build/policy-native --gpu on --threads 10 > build/policy-gpu.csv
+  python3 tests/policy-native-check.py
+  scripts/bend tests/arguments-native.bend -o build/arguments-native
+  ./build/arguments-native --gpu off -- --help alpha beta > build/arguments-native.txt
+  python3 -c 'from pathlib import Path; assert Path("build/arguments-native.txt").read_text().splitlines() == ["--help", "alpha", "beta"]'
+  ./build/arguments-native --gpu off > build/arguments-empty.txt
+  test ! -s build/arguments-empty.txt
   scripts/bend tests/native.bend -o build/native-test
   ./build/native-test --gpu off > results/native-cpu.csv
   ./build/native-test --gpu on > results/native-gpu.csv
@@ -42,4 +55,14 @@ if [ "${1:-}" = --native ]; then
   scripts/bend tests/cloth-soak.bend -o build/cloth-soak
   ./build/cloth-soak --gpu off --threads 10 > build/cloth-soak.csv
   python3 tests/cloth-surface-check.py build/cloth-soak.csv
+  scripts/bend benches/camera.bend -o build/camera
+  python3 tests/camera-native-check.py
+  scripts/bend tests/scene-native.bend -o build/scene-native
+  ./build/scene-native --gpu off --threads 10 > build/scene-cpu.csv
+  ./build/scene-native --gpu on --threads 10 > build/scene-metal.csv
+  python3 tests/scene-native-check.py
+  # Exercise the real mesh workload: tiny fixtures missed per-pixel closure work.
+  scripts/bend benches/profile.bend -o build/profile-native-test
+  ./build/profile-native-test --gpu on --threads 10 -- meadow gpu raw standard 2 3 > build/profile-native-test.csv
+  python3 -c 'import csv; rows=list(csv.DictReader(open("build/profile-native-test.csv"))); assert len(rows)==3 and all(int(r["frame_us"])>0 for r in rows)'
 fi

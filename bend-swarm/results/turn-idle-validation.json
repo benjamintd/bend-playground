@@ -1,0 +1,155 @@
+{
+  "date": "2026-09-28T15:52:13.992871+00:00",
+  "toolchain": [
+    "2.0.27",
+    "95317d952c8fe5be18ef49f916b2a57250cfb0aa"
+  ],
+  "scope": "Shared engine event-only window polling, lifecycle interruption tracking and pure frame cadence; Turn uses these to pause inactive windows and reduce unchanged-frame work. Native adapter is macOS-only; other demos opt in separately.",
+  "checks": [
+    "scripts/test: root PROOF and all 26 engine JS suites passed, including shared cadence.",
+    "tests/turn/schedule.js: active/inactive/occluded policy, static menus, ordered input, held-key reset, no resume catch-up and continuous 120 Hz physics passed.",
+    "tests/turn/play.js: 26,000 mixed-control ticks with independent collision sweeps and campaign/menu gameplay checks passed.",
+    "scripts/test-window: native input polling before first presentation, ordered keys, queue draining, 51 ms input wake, focus loss/resume, intervening interruption and close passed.",
+    "scripts/build-turn: generated catalog/font checks, Turn PROOF, CAMPAIGN_PROOF, native compilation and app installation passed.",
+    "Benchmark: visible-unfocused, hidden and minimized cases each produced zero frames and zero simulation ticks; CPU below 0.5% in all three.",
+    "Renderer, physics and other existing Turn Bend modules match the preceding API cleanup source hashes.",
+    "Built executable and installed app binary match; atomic installation preserves the old running executable."
+  ],
+  "limits": [
+    "Foreground idle/menu benchmark samples lost focus and are excluded from performance claims.",
+    "CPU time is an energy proxy, not a wattage/battery measurement.",
+    "The user's pre-update running Turn process was not terminated; relaunch is required to use the update.",
+    "The full native render/494-scene campaign suite was not rerun because render and simulation sources are unchanged."
+  ],
+  "performance": "results/turn-idle-performance.json",
+  "native_events": [
+    [
+      "ready",
+      "1",
+      "1",
+      "0",
+      "130",
+      ""
+    ],
+    [
+      "keys",
+      "1",
+      "1",
+      "0",
+      "226",
+      " key:100:1 key:100:0"
+    ],
+    [
+      "drained",
+      "1",
+      "1",
+      "0",
+      "5",
+      ""
+    ],
+    [
+      "early-wake",
+      "1",
+      "1",
+      "0",
+      "51337",
+      " key:100:1 key:100:0"
+    ],
+    [
+      "background",
+      "0",
+      "1",
+      "1",
+      "34",
+      ""
+    ],
+    [
+      "resumed",
+      "1",
+      "1",
+      "0",
+      "31",
+      ""
+    ],
+    [
+      "interrupted",
+      "1",
+      "0",
+      "1",
+      "35",
+      ""
+    ],
+    [
+      "close",
+      "1",
+      "0",
+      "0",
+      "1232",
+      " close"
+    ]
+  ],
+  "source_sha256": {
+    "engine/platform/events.bend": "2a401226936d7bf8e3e98114f762c628ed46566131f0969a966f0de1c629e79d",
+    "engine/platform/events.c": "e17a64f5ec4a5da1d3159738a46d7b3eaf8c7ab0f21a90b9d3ae2139eee216cf",
+    "engine/platform/events.js": "05293359a8a2e3a94e758414b7522cdb5380b2b991af8fba332ae516fcf2cb03",
+    "engine/platform/cadence.bend": "444c56eee781a59a11bd467f7f512864cc443cbe3e7ed294b71de623ded13b9e",
+    "demos/turn/main.bend": "2c8984e779d2e3ae08195fab7ad248df08c3a79373b8c262dda2821613db08e7",
+    "demos/turn/schedule.bend": "8ecee500252f829f31eaf42f2ee1d4866f77cc389780422a657ff38d1c71d484",
+    "scripts/build-turn": "65905c79b0310769dd2f415ca8f0eaebcd06ebe8b65ed5f5f630d15a5e991026",
+    "scripts/test": "d81b2d8c78618601627a11f89efc7110bf8f130e1b96b9f296bb13cee4acfd6f",
+    "scripts/test-turn": "91318bf0e635cbf0efa23ee486a3bd7a08013417fe10e4eeecf37b26b4709e55",
+    "scripts/test-window": "cc9fc0462dfc3172200a14cf40d3f8603766aaa800598b52835f83f2c8b401c1",
+    "scripts/bench-turn-idle.py": "c7b0712ea4beb76198a0decd9543199ac783be2f7bbad09eb238c2ea06aec6f0",
+    "tests/cadence.js": "23646c5a500340e877eb03ea7215735d61bb9fa9464ffeda270386810d2c4158",
+    "tests/turn/schedule.js": "6fcb9903e0390714d09f524060ec5dd920445cf7cd494dd1a587b4cdc1021ce8",
+    "tests/turn/idle-bench.bend": "b7e421d8953cf3224b6d2e7cfe807c3d39aa8c468ae8093aaf835aca8fc8cd4b",
+    "tests/turn/window-events.bend": "12ec4ae89bcbb56c511b8eb58904cfa8e8db3d1bd685f2858210c7e77a794a12",
+    "tests/turn/window-events-check.py": "07fd68f100e78486a7f488e4a9468739b6c15ffa99c681212853987b312681cf",
+    "tests/turn/window-control.bend": "a7f894265612bf95614d0c1cffe2bef32ff6af9e2c0af3d3a66aee12b82dc394",
+    "tests/turn/window-control.c": "d07795182f46e99dfbdedf931651de67097cdbb084d12e65db2011e51d992a1d",
+    "tests/turn/window-control.js": "89bf0024af3f233a83e7720d0fa960a1eaf3c5504b5cbf446f256bdc50328f3f",
+    "tests/turn/process-time.c": "5e3e5d16f1d84ac3aa14abd325a5300586349691a1876a096ccb7324d381d313",
+    "tests/turn/process-time.js": "5c374e3e6bbcec701af277ae38eef54b6205e7fed1330faf8dfea503fd1d53b3"
+  },
+  "unchanged_renderer_and_game_sha256": {
+    "engine/render/batch.bend": "1bb9d43e3860475a5735a7a161b1787e3f2ee796210bb3d9e05836545a306c04",
+    "engine/render/camera.bend": "32026fbdf2eff3c63d010e80c3c418c5353b4bb98fd41be2b53829d596f91c46",
+    "engine/render/color.bend": "f6c6cd8018f1ba6a6d40ef1f99665e96c41d96ccbce3ae84dcc6ab516f870782",
+    "engine/render/coverage.bend": "461eeab0a307a51273b6af87893eed29bf78f2b418bb0ede019f931b12008cfc",
+    "engine/render/downsample.bend": "d9507f9281a458ee06a513871d9ddae14d889b0ff7b80885254d6576ae73b724",
+    "engine/render/finish.bend": "bce57e4614c7a905d5c48d3167ebb9dcfe998df420cb0efaebafca26f21b9f62",
+    "engine/render/hud.bend": "3ca0d17e14cc17dd730c09408c016563aafa79218728cfa6085d7a9d86b10f9b",
+    "engine/render/image.bend": "f1c83d172d918839459f1e8313659d1e11ac2dce5d490c9b68b83c0e4b422617",
+    "engine/render/mesh.bend": "121ad7c59a954b153285543f14b5885d4667213d066851ff3886a4d5579e80fa",
+    "engine/render/particles.bend": "b0ec8a6db254e4b10dc661455aae830578543f965ec612e1b3cc7d5bc52ba774",
+    "engine/render/post.bend": "3fc0b754cd1473c75451d37e51abcd878825f3ef7242fe688139978eaa9ca4fe",
+    "engine/render/project.bend": "601a5f150b09f8e6eb405bedec31d294f5a658e435b73fe45d16ecce5004d4b0",
+    "engine/render/scene.bend": "4e2f1824a9c595d434ed466cb523fa4689b139bcdd0046e63df22318a306ec02",
+    "engine/render/splats.bend": "14529c6bb9f9ffb223b8671e745ad223e10019cfe9eb0f7972729b805a31b20c",
+    "engine/render/tiles.bend": "7d264c034e2790aeb35903ba0dbc4da002415795710fb7e7262dbfcab67a9073",
+    "demos/turn/CAMPAIGN_LAWS.bend": "0ca97be1fbdbc818af1d87ac3871699e1f76277765a14a87a942a32a86bf76cb",
+    "demos/turn/CAMPAIGN_PROOF.bend": "1e09eb18451091ff2cb43c9241336b74bc12f0517cd4aee7a05b56740e99c688",
+    "demos/turn/LAWS.bend": "210d85b4a9d0834e3fae4d4968986243782eb0b89f573315115afa52665a3e55",
+    "demos/turn/PROOF.bend": "38569d983f6ac2fdee3f20f2946335cc3464747b7a86a4fc2609e48cd82cb11b",
+    "demos/turn/collision.bend": "67886d4525e0e3ff5367c91d9cbecc86a6341a8d08d4c884eabdd66ce7a40849",
+    "demos/turn/font.bend": "aa739b4d1b8044e2790d8772c47216bc8bc41f7e33597617847b157ef428312c",
+    "demos/turn/levels.bend": "ffe42a590460c1a42d636cfc6f3181ef7dd7cfd4f16a415b91bd60adbe721bf5",
+    "demos/turn/model.bend": "ec5137c92a13641e30eedc4f60c8e6c8e1620d882f99c0adb314f12d7f9e77af",
+    "demos/turn/physics.bend": "ec4a64910766898936426b08bfd09dc51c891cc8b7f46f813f824938fa8558ce",
+    "demos/turn/play.bend": "7b28408196579847f9d77b4916178a1f5b1a571f2c0d6f214d7cb6bfe502c06e",
+    "demos/turn/projection.bend": "ab2dfb2dec5472d382532e000122e85b2a1400214997eafe51a9e9234543e4e5",
+    "demos/turn/render.bend": "cb9f9575bf18ad8719b8f6ca8aefd22460d0bcb64f2110e08133396a78cf5b57",
+    "demos/turn/resolution-check.bend": "fcc597eb814244372a026fc092510cc1e3ad0a850b21e413f0022826e528a82e",
+    "demos/turn/rules.bend": "4976b6967ea6396fb8eea8fd70dd397cbccedd1f3d81784c27bdb0f475755b6a",
+    "demos/turn/snapshot.bend": "1547d8dc98c8fb19d00fb672e26db35d65419402c5659f2b6477833d07514eeb",
+    "demos/turn/solutions.bend": "d2c84eba942f97ab0e8bd71acb73d199ccbc5ed44574a80e2f38bfba8ab0a513",
+    "demos/turn/style.bend": "7fe57ac280c2693efa31ed3350e039376c03eb56d4021dfcc63bb9e2f57e3878",
+    "demos/turn/terrain.bend": "51148ea9aa8dc1df953877d31a8492dbbc616bfaf52810ea50225e3e252fe1e7",
+    "demos/turn/text-coverage.bend": "01aecc7fc6425cd095dc69bedbf6972733fd5c11e9688c7d5510dbb9481fa09c",
+    "demos/turn/view.bend": "78557d12b4e8fe7c706f7528b86e00003c7b642c3e78d8d5f633ede893c98e4e",
+    "demos/turn/world.bend": "f5abbe47e4ee018bd12979ba751d4ec957c401c6fcba6c70f65b3fdffe6b635b"
+  },
+  "app_sha256": "fd18af077e8b118166eb8c3b86be6d0f44329c68d42120b48717eb80653b3265",
+  "benchmark_sha256": "a1334325527928cd77a6d6fbfaa5a891e0b55112a35d92be0d1173343bd0d5bc",
+  "baseline_main_sha256": "f4ee5e73bce479bba4b0130650187303e5f0436eef563224f4c224c90010b403"
+}

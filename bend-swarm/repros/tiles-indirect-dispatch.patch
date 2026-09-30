@@ -1,0 +1,70 @@
+--- a/engine/render/tiles.bend
++++ b/engine/render/tiles.bend
+@@ -33,3 +33,8 @@
+       ra rb rc rd = tree(~S,~size,~leaf,~merge,k,x,y,state,open(a)) tree(~S,~size,~leaf,~merge,k,(x + h : U32),y,state,open(b))
+         tree(~S,~size,~leaf,~merge,k,x,(y + h : U32),state,open(c)) tree(~S,~size,~leaf,~merge,k,(x + h : U32),(y + h : U32),state,open(d))
+       joined(~S,~merge,ra,rb,rc,rd)
++def run(~S: Type, ~size: U32, ~leaf: U32 -> U32 -> S -> Image -> S & Image, ~merge: S -> S -> S,
++  gpu: Bool, depth: Nat, state: S, image: Image) -> S & Image:
++  match gpu:
++    case True{}: tree!(~S,~size,~leaf,~merge,depth,0,0,state,open(image))
++    case False{}: tree(~S,~size,~leaf,~merge,depth,0,0,state,open(image))
+--- a/engine/render/mesh.bend
++++ b/engine/render/mesh.bend
+@@ -309,8 +309,8 @@
+ 
+ def render_level(~level: Nat, gpu: Bool, b: Drawing, old: Image) -> Drawing & Image:
+   match gpu:
+-    case True{}: Tiles.tree!(~Drawing,~U32.shln(4,level),~tile_size(~level,True{}),~join,7n,0,0,b,Tiles.open(old))
+-    case False{}: Tiles.tree(~Drawing,~U32.shln(8,level),~tile_size(~level,False{}),~join,6n,0,0,b,Tiles.open(old))
++    case True{}: Tiles.run(~Drawing,~U32.shln(4,level),~tile_size(~level,True{}),~join,True{},7n,b,old)
++    case False{}: Tiles.run(~Drawing,~U32.shln(8,level),~tile_size(~level,False{}),~join,False{},6n,b,old)
+ 
+ def bounds(t: Triangle) -> Bounds:
+   bounds_level(~0n,t)
+--- a/engine/render/particles.bend
++++ b/engine/render/particles.bend
+@@ -84,6 +84,4 @@
+ def leaf(x: U32, y: U32, b: Buffers, old: Image) -> Buffers & Image:
+   tile(x,y,b,old)
+ def render(gpu: Bool, b: Buffers, old: Image) -> Buffers & Image:
+-  match gpu:
+-    case True{}: Tiles.tree!(~Buffers,~8,~leaf,~join,7n,0,0,b,Tiles.open(old))
+-    case False{}: Tiles.tree(~Buffers,~8,~leaf,~join,7n,0,0,b,Tiles.open(old))
++  Tiles.run(~Buffers,~8,~leaf,~join,gpu,7n,b,old)
+--- a/engine/render/splats.bend
++++ b/engine/render/splats.bend
+@@ -111,9 +111,7 @@
+ def leaf(~scale: Nat, ~S: Type, ~read: @+i:U32 -> S -> S & Splat, x: U32, y: U32, b: Buffers<S>, old: Image) -> Buffers<S> & Image:
+   tile(~scale,~S,~read,x,y,b,old)
+ def render(~scale: Nat, ~S: Type, ~read: @+i:U32 -> S -> S & Splat, ~merge: S -> S -> S, gpu: Bool, b: Buffers<S>, old: Image) -> Buffers<S> & Image:
+-  match gpu:
+-    case True{}: Tiles.tree!(~Buffers<S>,~U32.shln(8,scale),~leaf(~scale,~S,~read),~join(~S,~merge),7n,0,0,b,Tiles.open(old))
+-    case False{}: Tiles.tree(~Buffers<S>,~U32.shln(8,scale),~leaf(~scale,~S,~read),~join(~S,~merge),7n,0,0,b,Tiles.open(old))
++  Tiles.run(~Buffers<S>,~U32.shln(8,scale),~leaf(~scale,~S,~read),~join(~S,~merge),gpu,7n,b,old)
+ def finished(~S: Type, cap: U32, counts: Array<U32>, cursors: Array<U32>, r: Buffers<S> & Image) -> S & Spatial.Index(space()) & Array<U32> & Image:
+   (Buffers{s,offsets,ids,pixels,_},image) = r
+   (s,Index.Index{cap,counts,offsets,cursors,ids},pixels,image)
+--- a/engine/render/post.bend
++++ b/engine/render/post.bend
+@@ -158,8 +158,8 @@
+   tile(~level,filter,small,x,y,s,old)
+ def render_filtered(~level: Nat, ~filter: Bool, gpu: Bool, s: State, old: Image) -> State & Image:
+   match gpu:
+-    case True{}: Tiles.tree!(~State,~U32.shln(4,level),~leaf(~level,~filter,~True{}),~join,7n,0,0,s,Tiles.open(old))
+-    case False{}: Tiles.tree(~State,~U32.shln(8,level),~leaf(~level,~filter,~False{}),~join,6n,0,0,s,Tiles.open(old))
++    case True{}: Tiles.run(~State,~U32.shln(4,level),~leaf(~level,~filter,~True{}),~join,True{},7n,s,old)
++    case False{}: Tiles.run(~State,~U32.shln(8,level),~leaf(~level,~filter,~False{}),~join,False{},6n,s,old)
+ def render_level(~level: Nat, gpu: Bool, s: State, old: Image) -> State & Image:
+   render_filtered(~level,~True{},gpu,s,old)
+ # Coverage already wrote resolved pixels: specialize away filtering/writes.
+--- a/engine/render/downsample.bend
++++ b/engine/render/downsample.bend
+@@ -32,5 +32,5 @@
+   leaf(~level,~small,x,y,pixels,image)
+ def render(~level: Nat, gpu: Bool, pixels: Array<U32>, image: Image) -> Array<U32> & Image:
+   match gpu:
+-    case True{}: Tiles.tree!(~Array<U32>,~U32.shln(4,level),~tile(~level,~True{}),~Array.join(U32),7n,0,0,pixels,Tiles.open(image))
+-    case False{}: Tiles.tree(~Array<U32>,~U32.shln(8,level),~tile(~level,~False{}),~Array.join(U32),6n,0,0,pixels,Tiles.open(image))
++    case True{}: Tiles.run(~Array<U32>,~U32.shln(4,level),~tile(~level,~True{}),~Array.join(U32),True{},7n,pixels,image)
++    case False{}: Tiles.run(~Array<U32>,~U32.shln(8,level),~tile(~level,~False{}),~Array.join(U32),False{},6n,pixels,image)

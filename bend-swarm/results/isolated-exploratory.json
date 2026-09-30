@@ -1,0 +1,132 @@
+{
+  "date": "2026-09-28T07:41:53.237248+00:00",
+  "machine": {
+    "os": "macOS-15.7.4-arm64-arm-64bit",
+    "cpu": "Apple M2 Pro",
+    "gpu": [
+      {
+        "sppci_model": "Apple M2 Pro",
+        "sppci_cores": "16"
+      }
+    ],
+    "memory_gb": 16.0
+  },
+  "runs": [
+    {
+      "command": [
+        "build/meadow-before",
+        "--gpu",
+        "off",
+        "--threads",
+        "10",
+        "--",
+        "cpu",
+        "raw"
+      ],
+      "binary_sha256": "fd90ebe1c66625c484768fa29c2babe7d36775b7ee23b0b9fc0aa8d5064e25f8",
+      "csv": "isolated-exploratory-cpu-before.csv",
+      "summary": {
+        "simulation_us": 0.229,
+        "render_us": 12.1325,
+        "frame_us": 12.361
+      }
+    },
+    {
+      "command": [
+        "build/meadow-frame",
+        "--gpu",
+        "off",
+        "--threads",
+        "10",
+        "--",
+        "cpu",
+        "raw"
+      ],
+      "binary_sha256": "85d690114bb6dbb24aa22ba5512036741bc755b001405ca31b5609ea1dca7497",
+      "csv": "isolated-exploratory-cpu-culling.csv",
+      "summary": {
+        "simulation_us": 0.232,
+        "render_us": 12.3835,
+        "frame_us": 12.6185
+      }
+    },
+    {
+      "command": [
+        "build/meadow-ribbon",
+        "--gpu",
+        "off",
+        "--threads",
+        "10",
+        "--",
+        "cpu",
+        "raw"
+      ],
+      "binary_sha256": "1d9635e08a4cd01ace4ec8cc7c94ccfb8f74fcea59eb86273497583472fefd79",
+      "csv": "isolated-exploratory-cpu-ribbon.csv",
+      "summary": {
+        "simulation_us": 0.2285,
+        "render_us": 12.1225,
+        "frame_us": 12.347
+      }
+    },
+    {
+      "command": [
+        "build/meadow-before",
+        "--gpu",
+        "on",
+        "--threads",
+        "10",
+        "--",
+        "gpu",
+        "aa"
+      ],
+      "binary_sha256": "fd90ebe1c66625c484768fa29c2babe7d36775b7ee23b0b9fc0aa8d5064e25f8",
+      "csv": "isolated-exploratory-gpu-before.csv",
+      "summary": {
+        "simulation_us": 1.0195,
+        "render_us": 24.731,
+        "frame_us": 25.762
+      }
+    },
+    {
+      "command": [
+        "build/meadow-frame",
+        "--gpu",
+        "on",
+        "--threads",
+        "10",
+        "--",
+        "gpu",
+        "aa"
+      ],
+      "binary_sha256": "85d690114bb6dbb24aa22ba5512036741bc755b001405ca31b5609ea1dca7497",
+      "csv": "isolated-exploratory-gpu-culling.csv",
+      "summary": {
+        "simulation_us": 1.031,
+        "render_us": 25.3775,
+        "frame_us": 26.427
+      }
+    },
+    {
+      "command": [
+        "build/meadow-ribbon",
+        "--gpu",
+        "on",
+        "--threads",
+        "10",
+        "--",
+        "gpu",
+        "aa"
+      ],
+      "binary_sha256": "1d9635e08a4cd01ace4ec8cc7c94ccfb8f74fcea59eb86273497583472fefd79",
+      "csv": "isolated-exploratory-gpu-ribbon.csv",
+      "summary": {
+        "simulation_us": 1.031,
+        "render_us": 25.2965,
+        "frame_us": 26.338
+      }
+    }
+  ],
+  "paused_demos": [],
+  "note": "The two previously observed Bend Turn processes had already exited before this run; ps returned exit 1 with no output/errors. No processes were paused or resumed. Other desktop applications remained active."
+}

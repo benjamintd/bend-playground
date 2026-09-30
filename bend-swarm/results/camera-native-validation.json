@@ -1,0 +1,104 @@
+[
+  {
+    "scene": "mono",
+    "projection": "perspective",
+    "size": 512,
+    "backend": "cpu",
+    "pixels": 262144,
+    "sha256": "fcd64bfa631276467888cc581d5028f1c24e1afa181d48a72137ad809c77b635"
+  },
+  {
+    "scene": "mono",
+    "projection": "perspective",
+    "size": 512,
+    "backend": "metal",
+    "pixels": 262144,
+    "sha256": "fcd64bfa631276467888cc581d5028f1c24e1afa181d48a72137ad809c77b635",
+    "cpu_metal_pixel_differences": 0
+  },
+  {
+    "scene": "mono",
+    "projection": "ortho",
+    "size": 512,
+    "backend": "cpu",
+    "pixels": 262144,
+    "sha256": "4328db15a91b78d2c5efb168ae7043afbe5dfdedebdbb51645c637eeda6f333e"
+  },
+  {
+    "scene": "mono",
+    "projection": "ortho",
+    "size": 512,
+    "backend": "metal",
+    "pixels": 262144,
+    "sha256": "4328db15a91b78d2c5efb168ae7043afbe5dfdedebdbb51645c637eeda6f333e",
+    "cpu_metal_pixel_differences": 0
+  },
+  {
+    "scene": "voxel",
+    "projection": "perspective",
+    "size": 512,
+    "backend": "cpu",
+    "pixels": 262144,
+    "sha256": "28ab1e76b9b75003e83c758928840e719facda3fa98b98227c1d38cf6eb7dc0e"
+  },
+  {
+    "scene": "voxel",
+    "projection": "perspective",
+    "size": 512,
+    "backend": "metal",
+    "pixels": 262144,
+    "sha256": "28ab1e76b9b75003e83c758928840e719facda3fa98b98227c1d38cf6eb7dc0e",
+    "cpu_metal_pixel_differences": 0
+  },
+  {
+    "scene": "voxel",
+    "projection": "ortho",
+    "size": 512,
+    "backend": "cpu",
+    "pixels": 262144,
+    "sha256": "96706216c6f428043a21103d2e6d0aaaf74651037f125639ca8628d496b3a94e"
+  },
+  {
+    "scene": "voxel",
+    "projection": "ortho",
+    "size": 512,
+    "backend": "metal",
+    "pixels": 262144,
+    "sha256": "96706216c6f428043a21103d2e6d0aaaf74651037f125639ca8628d496b3a94e",
+    "cpu_metal_pixel_differences": 0
+  },
+  {
+    "scene": "mono",
+    "projection": "perspective",
+    "size": 2048,
+    "backend": "cpu",
+    "pixels": 4194304,
+    "sha256": "2584be0d63ef1e23ec055e698bc68cec9aef3b265c33dd154367a1d9e6192d7d"
+  },
+  {
+    "scene": "mono",
+    "projection": "perspective",
+    "size": 2048,
+    "backend": "metal",
+    "pixels": 4194304,
+    "sha256": "2584be0d63ef1e23ec055e698bc68cec9aef3b265c33dd154367a1d9e6192d7d",
+    "cpu_metal_pixel_differences": 0
+  },
+  {
+    "scene": "voxel",
+    "projection": "ortho",
+    "size": 1024,
+    "backend": "cpu",
+    "pixels": 1048576,
+    "sha256": "6741e2258c2714cfb886e4c9cac01bc2caabaab4b03f2f2c6489ba8465f56505"
+  },
+  {
+    "scene": "voxel",
+    "projection": "ortho",
+    "size": 1024,
+    "backend": "metal",
+    "pixels": 1048576,
+    "sha256": "6741e2258c2714cfb886e4c9cac01bc2caabaab4b03f2f2c6489ba8465f56505",
+    "cpu_metal_pixel_differences": 0
+  }
+]

@@ -1,0 +1,45 @@
+{
+  "date": "2026-09-28T09:33:13.670573+00:00",
+  "bend_version": [
+    "2.0.27",
+    "95317d952c8fe5be18ef49f916b2a57250cfb0aa"
+  ],
+  "source_files": {
+    "engine/render/coverage.bend": "461eeab0a307a51273b6af87893eed29bf78f2b418bb0ede019f931b12008cfc",
+    "engine/render/post.bend": "67afa6bad33b30cb00ddd36fb8424bb66eadf321118a919a49f887f493ecff5c",
+    "engine/render/finish.bend": "8f31a8e9b887fa6ea855be8bb1f98411abe2c566cb3206954ec54e33e9afe86d",
+    "engine/render/mesh.bend": "c12b58ef51e4e8001d10b90f1118bf6dbfb1e55c09285862434a13e96f905c0b",
+    "demos/cloth/frame.bend": "bffd950818a5ed8dea6006e6c5b46a1f3347f7e1283da4f13cb86729d014074e",
+    "demos/cloth/main.bend": "41a4cb94b804375532706bfc4bb6225815228437571102e598d9d60173f0b1e8",
+    "engine/platform/player.bend": "9ae6770a25c4e83a240140ad8f5344e0b4ecb6e7493febc479e8b97d9cb07191",
+    "engine/platform/arguments.bend": "c2a68eacd246e74d4366e199f14ed617fdf34e482b74e9e6c5bd61adcbc15e72",
+    "benches/cloth.bend": "df1d4cf3d3de6dc09a89ec4dc17959887c8f8a78d4ca15d825880e62410a1df7",
+    "benches/cloth_window.bend": "aa00194c9c2fe41b048230c33418bd0e78159b85cc2839420c527c6567c3df46",
+    "tests/cloth-input.bend": "63918299ea3bc74732e15e6ce63796b39f901e7f4edc255dbb87cbf6aa3e1bb7",
+    "tests/cloth-input.js": "42c510e04f78afe7edfd0f11bf9a330af852a4f792fc3aff9e7062f486196e49",
+    "scripts/test": "e48176b5b01927e5a5adab35b9ebc5fddf7e2085960f78e3d08da1c0e96608fa"
+  },
+  "checks": {
+    "proofs_and_js": "PASS: scripts/test --native",
+    "native": "PASS: complete scripts/test --native including fresh CPU/Metal fixtures, native argument checks, Life 600-step all-pairs probes, quality/2048/Image tests and cloth soak",
+    "cloth_soak": {
+      "snapshots": 20,
+      "triangle_intersections": 0,
+      "max_structural_stretch": 1.4554149004917358
+    },
+    "apps": "PASS: scripts/build",
+    "window_benchmark_build": "PASS: benches/cloth_window.bend",
+    "turn": "PASS: scripts/test-turn (proofs, JS and native)",
+    "global_upgrade": "See bend-upgrade-validation.json for the separately retained 2.0.32 global install and Metal blocker",
+    "app_bundle_matches_build": true
+  },
+  "logs": [
+    "build/cloth-final-native.log",
+    "build/cloth-final-build.log",
+    "build/cloth-window-build.log",
+    "build/cloth-final-turn.log"
+  ],
+  "scope": "Performance and real-window observations recorded separately in cloth-routing-final.json. Project tests use the user-selected working 2.0.27 pin.",
+  "performance": "cloth-routing-final.json: 4 complete headless runs, 1 complete CPU-only window run, 1 clean early window exit; quality window matrix not complete. See load note.",
+  "app_binary_sha256": "cb8693af709067d6f35e6a41c8ab8f78df962596f119446bf3c7ded52e4782bd"
+}

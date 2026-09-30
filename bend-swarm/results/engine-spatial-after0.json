@@ -1,0 +1,80 @@
+[
+  {
+    "name": "points-cpu",
+    "capture": "results/engine-spatial-after0-points-cpu.csv",
+    "binary_sha256": "7723fc5c5e4091699a07a49091ac4578e077655e897c1dc23d89845d92c0fe10",
+    "args": [
+      "17",
+      "14",
+      "40",
+      "180"
+    ],
+    "gpu": "off",
+    "samples": 180,
+    "us": {
+      "update_us": {
+        "median": 9280.5,
+        "p95": 17865
+      },
+      "histogram_us": {
+        "median": 9552.5,
+        "p95": 19726
+      },
+      "scan_us": {
+        "median": 37.0,
+        "p95": 61
+      },
+      "scatter_us": {
+        "median": 9948.5,
+        "p95": 19292
+      },
+      "render_us": {
+        "median": 15531.5,
+        "p95": 26743
+      },
+      "frame_us": {
+        "median": 47158.5,
+        "p95": 66954
+      }
+    }
+  },
+  {
+    "name": "points-metal",
+    "capture": "results/engine-spatial-after0-points-metal.csv",
+    "binary_sha256": "7723fc5c5e4091699a07a49091ac4578e077655e897c1dc23d89845d92c0fe10",
+    "args": [
+      "17",
+      "14",
+      "40",
+      "180"
+    ],
+    "gpu": "on",
+    "samples": 180,
+    "us": {
+      "update_us": {
+        "median": 1390.5,
+        "p95": 2172
+      },
+      "histogram_us": {
+        "median": 1249.0,
+        "p95": 1855
+      },
+      "scan_us": {
+        "median": 34.0,
+        "p95": 39
+      },
+      "scatter_us": {
+        "median": 1227.0,
+        "p95": 1831
+      },
+      "render_us": {
+        "median": 2208.0,
+        "p95": 3332
+      },
+      "frame_us": {
+        "median": 6162.5,
+        "p95": 8974
+      }
+    }
+  }
+]

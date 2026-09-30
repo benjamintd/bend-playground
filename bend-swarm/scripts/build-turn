@@ -1,0 +1,29 @@
+#!/bin/sh
+set -eu
+root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+cd "$root"
+mkdir -p build
+python3 scripts/generate-turn-levels.py --check
+python3 demos/turn/assets/generate-font.py --check
+scripts/bend demos/turn/PROOF.bend
+scripts/bend demos/turn/CAMPAIGN_PROOF.bend
+scripts/bend demos/turn/main.bend -o build/turn
+if [ "$(uname)" = Darwin ]; then
+  app='build/Bend Turn.app/Contents'
+  mkdir -p "$app/MacOS" "$app/Resources"
+  # Replace atomically so an already-running game keeps its mapped executable.
+  native_tmp=$(mktemp "$app/MacOS/turn-native.XXXXXX")
+  cp build/turn "$native_tmp"
+  chmod 755 "$native_tmp"
+  mv -f "$native_tmp" "$app/MacOS/turn-native"
+  cat > "$app/MacOS/turn" <<'LAUNCHER'
+#!/bin/sh
+set -eu
+app_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+exec "$app_dir/turn-native" --gpu off --threads 8
+LAUNCHER
+  chmod +x "$app/MacOS/turn"
+  if [ -f build/turn.gpu ]; then cp build/turn.gpu "$app/MacOS/turn-native.gpu"; fi
+  cp demos/turn/Info.plist "$app/Info.plist"
+  cp demos/turn/assets/OFL.txt "$app/Resources/Turn-Font-License.txt"
+fi

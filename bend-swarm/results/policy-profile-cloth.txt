@@ -1,0 +1,11 @@
+30 measured frames from results/policy-profile-cloth.csv
+Host elapsed milliseconds; frame excludes CSV output and window presentation.
+Stage         Backend     Median       P95       Max
+simulation    CPU          9.518    13.008    15.016
+geometry      CPU          0.108     0.129     0.130
+binning       CPU          0.112     0.141     0.145
+raster        GPU          3.650     6.051     6.481
+post          GPU          4.571     6.161     6.985
+work                      17.888    23.072    28.708
+other                      0.005     0.019     0.021
+frame                     17.892    23.076    28.714

@@ -1,12 +1,5 @@
 import Base
 
-# Balanced contiguous intervals. The right half receives an odd remainder.
-def left(n: Nat) -> Nat:
-  Nat.div(n,2n)
-
-def right(+n: Nat) -> Nat:
-  Nat.sub(n,left(n))
-
 def capacity(d: Nat) -> Nat:
   match d:
     case 0n: 1n

@@ -1,0 +1,23 @@
+--- a/engine/render/mesh.bend
++++ b/engine/render/mesh.bend
+@@ -162,15 +162,13 @@
+     shaded(color,F32.max(0.0,(al + v * (bl - al) + w * (cl - al) : F32))),old)
+ def interpolation_camera(u: F32, v: F32, w: F32, az: F32, bz: F32, cz: F32, al: F32, bl: F32, cl: F32, +color: U32, old: Fragment) -> Fragment:
+   interpolated(U32.is_ne(U32.and(color,16777216),0),True{},u,v,w,az,bz,cz,al,bl,cl,color,old)
+-# Keep selection first-order. Selecting curried functions here leaves heap
+-# closures in generated pixel code on the pinned Bend compiler.
+-def interpolation_choice(camera: Bool,
++def interpolation_call(~shade: F32 -> F32 -> F32 -> F32 -> F32 -> F32 -> F32 -> F32 -> F32 -> U32 -> Fragment -> Fragment,
+   u: F32, v: F32, w: F32, az: F32, bz: F32, cz: F32, al: F32, bl: F32, cl: F32, color: U32, old: Fragment) -> Fragment:
+-  match camera:
+-    case True{}: interpolation_camera(u,v,w,az,bz,cz,al,bl,cl,color,old)
+-    case False{}: interpolation_legacy(u,v,w,az,bz,cz,al,bl,cl,color,old)
++  shade(u,v,w,az,bz,cz,al,bl,cl,color,old)
+ def interpolation(~camera: Bool, u: F32, v: F32, w: F32, az: F32, bz: F32, cz: F32, al: F32, bl: F32, cl: F32, color: U32, old: Fragment) -> Fragment:
+-  interpolation_choice(camera,u,v,w,az,bz,cz,al,bl,cl,color,old)
++  interpolation_call(~Bool.pick(F32 -> F32 -> F32 -> F32 -> F32 -> F32 -> F32 -> F32 -> F32 -> U32 -> Fragment -> Fragment,
++    camera,(u => v => w => az => bz => cz => al => bl => cl => color => old => interpolation_camera(u,v,w,az,bz,cz,al,bl,cl,color,old)),
++    (u => v => w => az => bz => cz => al => bl => cl => color => old => interpolation_legacy(u,v,w,az,bz,cz,al,bl,cl,color,old))),u,v,w,az,bz,cz,al,bl,cl,color,old)
+ def barycentric_mode(~camera: Bool,valid: Bool, u: F32, v: F32, w: F32, az: F32, bz: F32, cz: F32, al: F32, bl: F32, cl: F32, +color: U32, old: Fragment) -> Fragment:
+   match valid:
+     case False{}: old

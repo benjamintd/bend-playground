@@ -1,0 +1,12 @@
+#!/bin/sh
+set -eu
+root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+cd "$root"
+if [ "$(uname)" != Darwin ]; then
+  echo 'Native event tests require the macOS window adapter.' >&2
+  exit 1
+fi
+mkdir -p build
+scripts/bend tests/turn/window-events.bend -o build/turn-window-events
+./build/turn-window-events --gpu off --threads 8 > build/idle-events.csv
+python3 tests/turn/window-events-check.py

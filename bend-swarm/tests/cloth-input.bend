@@ -15,3 +15,15 @@ def tested(r: Result<String,S.State>, es: List<Event>) -> U32:
         App.Controls{False{},False{},False{},False{},True{},False{},0.0,0.0,False{},4294967295,7.5,0.5,0.5,False{},False{},False{}})))
 def batch(es: List<Event>) -> U32:
   tested(S.create(5n),es)
+
+# Keep constructor names at one JS module boundary: Bend 2.0.32 qualifies
+# imported constructors using the exporting module's import paths.
+def fixture_created(r: Result<String,S.State>) -> Result<String,F.Frame>:
+  match r:
+    case Fail{e}: Fail{e}
+    case Done{s}: Done{F.Frame{s,Array.new(M.Triangle,11n,M.blank()),M.empty(),Array.new(U32,18n,0),
+      Array.new(M.Fragment,0n,M.Fragment{0.0,0}),Pix{0},123,456}}
+def fixture() -> Result<String,F.Frame>:
+  fixture_created(S.create(5n))
+def resize(high: Bool, f: F.Frame) -> F.Frame:
+  F.ensure(high,f)

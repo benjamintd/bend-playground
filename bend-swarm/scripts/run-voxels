@@ -1,0 +1,6 @@
+#!/bin/sh
+set -eu
+root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+cd "$root"
+if [ ! -x build/voxels ]; then scripts/build-camera; fi
+exec ./build/voxels --gpu on --threads 10 "$@"

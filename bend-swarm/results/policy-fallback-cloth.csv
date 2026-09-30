@@ -1,0 +1,4 @@
+sim_gpu,geometry_gpu,binning_gpu,raster_gpu,post_gpu,simulation_us,geometry_us,binning_us,raster_us,post_us,work_us,frame_us
+0,0,0,0,0,10079,108,105,2469,0,12761,12764
+0,0,0,0,0,9702,104,104,2241,0,12151,12154
+0,0,0,0,0,9976,103,108,2761,0,12948,12950

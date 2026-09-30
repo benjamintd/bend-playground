@@ -1,0 +1,258 @@
+--- a/engine/render/mesh.bend
++++ b/engine/render/mesh.bend
+@@ -157,24 +157,12 @@
+     case False{}:
+       +depth = (1.0 / F32.max((u / az + v / bz + w / cz : F32),0.000001) : F32)
+       choose(True{},depth,shaded(color,F32.max(0.0,perspective_light(modern,u,v,w,az,bz,cz,al,bl,cl,depth))),old)
+-def interpolation_legacy(+u: F32, +v: F32, +w: F32, az: F32, bz: F32, cz: F32, +al: F32, bl: F32, cl: F32, color: U32, old: Fragment) -> Fragment:
+-  choose(True{},(1.0 / F32.max((u / az + v / bz + w / cz : F32),0.000001) : F32),
+-    shaded(color,F32.max(0.0,(al + v * (bl - al) + w * (cl - al) : F32))),old)
+-def interpolation_camera(u: F32, v: F32, w: F32, az: F32, bz: F32, cz: F32, al: F32, bl: F32, cl: F32, +color: U32, old: Fragment) -> Fragment:
+-  interpolated(U32.is_ne(U32.and(color,16777216),0),True{},u,v,w,az,bz,cz,al,bl,cl,color,old)
+-def interpolation_call(~shade: F32 -> F32 -> F32 -> F32 -> F32 -> F32 -> F32 -> F32 -> F32 -> U32 -> Fragment -> Fragment,
+-  u: F32, v: F32, w: F32, az: F32, bz: F32, cz: F32, al: F32, bl: F32, cl: F32, color: U32, old: Fragment) -> Fragment:
+-  shade(u,v,w,az,bz,cz,al,bl,cl,color,old)
+-def interpolation(~camera: Bool, u: F32, v: F32, w: F32, az: F32, bz: F32, cz: F32, al: F32, bl: F32, cl: F32, color: U32, old: Fragment) -> Fragment:
+-  interpolation_call(~Bool.pick(F32 -> F32 -> F32 -> F32 -> F32 -> F32 -> F32 -> F32 -> F32 -> U32 -> Fragment -> Fragment,
+-    camera,(u => v => w => az => bz => cz => al => bl => cl => color => old => interpolation_camera(u,v,w,az,bz,cz,al,bl,cl,color,old)),
+-    (u => v => w => az => bz => cz => al => bl => cl => color => old => interpolation_legacy(u,v,w,az,bz,cz,al,bl,cl,color,old))),u,v,w,az,bz,cz,al,bl,cl,color,old)
+-def barycentric_mode(~camera: Bool,valid: Bool, u: F32, v: F32, w: F32, az: F32, bz: F32, cz: F32, al: F32, bl: F32, cl: F32, +color: U32, old: Fragment) -> Fragment:
++def barycentric(valid: Bool, u: F32, v: F32, w: F32, az: F32, bz: F32, cz: F32, al: F32, bl: F32, cl: F32, +color: U32, old: Fragment) -> Fragment:
+   match valid:
+     case False{}: old
+-    case True{}: interpolation(~camera,u,v,w,az,bz,cz,al,bl,cl,color,old)
+-
+-def weights_mode(~camera: Bool,nonzero: Bool, +x: F32, +y: F32, +ax: F32, +ay: F32, +az: F32,
++    case True{}: interpolated(U32.is_ne(U32.and(color,16777216),0),U32.is_ne(U32.and(color,33554432),0),u,v,w,az,bz,cz,al,bl,cl,color,old)
++
++def weights(nonzero: Bool, +x: F32, +y: F32, +ax: F32, +ay: F32, +az: F32,
+   +bx: F32, +by: F32, +bz: F32, +cx: F32, +cy: F32, +cz: F32, +den: F32, al: F32, bl: F32, cl: F32, +color: U32, old: Fragment) -> Fragment:
+   match nonzero:
+     case False{}: old
+@@ -184,13 +172,13 @@
+       +w = (1.0 - u - v : F32)
+       # Bend evaluates arguments eagerly. Reject misses before depth and
+       # lighting work, rather than computing a color that choose discards.
+-      barycentric_mode(~camera,(F32.min(az,F32.min(bz,cz)) > Bool.pick(F32,camera,0.0,0.1) : F32) && (u >= 0.0 : F32)
++      barycentric((F32.min(az,F32.min(bz,cz)) > near_threshold(color) : F32) && (u >= 0.0 : F32)
+         && (v >= 0.0 : F32) && (w >= 0.0 : F32),u,v,w,az,bz,cz,al,bl,cl,color,old)
+ 
+-def sample_mode(~camera: Bool,x: F32, y: F32, t: Triangle, old: Fragment) -> Fragment:
++def sample(x: F32, y: F32, t: Triangle, old: Fragment) -> Fragment:
+   Triangle{Vertex{+ax,+ay,az,al},Vertex{+bx,+by,bz,bl},Vertex{+cx,+cy,cz,cl},color} = t
+   +den = ((by - cy) * (ax - cx) + (cx - bx) * (ay - cy) : F32)
+-  weights_mode(~camera,(F32.abs(den) > 0.00001 : F32),x,y,ax,ay,az,bx,by,bz,cx,cy,cz,den,al,bl,cl,color,old)
++  weights((F32.abs(den) > 0.00001 : F32),x,y,ax,ay,az,bx,by,bz,cx,cy,cz,den,al,bl,cl,color,old)
+ 
+ # Allocate two framebuffer areas of Fragment. The first half is a static
+ # backdrop_level, refilled only when camera/background changes. Raster reads it
+@@ -211,7 +199,7 @@
+ 
+ def sampled(x: F32, y: F32, ids: Array<U32>, old: Fragment, r: Array<Triangle> & Triangle) -> Query:
+   (tris,t) = r
+-  Query{tris,ids,sample_mode(~False{},x,y,t,old)}
++  Query{tris,ids,sample(x,y,t,old)}
+ 
+ def queried(x: F32, y: F32, tris: Array<Triangle>, old: Fragment, r: Array<U32> & U32) -> Query:
+   (ids,id) = r
+@@ -241,21 +229,21 @@
+ # independent background/depth/color and uses the unchanged sample equation.
+ type BlockQuery is Type:
+   BlockQuery{triangles: Array<Triangle>, ids: Array<U32>, a: Fragment, b: Fragment, c: Fragment, d: Fragment}
+-def block_sampled_mode(~camera: Bool,+x: F32, +y: F32, ids: Array<U32>, a: Fragment, b: Fragment, c: Fragment, d: Fragment,
++def block_sampled(+x: F32, +y: F32, ids: Array<U32>, a: Fragment, b: Fragment, c: Fragment, d: Fragment,
+   r: Array<Triangle> & Triangle) -> BlockQuery:
+   (tris,+t) = r
+-  BlockQuery{tris,ids,sample_mode(~camera,x,y,t,a),sample_mode(~camera,(x + 1.0 : F32),y,t,b),
+-    sample_mode(~camera,x,(y + 1.0 : F32),t,c),sample_mode(~camera,(x + 1.0 : F32),(y + 1.0 : F32),t,d)}
+-def block_identified_mode(~camera: Bool,x: F32, y: F32, tris: Array<Triangle>, a: Fragment, b: Fragment, c: Fragment, d: Fragment,
++  BlockQuery{tris,ids,sample(x,y,t,a),sample((x + 1.0 : F32),y,t,b),
++    sample(x,(y + 1.0 : F32),t,c),sample((x + 1.0 : F32),(y + 1.0 : F32),t,d)}
++def block_identified(x: F32, y: F32, tris: Array<Triangle>, a: Fragment, b: Fragment, c: Fragment, d: Fragment,
+   r: Array<U32> & U32) -> BlockQuery:
+   (ids,id) = r
+-  block_sampled_mode(~camera,x,y,ids,a,b,c,d,Array.get(Triangle,tris,id))
+-def block_query_mode(~camera: Bool,n: Nat, +i: U32, +x: F32, +y: F32, q: BlockQuery) -> BlockQuery:
++  block_sampled(x,y,ids,a,b,c,d,Array.get(Triangle,tris,id))
++def block_query(n: Nat, +i: U32, +x: F32, +y: F32, q: BlockQuery) -> BlockQuery:
+   match n:
+     case 0n: q
+     case 1n+k:
+       BlockQuery{tris,ids,a,b,c,d} = q
+-      block_query_mode(~camera,k,(i + 1 : U32),x,y,block_identified_mode(~camera,x,y,tris,a,b,c,d,Array.get(U32,ids,i)))
++      block_query(k,(i + 1 : U32),x,y,block_identified(x,y,tris,a,b,c,d,Array.get(U32,ids,i)))
+ def block_written(~level: Nat,+i: U32,offsets: Array<U32>,pixels: Array<U32>,background: Array<Fragment>,q: BlockQuery) -> Drawing:
+   BlockQuery{tris,ids,+a,+b,+c,+d} = q
+   Fragment{_,ac} = a
+@@ -267,23 +255,23 @@
+   Drawing{tris,offsets,ids,
+     Array.set(U32,Array.set(U32,Array.set(U32,Array.set(U32,pixels,i,ac),(i + 1 : U32),bc),(i + width : U32),cc),(i + width + 1 : U32),dc),
+     Array.set(Fragment,Array.set(Fragment,Array.set(Fragment,Array.set(Fragment,background,base,a),(base + 1 : U32),b),(base + width : U32),c),(base + width + 1 : U32),d)}
+-def block_background_d_mode(~camera: Bool,~level: Nat,i: U32,x: F32,y: F32,start: U32,count: U32,
++def block_background_d(~level: Nat,i: U32,x: F32,y: F32,start: U32,count: U32,
+   tris: Array<Triangle>,offsets: Array<U32>,ids: Array<U32>,pixels: Array<U32>,a: Fragment,b: Fragment,c: Fragment,r: Array<Fragment> & Fragment) -> Drawing:
+   (background,d) = r
+-  block_written(~level,i,offsets,pixels,background,block_query_mode(~camera,U32.to_nat(count),start,x,y,BlockQuery{tris,ids,a,b,c,d}))
+-def block_background_c_mode(~camera: Bool,~level: Nat,+i: U32,x: F32,y: F32,start: U32,count: U32,
++  block_written(~level,i,offsets,pixels,background,block_query(U32.to_nat(count),start,x,y,BlockQuery{tris,ids,a,b,c,d}))
++def block_background_c(~level: Nat,+i: U32,x: F32,y: F32,start: U32,count: U32,
+   tris: Array<Triangle>,offsets: Array<U32>,ids: Array<U32>,pixels: Array<U32>,a: Fragment,b: Fragment,r: Array<Fragment> & Fragment) -> Drawing:
+   (background,c) = r
+-  block_background_d_mode(~camera,~level,i,x,y,start,count,tris,offsets,ids,pixels,a,b,c,Array.get(Fragment,background,(i + U32.shln(512,level) + 1 : U32)))
+-def block_background_b_mode(~camera: Bool,~level: Nat,+i: U32,x: F32,y: F32,start: U32,count: U32,
++  block_background_d(~level,i,x,y,start,count,tris,offsets,ids,pixels,a,b,c,Array.get(Fragment,background,(i + U32.shln(512,level) + 1 : U32)))
++def block_background_b(~level: Nat,+i: U32,x: F32,y: F32,start: U32,count: U32,
+   tris: Array<Triangle>,offsets: Array<U32>,ids: Array<U32>,pixels: Array<U32>,a: Fragment,r: Array<Fragment> & Fragment) -> Drawing:
+   (background,b) = r
+-  block_background_c_mode(~camera,~level,i,x,y,start,count,tris,offsets,ids,pixels,a,b,Array.get(Fragment,background,(i + U32.shln(512,level) : U32)))
+-def block_background_a_mode(~camera: Bool,~level: Nat,+i: U32,x: F32,y: F32,start: U32,count: U32,
++  block_background_c(~level,i,x,y,start,count,tris,offsets,ids,pixels,a,b,Array.get(Fragment,background,(i + U32.shln(512,level) : U32)))
++def block_background_a(~level: Nat,+i: U32,x: F32,y: F32,start: U32,count: U32,
+   tris: Array<Triangle>,offsets: Array<U32>,ids: Array<U32>,pixels: Array<U32>,r: Array<Fragment> & Fragment) -> Drawing:
+   (background,a) = r
+-  block_background_b_mode(~camera,~level,i,x,y,start,count,tris,offsets,ids,pixels,a,Array.get(Fragment,background,(i + 1 : U32)))
+-def blocks_mode(~camera: Bool,~level: Nat, +n: Nat, +x: U32, +y: U32, +start: U32, +count: U32, b: Drawing) -> Drawing:
++  block_background_b(~level,i,x,y,start,count,tris,offsets,ids,pixels,a,Array.get(Fragment,background,(i + 1 : U32)))
++def blocks(~level: Nat, +n: Nat, +x: U32, +y: U32, +start: U32, +count: U32, b: Drawing) -> Drawing:
+   match n:
+     case 0n: b
+     case 1n+k:
+@@ -292,25 +280,25 @@
+       +px = (x + U32.and(j,(U32.shln(2,level) - 1 : U32)) * 2 : U32)
+       +py = (y + U32.shrn(j,Nat.add(level,1n)) * 2 : U32)
+       +i = (px + py * U32.shln(512,level) : U32)
+-      blocks_mode(~camera,~level,k,x,y,start,count,block_background_a_mode(~camera,~level,i,(U32.to_f32(px) + 0.5 : F32),
++      blocks(~level,k,x,y,start,count,block_background_a(~level,i,(U32.to_f32(px) + 0.5 : F32),
+         (U32.to_f32(py) + 0.5 : F32),start,count,tris,offsets,ids,out,Array.get(Fragment,background,i)))
+-def pixels_mode(~camera: Bool,~level: Nat,n: Nat,x: U32,y: U32,start: U32,count: U32,b: Drawing) -> Drawing:
+-  blocks_mode(~camera,~level,U32.to_nat((U32.from_nat(n) / 4 : U32)),x,y,start,count,b)
+-
+-def range_end_mode(~camera: Bool,~level: Nat, x: U32, y: U32, +start: U32,
++def pixels(~level: Nat,n: Nat,x: U32,y: U32,start: U32,count: U32,b: Drawing) -> Drawing:
++  blocks(~level,U32.to_nat((U32.from_nat(n) / 4 : U32)),x,y,start,count,b)
++
++def range_end(~level: Nat, x: U32, y: U32, +start: U32,
+   tris: Array<Triangle>, ids: Array<U32>, out: Array<U32>, background: Array<Fragment>, r: Array<U32> & U32) -> Drawing:
+   (offsets,end) = r
+-  pixels_mode(~camera,~level,U32.to_nat(U32.shln(16,Nat.add(level,level))),x,y,start,(end - start : U32),Drawing{tris,offsets,ids,out,background})
+-
+-def range_start_mode(~camera: Bool,~level: Nat, x: U32, y: U32, cell: U32,
++  pixels(~level,U32.to_nat(U32.shln(16,Nat.add(level,level))),x,y,start,(end - start : U32),Drawing{tris,offsets,ids,out,background})
++
++def range_start(~level: Nat, x: U32, y: U32, cell: U32,
+   tris: Array<Triangle>, ids: Array<U32>, out: Array<U32>, background: Array<Fragment>, r: Array<U32> & U32) -> Drawing:
+   (offsets,start) = r
+-  range_end_mode(~camera,~level,x,y,start,tris,ids,out,background,Array.get(U32,offsets,(cell + 1 : U32)))
+-
+-def raster_mode(~camera: Bool,~level: Nat, +x: U32, +y: U32, b: Drawing) -> Drawing:
++  range_end(~level,x,y,start,tris,ids,out,background,Array.get(U32,offsets,(cell + 1 : U32)))
++
++def raster(~level: Nat, +x: U32, +y: U32, b: Drawing) -> Drawing:
+   Drawing{tris,offsets,ids,out,background} = b
+   +cell = (U32.shrn(x,Nat.add(level,2n)) + U32.shrn(y,Nat.add(level,2n)) * 128 : U32)
+-  range_start_mode(~camera,~level,x,y,cell,tris,ids,out,background,Array.get(U32,offsets,cell))
++  range_start(~level,x,y,cell,tris,ids,out,background,Array.get(U32,offsets,cell))
+ 
+ def tile_image(tris: Array<Triangle>, offsets: Array<U32>, ids: Array<U32>, background: Array<Fragment>, r: Array<U32> & Image) -> Drawing & Image:
+   (pixels,image) = r
+@@ -320,29 +308,29 @@
+   Drawing{tris,offsets,ids,pixels,background} = b
+   tile_image(tris,offsets,ids,background,ImageBuffer.leaf(~level,True{},x,y,pixels))
+ 
+-def tile_mode(~camera: Bool,~level: Nat, +x: U32, +y: U32, b: Drawing, old: Image) -> Drawing & Image:
+-  tile_done(~level,x,y,raster_mode(~camera,~level,x,y,b))
++def tile(~level: Nat, +x: U32, +y: U32, b: Drawing, old: Image) -> Drawing & Image:
++  tile_done(~level,x,y,raster(~level,x,y,b))
+ 
+ def tile8_done(~level: Nat,x: U32, y: U32, b: Drawing) -> Drawing & Image:
+   Drawing{tris,offsets,ids,pixels,background} = b
+   tile_image(tris,offsets,ids,background,ImageBuffer.leaf(~level,False{},x,y,pixels))
+-def tile8_mode(~camera: Bool,~level: Nat, +x: U32, +y: U32, b: Drawing, old: Image) -> Drawing & Image:
+-  tile8_done(~level,x,y,raster_mode(~camera,~level,(x + U32.shln(4,level) : U32),(y + U32.shln(4,level) : U32),
+-    raster_mode(~camera,~level,x,(y + U32.shln(4,level) : U32),raster_mode(~camera,~level,(x + U32.shln(4,level) : U32),y,raster_mode(~camera,~level,x,y,b)))))
+-def tile_size_mode(~camera: Bool,~level: Nat, small: Bool, x: U32, y: U32, b: Drawing, old: Image) -> Drawing & Image:
++def tile8(~level: Nat, +x: U32, +y: U32, b: Drawing, old: Image) -> Drawing & Image:
++  tile8_done(~level,x,y,raster(~level,(x + U32.shln(4,level) : U32),(y + U32.shln(4,level) : U32),
++    raster(~level,x,(y + U32.shln(4,level) : U32),raster(~level,(x + U32.shln(4,level) : U32),y,raster(~level,x,y,b)))))
++def tile_size(~level: Nat, small: Bool, x: U32, y: U32, b: Drawing, old: Image) -> Drawing & Image:
+   match small:
+-    case True{}: tile_mode(~camera,~level,x,y,b,old)
+-    case False{}: tile8_mode(~camera,~level,x,y,b,old)
++    case True{}: tile(~level,x,y,b,old)
++    case False{}: tile8(~level,x,y,b,old)
+ 
+ def join(a: Drawing, b: Drawing) -> Drawing:
+   Drawing{at,ao,ai,ap,ab} = a
+   Drawing{bt,bo,bi,bp,bb} = b
+   Drawing{Array.join(Triangle,at,bt),Array.join(U32,ao,bo),Array.join(U32,ai,bi),Array.join(U32,ap,bp),Array.join(Fragment,ab,bb)}
+ 
+-def render_level_mode(~camera: Bool,~level: Nat, gpu: Bool, b: Drawing, old: Image) -> Drawing & Image:
++def render_level(~level: Nat, gpu: Bool, b: Drawing, old: Image) -> Drawing & Image:
+   match gpu:
+-    case True{}: Tiles.tree!(~Drawing,~U32.shln(4,level),~tile_size_mode(~camera,~level,True{}),~join,7n,0,0,b,Tiles.open(old))
+-    case False{}: Tiles.tree(~Drawing,~U32.shln(8,level),~tile_size_mode(~camera,~level,False{}),~join,6n,0,0,b,Tiles.open(old))
++    case True{}: Tiles.tree!(~Drawing,~U32.shln(4,level),~tile_size(~level,True{}),~join,7n,0,0,b,Tiles.open(old))
++    case False{}: Tiles.tree(~Drawing,~U32.shln(8,level),~tile_size(~level,False{}),~join,6n,0,0,b,Tiles.open(old))
+ 
+ def bounds(t: Triangle) -> Bounds:
+   bounds_level(~0n,t)
+@@ -353,47 +341,30 @@
+     case True{}: build_level(~1n,gpu,n,tris,index)
+     case False{}: build_level(~0n,gpu,n,tris,index)
+ def render( gpu: Bool, b: Drawing, old: Image) -> Drawing & Image:
+-  render_level_mode(~False{},~0n,gpu,b,old)
++  render_level(~0n,gpu,b,old)
+ 
+ # Buffer-only path for post-processing. Static fragments occupy [0, area);
+ # resolved color/depth occupy [area, 2*area), with one writer per screen pixel.
+ # The backdrop_level allocation must have twice the render area.
+-def buffer_loop_mode(~camera: Bool,~level: Nat, n: Nat, +i: U32, b: Drawing) -> Drawing:
++def buffer_loop(~level: Nat, n: Nat, +i: U32, b: Drawing) -> Drawing:
+   match n:
+     case 0n: b
+     case 1n+k:
+       +tile = U32.shln(4,level)
+-      buffer_loop_mode(~camera,~level,k,(i + 1 : U32),raster_mode(~camera,~level,((i % 128) * tile : U32),((i / 128) * tile : U32),b))
+-def buffer_leaf_mode(~camera: Bool,~level: Nat, i: U32, n: U32, b: Drawing) -> Drawing:
+-  buffer_loop_mode(~camera,~level,U32.to_nat(n),i,b)
+-def buffer_mode(~camera: Bool,~level: Nat, depth: Nat, b: Drawing) -> Drawing:
+-  Region.run(~Drawing,~buffer_leaf_mode(~camera,~level),~join,depth,0,16384,b)
+-def buffer_level_mode(~camera: Bool,~level: Nat, gpu: Bool, b: Drawing) -> Drawing:
++      buffer_loop(~level,k,(i + 1 : U32),raster(~level,((i % 128) * tile : U32),((i / 128) * tile : U32),b))
++def buffer_leaf(~level: Nat, i: U32, n: U32, b: Drawing) -> Drawing:
++  buffer_loop(~level,U32.to_nat(n),i,b)
++def buffer(~level: Nat, depth: Nat, b: Drawing) -> Drawing:
++  Region.run(~Drawing,~buffer_leaf(~level),~join,depth,0,16384,b)
++def buffer_level(~level: Nat, gpu: Bool, b: Drawing) -> Drawing:
+   match gpu:
+-    case True{}: buffer_mode!(~camera,~level,14n,b)
+-    case False{}: buffer_mode(~camera,~level,8n,b)
++    case True{}: buffer!(~level,14n,b)
++    case False{}: buffer(~level,8n,b)
+ 
+ # Stable 512/1024 API. Resolution-level entry points also support level 2 (2048).
+ def backdrop(~high: Bool, ~background: U32 -> U32 -> Fragment, out: Array<Fragment>) -> Array<Fragment>:
+   backdrop_level(~Bool.pick(Nat,high,1n,0n),~background,out)
+ def render_size(~high: Bool, gpu: Bool, b: Drawing, old: Image) -> Drawing & Image:
+-  render_level_mode(~False{},~Bool.pick(Nat,high,1n,0n),gpu,b,old)
++  render_level(~Bool.pick(Nat,high,1n,0n),gpu,b,old)
+ def render_buffer(~high: Bool, gpu: Bool, b: Drawing) -> Drawing:
+-  buffer_level_mode(~False{},~Bool.pick(Nat,high,1n,0n),gpu,b)
+-
+-# Legacy entry points remain statically specialized to the original equations.
+-# Camera batches must use the corresponding camera renderer/sample entry point.
+-def sample(x: F32, y: F32, t: Triangle, old: Fragment) -> Fragment:
+-  sample_mode(~False{},x,y,t,old)
+-def sample_camera(x: F32, y: F32, t: Triangle, old: Fragment) -> Fragment:
+-  sample_mode(~True{},x,y,t,old)
+-def block_query(n: Nat, i: U32, x: F32, y: F32, q: BlockQuery) -> BlockQuery:
+-  block_query_mode(~False{},n,i,x,y,q)
+-def raster(~level: Nat, x: U32, y: U32, b: Drawing) -> Drawing:
+-  raster_mode(~False{},~level,x,y,b)
+-def render_level(~level: Nat, gpu: Bool, b: Drawing, old: Image) -> Drawing & Image:
+-  render_level_mode(~False{},~level,gpu,b,old)
+-def render_camera_level(~level: Nat, gpu: Bool, b: Drawing, old: Image) -> Drawing & Image:
+-  render_level_mode(~True{},~level,gpu,b,old)
+-def buffer_level(~level: Nat, gpu: Bool, b: Drawing) -> Drawing:
+-  buffer_level_mode(~False{},~level,gpu,b)
++  buffer_level(~Bool.pick(Nat,high,1n,0n),gpu,b)

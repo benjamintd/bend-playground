@@ -1,0 +1,405 @@
+[
+  {
+    "name": "cloth-cpu-raw",
+    "capture": "results/engine-before-cloth-cpu-raw.csv",
+    "binary_sha256": "524def88867e7dd15d16690258147eebde79ac76639d86619e792399ca61e630",
+    "args": [
+      "cloth",
+      "cpu",
+      "raw",
+      "standard",
+      "20",
+      "60"
+    ],
+    "gpu": "off",
+    "samples": 60,
+    "us": {
+      "sim_gpu": {
+        "median": 0.0,
+        "p95": 0
+      },
+      "geometry_gpu": {
+        "median": 0.0,
+        "p95": 0
+      },
+      "binning_gpu": {
+        "median": 0.0,
+        "p95": 0
+      },
+      "raster_gpu": {
+        "median": 0.0,
+        "p95": 0
+      },
+      "post_gpu": {
+        "median": 0.0,
+        "p95": 0
+      },
+      "simulation_us": {
+        "median": 9849.0,
+        "p95": 10919
+      },
+      "geometry_us": {
+        "median": 105.0,
+        "p95": 115
+      },
+      "binning_us": {
+        "median": 111.0,
+        "p95": 119
+      },
+      "raster_us": {
+        "median": 2750.5,
+        "p95": 2836
+      },
+      "post_us": {
+        "median": 0.0,
+        "p95": 0
+      },
+      "work_us": {
+        "median": 12780.5,
+        "p95": 13968
+      },
+      "frame_us": {
+        "median": 12783.5,
+        "p95": 13972
+      }
+    }
+  },
+  {
+    "name": "cloth-metal-dof",
+    "capture": "results/engine-before-cloth-metal-dof.csv",
+    "binary_sha256": "524def88867e7dd15d16690258147eebde79ac76639d86619e792399ca61e630",
+    "args": [
+      "cloth",
+      "render",
+      "dof",
+      "standard",
+      "20",
+      "60"
+    ],
+    "gpu": "on",
+    "samples": 60,
+    "us": {
+      "sim_gpu": {
+        "median": 0.0,
+        "p95": 0
+      },
+      "geometry_gpu": {
+        "median": 1.0,
+        "p95": 1
+      },
+      "binning_gpu": {
+        "median": 1.0,
+        "p95": 1
+      },
+      "raster_gpu": {
+        "median": 1.0,
+        "p95": 1
+      },
+      "post_gpu": {
+        "median": 1.0,
+        "p95": 1
+      },
+      "simulation_us": {
+        "median": 9630.0,
+        "p95": 11657
+      },
+      "geometry_us": {
+        "median": 1550.0,
+        "p95": 1778
+      },
+      "binning_us": {
+        "median": 1975.5,
+        "p95": 2807
+      },
+      "raster_us": {
+        "median": 3590.0,
+        "p95": 4285
+      },
+      "post_us": {
+        "median": 4108.5,
+        "p95": 4707
+      },
+      "work_us": {
+        "median": 21359.0,
+        "p95": 23432
+      },
+      "frame_us": {
+        "median": 21362.5,
+        "p95": 23437
+      }
+    }
+  },
+  {
+    "name": "meadow-cpu-raw",
+    "capture": "results/engine-before-meadow-cpu-raw.csv",
+    "binary_sha256": "524def88867e7dd15d16690258147eebde79ac76639d86619e792399ca61e630",
+    "args": [
+      "meadow",
+      "cpu",
+      "raw",
+      "standard",
+      "20",
+      "60"
+    ],
+    "gpu": "off",
+    "samples": 60,
+    "us": {
+      "sim_gpu": {
+        "median": 0.0,
+        "p95": 0
+      },
+      "geometry_gpu": {
+        "median": 0.0,
+        "p95": 0
+      },
+      "binning_gpu": {
+        "median": 0.0,
+        "p95": 0
+      },
+      "raster_gpu": {
+        "median": 0.0,
+        "p95": 0
+      },
+      "post_gpu": {
+        "median": 0.0,
+        "p95": 0
+      },
+      "simulation_us": {
+        "median": 228.0,
+        "p95": 305
+      },
+      "geometry_us": {
+        "median": 588.5,
+        "p95": 739
+      },
+      "binning_us": {
+        "median": 1192.0,
+        "p95": 1302
+      },
+      "raster_us": {
+        "median": 8106.5,
+        "p95": 9131
+      },
+      "post_us": {
+        "median": 0.0,
+        "p95": 0
+      },
+      "work_us": {
+        "median": 10107.0,
+        "p95": 11182
+      },
+      "frame_us": {
+        "median": 10110.0,
+        "p95": 11187
+      }
+    }
+  },
+  {
+    "name": "meadow-metal-raw",
+    "capture": "results/engine-before-meadow-metal-raw.csv",
+    "binary_sha256": "524def88867e7dd15d16690258147eebde79ac76639d86619e792399ca61e630",
+    "args": [
+      "meadow",
+      "gpu",
+      "raw",
+      "standard",
+      "20",
+      "60"
+    ],
+    "gpu": "on",
+    "samples": 60,
+    "us": {
+      "sim_gpu": {
+        "median": 1.0,
+        "p95": 1
+      },
+      "geometry_gpu": {
+        "median": 1.0,
+        "p95": 1
+      },
+      "binning_gpu": {
+        "median": 1.0,
+        "p95": 1
+      },
+      "raster_gpu": {
+        "median": 1.0,
+        "p95": 1
+      },
+      "post_gpu": {
+        "median": 1.0,
+        "p95": 1
+      },
+      "simulation_us": {
+        "median": 1204.5,
+        "p95": 1679
+      },
+      "geometry_us": {
+        "median": 1182.5,
+        "p95": 1489
+      },
+      "binning_us": {
+        "median": 3258.0,
+        "p95": 3740
+      },
+      "raster_us": {
+        "median": 8471.0,
+        "p95": 9280
+      },
+      "post_us": {
+        "median": 0.0,
+        "p95": 0
+      },
+      "work_us": {
+        "median": 14332.5,
+        "p95": 15259
+      },
+      "frame_us": {
+        "median": 14337.5,
+        "p95": 15263
+      }
+    }
+  },
+  {
+    "name": "meadow-metal-dof",
+    "capture": "results/engine-before-meadow-metal-dof.csv",
+    "binary_sha256": "524def88867e7dd15d16690258147eebde79ac76639d86619e792399ca61e630",
+    "args": [
+      "meadow",
+      "gpu",
+      "dof",
+      "standard",
+      "20",
+      "60"
+    ],
+    "gpu": "on",
+    "samples": 60,
+    "us": {
+      "sim_gpu": {
+        "median": 1.0,
+        "p95": 1
+      },
+      "geometry_gpu": {
+        "median": 1.0,
+        "p95": 1
+      },
+      "binning_gpu": {
+        "median": 1.0,
+        "p95": 1
+      },
+      "raster_gpu": {
+        "median": 1.0,
+        "p95": 1
+      },
+      "post_gpu": {
+        "median": 1.0,
+        "p95": 1
+      },
+      "simulation_us": {
+        "median": 1222.0,
+        "p95": 1442
+      },
+      "geometry_us": {
+        "median": 1179.0,
+        "p95": 1326
+      },
+      "binning_us": {
+        "median": 3263.5,
+        "p95": 3727
+      },
+      "raster_us": {
+        "median": 19678.0,
+        "p95": 21502
+      },
+      "post_us": {
+        "median": 11986.5,
+        "p95": 14009
+      },
+      "work_us": {
+        "median": 37449.5,
+        "p95": 39892
+      },
+      "frame_us": {
+        "median": 37455.5,
+        "p95": 39898
+      }
+    }
+  },
+  {
+    "name": "points-cpu",
+    "capture": "results/engine-before-points-cpu.csv",
+    "binary_sha256": "d711dded6c400572835a5c12fe964ff1a45ca6283ffd9d901acbec4f046b72d4",
+    "args": [
+      "17",
+      "14",
+      "20",
+      "60"
+    ],
+    "gpu": "off",
+    "samples": 60,
+    "us": {
+      "update_us": {
+        "median": 7323.5,
+        "p95": 7563
+      },
+      "histogram_us": {
+        "median": 5205.0,
+        "p95": 5358
+      },
+      "scan_us": {
+        "median": 19.0,
+        "p95": 22
+      },
+      "scatter_us": {
+        "median": 5228.0,
+        "p95": 5404
+      },
+      "render_us": {
+        "median": 7573.5,
+        "p95": 7689
+      },
+      "frame_us": {
+        "median": 25372.5,
+        "p95": 25753
+      }
+    }
+  },
+  {
+    "name": "points-metal",
+    "capture": "results/engine-before-points-metal.csv",
+    "binary_sha256": "d711dded6c400572835a5c12fe964ff1a45ca6283ffd9d901acbec4f046b72d4",
+    "args": [
+      "17",
+      "14",
+      "20",
+      "60"
+    ],
+    "gpu": "on",
+    "samples": 60,
+    "us": {
+      "update_us": {
+        "median": 1348.5,
+        "p95": 1756
+      },
+      "histogram_us": {
+        "median": 1202.0,
+        "p95": 1542
+      },
+      "scan_us": {
+        "median": 18.0,
+        "p95": 25
+      },
+      "scatter_us": {
+        "median": 1198.5,
+        "p95": 1655
+      },
+      "render_us": {
+        "median": 2160.5,
+        "p95": 2573
+      },
+      "frame_us": {
+        "median": 6025.5,
+        "p95": 6473
+      }
+    }
+  }
+]

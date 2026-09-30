@@ -1,0 +1,42 @@
+{
+  "status": "passed",
+  "game_laws": {
+    "checked": 37,
+    "checker": "Bend 2.0.27"
+  },
+  "campaign_laws": {
+    "declared": 52,
+    "checked": 52,
+    "coverage": "26 explicit solution certificates and 26 exhaustive projected-cell resolution laws"
+  },
+  "independent_cell_transitions": 472150,
+  "continuous_escape_poses": 1055,
+  "longest_escape_ticks": 115,
+  "simulation_hz": 120,
+  "mixed_control_ticks": 26000,
+  "native_solution_replays": 26,
+  "native_input_ticks": 40162,
+  "all_native_routes_collect_all_seals_within_par": true,
+  "visual_scenes": 494,
+  "peak_triangles": 21383,
+  "triangle_capacity": 32768,
+  "font_glyphs": 47,
+  "font_coverage_tiles": 48,
+  "engine_api_changes_by_this_task": false,
+  "total_game_and_campaign_laws_checked": 89,
+  "native_resolution_cells": 7800,
+  "independent_resolution_cells": 7800,
+  "independent_resolution_depths": [
+    0,
+    4,
+    9
+  ],
+  "proofs_rechecked_after_final_generation": true,
+  "fixed_unit_cubes": 395,
+  "exact_cube_faces": 2370,
+  "moving_three_turn_cycles": 78,
+  "camera_poses": 390,
+  "native_reused_render_frames": 25,
+  "native_app_rebuilt": true,
+  "formal_scope": "Cell-space reachability, projected-cell resolution, projection identities and movement guards. Continuous trajectories validated separately by simulation and native input replays."
+}

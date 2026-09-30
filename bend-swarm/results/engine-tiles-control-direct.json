@@ -1,0 +1,405 @@
+[
+  {
+    "name": "cloth-cpu-raw",
+    "capture": "results/engine-tiles-control-direct-cloth-cpu-raw.csv",
+    "binary_sha256": "fbf6cc9a29d81d6e6e33284344b2a3cd76d1b1b37efb3a17388af46f68999a75",
+    "args": [
+      "cloth",
+      "cpu",
+      "raw",
+      "standard",
+      "40",
+      "120"
+    ],
+    "gpu": "off",
+    "samples": 120,
+    "us": {
+      "sim_gpu": {
+        "median": 0.0,
+        "p95": 0
+      },
+      "geometry_gpu": {
+        "median": 0.0,
+        "p95": 0
+      },
+      "binning_gpu": {
+        "median": 0.0,
+        "p95": 0
+      },
+      "raster_gpu": {
+        "median": 0.0,
+        "p95": 0
+      },
+      "post_gpu": {
+        "median": 0.0,
+        "p95": 0
+      },
+      "simulation_us": {
+        "median": 15112.5,
+        "p95": 19465
+      },
+      "geometry_us": {
+        "median": 142.0,
+        "p95": 315
+      },
+      "binning_us": {
+        "median": 156.0,
+        "p95": 239
+      },
+      "raster_us": {
+        "median": 3362.5,
+        "p95": 5911
+      },
+      "post_us": {
+        "median": 0.0,
+        "p95": 0
+      },
+      "work_us": {
+        "median": 19383.5,
+        "p95": 23838
+      },
+      "frame_us": {
+        "median": 19438.0,
+        "p95": 23843
+      }
+    }
+  },
+  {
+    "name": "cloth-metal-dof",
+    "capture": "results/engine-tiles-control-direct-cloth-metal-dof.csv",
+    "binary_sha256": "fbf6cc9a29d81d6e6e33284344b2a3cd76d1b1b37efb3a17388af46f68999a75",
+    "args": [
+      "cloth",
+      "render",
+      "dof",
+      "standard",
+      "40",
+      "120"
+    ],
+    "gpu": "on",
+    "samples": 120,
+    "us": {
+      "sim_gpu": {
+        "median": 0.0,
+        "p95": 0
+      },
+      "geometry_gpu": {
+        "median": 1.0,
+        "p95": 1
+      },
+      "binning_gpu": {
+        "median": 1.0,
+        "p95": 1
+      },
+      "raster_gpu": {
+        "median": 1.0,
+        "p95": 1
+      },
+      "post_gpu": {
+        "median": 1.0,
+        "p95": 1
+      },
+      "simulation_us": {
+        "median": 16174.5,
+        "p95": 19822
+      },
+      "geometry_us": {
+        "median": 1603.5,
+        "p95": 2105
+      },
+      "binning_us": {
+        "median": 2890.0,
+        "p95": 3555
+      },
+      "raster_us": {
+        "median": 4027.0,
+        "p95": 6076
+      },
+      "post_us": {
+        "median": 3646.5,
+        "p95": 5672
+      },
+      "work_us": {
+        "median": 28362.5,
+        "p95": 37161
+      },
+      "frame_us": {
+        "median": 28370.5,
+        "p95": 37170
+      }
+    }
+  },
+  {
+    "name": "meadow-cpu-raw",
+    "capture": "results/engine-tiles-control-direct-meadow-cpu-raw.csv",
+    "binary_sha256": "fbf6cc9a29d81d6e6e33284344b2a3cd76d1b1b37efb3a17388af46f68999a75",
+    "args": [
+      "meadow",
+      "cpu",
+      "raw",
+      "standard",
+      "40",
+      "120"
+    ],
+    "gpu": "off",
+    "samples": 120,
+    "us": {
+      "sim_gpu": {
+        "median": 0.0,
+        "p95": 0
+      },
+      "geometry_gpu": {
+        "median": 0.0,
+        "p95": 0
+      },
+      "binning_gpu": {
+        "median": 0.0,
+        "p95": 0
+      },
+      "raster_gpu": {
+        "median": 0.0,
+        "p95": 0
+      },
+      "post_gpu": {
+        "median": 0.0,
+        "p95": 0
+      },
+      "simulation_us": {
+        "median": 291.5,
+        "p95": 700
+      },
+      "geometry_us": {
+        "median": 801.0,
+        "p95": 4121
+      },
+      "binning_us": {
+        "median": 1650.0,
+        "p95": 2007
+      },
+      "raster_us": {
+        "median": 13164.0,
+        "p95": 14924
+      },
+      "post_us": {
+        "median": 0.0,
+        "p95": 0
+      },
+      "work_us": {
+        "median": 16211.0,
+        "p95": 18997
+      },
+      "frame_us": {
+        "median": 16216.5,
+        "p95": 19003
+      }
+    }
+  },
+  {
+    "name": "meadow-metal-raw",
+    "capture": "results/engine-tiles-control-direct-meadow-metal-raw.csv",
+    "binary_sha256": "fbf6cc9a29d81d6e6e33284344b2a3cd76d1b1b37efb3a17388af46f68999a75",
+    "args": [
+      "meadow",
+      "gpu",
+      "raw",
+      "standard",
+      "40",
+      "120"
+    ],
+    "gpu": "on",
+    "samples": 120,
+    "us": {
+      "sim_gpu": {
+        "median": 1.0,
+        "p95": 1
+      },
+      "geometry_gpu": {
+        "median": 1.0,
+        "p95": 1
+      },
+      "binning_gpu": {
+        "median": 1.0,
+        "p95": 1
+      },
+      "raster_gpu": {
+        "median": 1.0,
+        "p95": 1
+      },
+      "post_gpu": {
+        "median": 1.0,
+        "p95": 1
+      },
+      "simulation_us": {
+        "median": 1248.0,
+        "p95": 1394
+      },
+      "geometry_us": {
+        "median": 1209.0,
+        "p95": 1300
+      },
+      "binning_us": {
+        "median": 3284.5,
+        "p95": 3510
+      },
+      "raster_us": {
+        "median": 7658.5,
+        "p95": 9092
+      },
+      "post_us": {
+        "median": 0.0,
+        "p95": 0
+      },
+      "work_us": {
+        "median": 13445.5,
+        "p95": 14957
+      },
+      "frame_us": {
+        "median": 13450.0,
+        "p95": 14963
+      }
+    }
+  },
+  {
+    "name": "meadow-metal-dof",
+    "capture": "results/engine-tiles-control-direct-meadow-metal-dof.csv",
+    "binary_sha256": "fbf6cc9a29d81d6e6e33284344b2a3cd76d1b1b37efb3a17388af46f68999a75",
+    "args": [
+      "meadow",
+      "gpu",
+      "dof",
+      "standard",
+      "40",
+      "120"
+    ],
+    "gpu": "on",
+    "samples": 120,
+    "us": {
+      "sim_gpu": {
+        "median": 1.0,
+        "p95": 1
+      },
+      "geometry_gpu": {
+        "median": 1.0,
+        "p95": 1
+      },
+      "binning_gpu": {
+        "median": 1.0,
+        "p95": 1
+      },
+      "raster_gpu": {
+        "median": 1.0,
+        "p95": 1
+      },
+      "post_gpu": {
+        "median": 1.0,
+        "p95": 1
+      },
+      "simulation_us": {
+        "median": 1283.0,
+        "p95": 1399
+      },
+      "geometry_us": {
+        "median": 1204.5,
+        "p95": 1300
+      },
+      "binning_us": {
+        "median": 3304.0,
+        "p95": 3470
+      },
+      "raster_us": {
+        "median": 18287.5,
+        "p95": 19706
+      },
+      "post_us": {
+        "median": 11743.0,
+        "p95": 12094
+      },
+      "work_us": {
+        "median": 35917.0,
+        "p95": 37365
+      },
+      "frame_us": {
+        "median": 35927.0,
+        "p95": 37368
+      }
+    }
+  },
+  {
+    "name": "points-cpu",
+    "capture": "results/engine-tiles-control-direct-points-cpu.csv",
+    "binary_sha256": "0e2de83e05ef7e806058891b0797818eb9a0e052a47a09adebee346564fbe6ef",
+    "args": [
+      "17",
+      "14",
+      "40",
+      "120"
+    ],
+    "gpu": "off",
+    "samples": 120,
+    "us": {
+      "update_us": {
+        "median": 4488.5,
+        "p95": 8722
+      },
+      "histogram_us": {
+        "median": 4931.5,
+        "p95": 6244
+      },
+      "scan_us": {
+        "median": 24.0,
+        "p95": 44
+      },
+      "scatter_us": {
+        "median": 6017.5,
+        "p95": 6442
+      },
+      "render_us": {
+        "median": 8809.0,
+        "p95": 9977
+      },
+      "frame_us": {
+        "median": 24399.0,
+        "p95": 28266
+      }
+    }
+  },
+  {
+    "name": "points-metal",
+    "capture": "results/engine-tiles-control-direct-points-metal.csv",
+    "binary_sha256": "0e2de83e05ef7e806058891b0797818eb9a0e052a47a09adebee346564fbe6ef",
+    "args": [
+      "17",
+      "14",
+      "40",
+      "120"
+    ],
+    "gpu": "on",
+    "samples": 120,
+    "us": {
+      "update_us": {
+        "median": 1403.5,
+        "p95": 1903
+      },
+      "histogram_us": {
+        "median": 1246.0,
+        "p95": 1626
+      },
+      "scan_us": {
+        "median": 25.0,
+        "p95": 35
+      },
+      "scatter_us": {
+        "median": 1233.5,
+        "p95": 1606
+      },
+      "render_us": {
+        "median": 2209.0,
+        "p95": 3201
+      },
+      "frame_us": {
+        "median": 6142.5,
+        "p95": 8308
+      }
+    }
+  }
+]

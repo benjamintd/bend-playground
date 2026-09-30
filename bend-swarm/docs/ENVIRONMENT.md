@@ -1,4 +1,4 @@
-# Environment — 2026-09-25
+# Environment — updated 2026-09-28
 
 - Machine: MacBook Pro (Mac14,9), Apple M2 Pro, 10 CPU cores (6P + 4E), 16 GPU cores, 16 GB unified RAM.
 - OS: macOS 15.7.4 (24G517), arm64.
@@ -6,7 +6,26 @@
 - Source: https://github.com/bendlang/bend/tree/95317d952c8fe5be18ef49f916b2a57250cfb0aa
 - Exact revision in `.bend-version`; private project-local checkout under `.toolchain/bend`.
 - `scripts/bend` invokes that source with Bun, disables telemetry, and stores Clang's module cache in `build/`.
-- The global launcher remains unchanged (2.0.5). Its `bend version` and `bend guide shaders/effects` fail; its array API predates sharing.
+- Global Bend: **2.0.32**, installed from the official darwin-arm64 release.
+  Archive SHA-256: `d7debc002f59264f648dc94e45c2a9fab23e4b1ee0a390bf2acd8b1673e0cf55`.
+  The prior 2.0.5 launcher is retained under `~/.bend/backups/before-2.0.32-vqhqart_/bend-launcher`,
+  with its old application directory intact.
+
+## 2.0.32 upgrade compatibility
+
+The user selected retaining working Metal support after validation exposed a
+regression. The project therefore stays on the exact 2.0.27 revision above;
+global `bend` is 2.0.32. Both the official 2.0.32 binary and a clean source
+build fail the tiny `repros/gpu_smoke.bend` during Metal pipeline compilation.
+Apple's `MTLCompilerService` crashes with `EXC_BAD_ACCESS`. The same source
+was freshly rebuilt and passed on 2.0.27 after the failure. No compiler patches
+or silent GPU fallback are used. See the [prepared report](../repros/metal-2.0.32-issue.md)
+and its sanitized crash excerpt.
+
+The 2.0.32 proof suite and all JS tests passed. Its native argument regression
+passed after adapting `IO.args` to drop the executable, but the native suite
+then stopped at GPU compilation. The current argument adapter follows the
+retained 2.0.27 semantics; the native argument test guards future pin changes.
 
 Read before implementation: current guide/GUIDE.md, guide/SHADERS.md, guide/EFFECTS.md, bend2/base.bend, upstream AGENTS.md and CHANGELOG.md, app_pong_game_2d/main.bend, app_slash_boss_3d/main.bend and bend3d.bend; array_fork and stencil3d upstream tests.
 

@@ -8,6 +8,12 @@ World has active_count, power-of-two capacity and four F32 arrays (x, y, vx, vy)
 
 The first spatial backend is a 128×128 periodic grid over a 1024² world, with cell size and interaction radius 8. Histogram → exclusive scan → atomic cursor scatter produces contiguous ranges of agent IDs. The sentinel offset is stored at index 16384 in a 32768-slot array, avoiding Bend's wrapped array indexing. Histogram counts are reset during the scan. Scatter order is intentionally unspecified.
 
+Histogram and scatter share one interval traversal specialized with a closed
+point operation. Each active ID still performs one position read and one
+atomic increment; scatter uses the returned cursor to own a unique ID slot.
+The depth clamp, empty/odd active counts, separate stage entry points and scan
+remain unchanged. There is no runtime callback or added shared configuration.
+
 A task walks nine cells for each output agent. Squared distances reject candidates; accepted neighbors contribute separation, alignment and cohesion. The minimal-image displacement handles the torus seam. Steering acceleration is capped at 80; after integration, propulsion clamps speed to 20–60 world units/s while retaining heading. Near-zero velocity (magnitude ≤ 1e-6) uses a deterministic +X heading. The speed floor is a separate propulsion constraint, so it can change velocity faster than the steering acceleration cap. Fixed simulation dt is 1/60 s. This fixed dt means simulation slows with low frame rate; it is not a wall-clock accumulator yet. Mouse force is bounded by the same acceleration cap. All accepted neighbors participate; no caps, sampling or decorative agents.
 
 The reference uses identical forces/integration but enumerates every agent. An independent JavaScript equation implementation checks it. Dense clustered fixtures also check optimized neighborhoods, periodic boundaries, CPU and Metal outputs.
@@ -20,7 +26,15 @@ The native loop uses existing Window effects because App.run frees the image in 
 
 ## Unsafe boundary
 
-`engine/parallel/regions.bend` shares an internal state down a balanced tree. It accepts only statically supplied leaves/joins. Every leaf must write a disjoint interval, or use array atomics. Every join rejoins aliases of exactly the same allocation. No input to neighbor lookup may be concurrently written. These obligations are documented, runtime-tested contracts, **not proven by Bend's type checker**. The public Spatial API exposes these callback contracts explicitly; see [SPATIAL_API.md](SPATIAL_API.md).
+`engine/parallel/regions.bend` shares an internal state down a balanced tree.
+`engine/render/tiles.bend` does the same for square pixel regions. These are
+the engine's only two unsafe definitions. Both accept statically supplied
+leaves/joins. Every leaf must write a disjoint region, or use array atomics.
+Every join rejoins aliases of exactly the same allocation. No input to
+neighbor lookup may be concurrently written. These obligations are documented,
+runtime-tested contracts, **not proven by Bend's type checker**. The public
+Spatial API exposes these callback contracts explicitly; see
+[SPATIAL_API.md](SPATIAL_API.md).
 
 Atomic overlap is limited to histogram increments and scatter cursors. A returned cursor uniquely grants one ID slot. Boids inner loops contain no atomics. Tile rendering shares read-only arrays and disjoint pixel ranges. No handle survives beyond its fork/join tree.
 
@@ -82,8 +96,8 @@ CPU work units. Both modes retain 128² bins and 4,096 CPU raster leaves.
 Projected high-quality vertices are cached in triangle slots 8192–12287;
 assembly writes only slots 0–7937. The 16,384-element buffer therefore keeps
 source and destination disjoint through the entire fork/join tree. No extra
-per-frame vertex allocation occurs. Q changes rendering quality and resets the
-scene; it never selects a 64×64 physics workload.
+per-frame vertex allocation occurs. Q replaces the rendering buffers while
+preserving the scene, pause state and grab; it never selects a 64×64 physics workload.
 
 Mouse presses are resolved at their position in the event sequence, before a
 later move in the same batch can change the pick location. The tiny host-only
@@ -106,6 +120,24 @@ Pixels, Image nodes and runtime overhead are additional. This is a payload
 estimate, not measured peak heap use.
 
 ## Shared demo and rendering components
+
+`engine/render/image.bend` assembles pixel buffers into Images with one family
+of statically unrolled 2×2 through 32×32 blocks. Width and child operations are
+template arguments, so this consolidation introduces no runtime callback or
+per-pixel recursive scheduler.
+
+`engine/render/tiles.bend` owns the quadtree scheduling shared by particles,
+meshes, sprites, postprocessing and image resolve. Callers supply a closed leaf
+and merge operation, tile size, backend and depth. Tile size and operations
+are specialized before execution. CPU/GPU dispatch stays explicit in each
+renderer; an additional generic dispatch wrapper failed on the pinned Metal
+runtime (see [the reproduction](../repros/tiles-indirect-dispatch.md)).
+The render state is shared, but the four
+Image children remain separate affine values: resolve reads them, whereas
+other passes reclaim their previous frame. A compressed `Pix` expands into
+four same-color children without losing its source value. Particle/sprite
+passes retain depth seven on both backends; mesh/post/resolve use depth six
+with larger CPU leaves and depth seven on Metal.
 
 `engine/platform/player.bend` owns native presentation, normalized pointer input,
 presets, pause/reset, backend selection, HUD and pacing for the meadow and
@@ -133,3 +165,22 @@ The shared mesh finish pass and periodic sprite renderer are documented in
 [RENDERING.md](RENDERING.md). Effects run in Bend on either backend. Their
 immutable source and disjoint output ownership are runtime-tested contracts,
 with unsafe sharing confined to the engine's region/tile trees.
+
+The new world-space interface in `engine/camera.bend` prepares perspective or
+orthographic views for projection, normalized picking rays and conservative
+visibility tests. Pure orbit/fly controls are separate from event bindings.
+`engine/render/project.bend` clips world triangles before projection into
+`engine/render/batch.bend`, the same growable triangle owner used directly by
+TURN's world geometry and font. `engine/render/scene.bend` owns frame buffers,
+resolution dispatch, actual backend selection and stage timing. The target's
+stored level is the sole resolution input at draw time.
+Mesh entry points statically select camera interpolation or the existing legacy
+equations, so existing demos avoid extra camera work inside their pixel loops.
+The old render camera adapter remains compatible. See [CAMERA_API.md](CAMERA_API.md).
+
+`engine/voxel/world.bend` owns bounded occupancy and nearest-hit grid traversal.
+The voxel demo owns terrain generation, edit semantics and sixteen cached chunk
+meshes. An edit rebuilds only affected chunks; camera movement projects the
+cached world-space faces. Platform input capture, reusable controls and game
+bindings are separate responsibilities; native wheel/pinch/focus capture is
+the next platform extension.

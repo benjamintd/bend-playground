@@ -1,13 +1,17 @@
 import Base
+import ../engine/platform/arguments.bend as Arguments
 import ../demos/life/main.bend as App
 import ../engine/platform/player.bend as Player
 import ../engine/core/time.bend as Time
 
-def report(on: Bool, elapsed: U32, r: App.State & Image & Player.Metrics) -> IO(App.State & Image):
-  (s,image,Player.Metrics{sim,draw,_}) = r
+def report_summary(on: Bool, elapsed: U32, s: App.State, image: Image, metrics: U32 & U32 & U32) -> IO(App.State & Image):
+  (sim,draw,_) = metrics
   do IO<App.State & Image>:
     Unit <- Bool.pick(IO(Unit),on,IO.print(U32.show(sim) ++ "," ++ U32.show(draw) ++ "," ++ U32.show(elapsed)),IO.pure(Unit,Unit{}))
     return (s,image)
+def report(on: Bool, elapsed: U32, r: App.State & Image & Player.Metrics) -> IO(App.State & Image):
+  (s,image,metrics) = r
+  report_summary(on,elapsed,s,image,Player.summary(metrics))
 def frames_quality(+gpu: Bool, +high: Bool, +aa: Bool, +dof: Bool, n: Nat, +tick: U32, +warm: U32, r: App.State & Image) -> IO(App.State & Image):
   match n:
     case 0n: IO.pure(App.State & Image,r)
@@ -45,5 +49,5 @@ def args(xs: List<String>) -> IO(Unit):
     case _: bench(False{},True{},False{})
 def main() -> IO(Unit):
   do IO<Unit>:
-    xs : List<String> <- IO.args()
+    xs : List<String> <- Arguments.read()
     args(xs)

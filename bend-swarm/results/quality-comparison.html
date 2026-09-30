@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Bend · Rendering quality</title>
+<style>
+:root{color-scheme:dark;font:16px/1.5 system-ui,sans-serif;background:#141d22;color:#e9ece6}body{max-width:980px;margin:40px auto;padding:0 24px}h1{font-size:32px;letter-spacing:-.04em;margin:0}p{color:#b9c7c8;max-width:700px}nav{display:flex;gap:8px;flex-wrap:wrap;margin:24px 0 14px}button{font:inherit;border:1px solid #526264;border-radius:6px;background:transparent;color:inherit;padding:8px 14px;cursor:pointer}button[aria-pressed=true]{background:#d1e6b8;color:#182623;border-color:#d1e6b8}.comparison{position:relative;overflow:hidden;aspect-ratio:1;background:#202d34;border-radius:10px}.comparison img{display:block;width:100%;height:100%;object-fit:cover}.layer{position:absolute;inset:0;clip-path:inset(0 0 0 50%)}.divider{position:absolute;top:0;bottom:0;left:50%;width:2px;background:#eaf4de;pointer-events:none}.tag{position:absolute;top:16px;padding:4px 10px;background:#141d22dd;border-radius:4px;font-size:13px}.left{left:16px}.right{right:16px}input{width:100%;accent-color:#d1e6b8;margin:16px 0 0}label{font-size:14px;color:#b9c7c8}footer{font-size:14px;margin:24px 0 40px;color:#9eadaf}.keys{color:#d1e6b8}a{color:#d1e6b8}
+</style>
+<h1>Bend rendering quality</h1>
+<p>The same seeded Meadow scene, frozen at the same moment. Drag the divider to compare.</p>
+<nav aria-label="Comparison"><button aria-pressed="true" data-mode="aa">Antialiasing</button><button aria-pressed="false" data-mode="dof">Depth of field</button><button aria-pressed="false" data-mode="resolution">Resolution</button></nav>
+<p id="description">Four rotated samples improve coverage of thin horizontal and vertical edges.</p>
+<div class="comparison"><img id="before" src="quality-aa-before.png" alt="Previous antialiasing"><div class="layer" id="layer"><img id="after" src="quality-aa-after.png" alt="Updated antialiasing"></div><div class="divider" id="divider"></div><span class="tag left" id="left">Before</span><span class="tag right" id="right">After</span></div>
+<label for="slider">Comparison divider</label><input id="slider" type="range" min="0" max="100" value="50">
+<p class="keys">In the demos: A · antialiasing &nbsp; D · depth of field &nbsp; Q · resolution &nbsp; H · details</p>
+<footer>These are native Bend CPU renders. The resolution comparison shows 1024 and 2048 pixel images at the same display size; open the <a href="quality-dof-high.png">2048 pixel export</a> to inspect it at full size. Four spatial samples can still shimmer in motion. The depth filter is a lightweight approximation, without temporal history or cinematic bokeh.</footer>
+<script>
+const modes={aa:['quality-aa-before.png','quality-aa-after.png','Before','After','Four rotated samples improve coverage of thin horizontal and vertical edges.'],dof:['quality-dof-before.png','quality-dof-after.png','Before','After','A continuously sampled, weighted blur replaces the old rounded, equally weighted samples.'],resolution:['quality-dof-after.png','quality-dof-high.png','1024 pixels','2048 pixels','The blur radius scales with resolution to preserve its apparent strength. Both images use the updated antialiasing and depth of field.']};
+const byId=id=>document.getElementById(id);
+for(const button of document.querySelectorAll('button'))button.addEventListener('click',()=>{const [before,after,left,right,description]=modes[button.dataset.mode];byId('before').src=before;byId('after').src=after;byId('before').alt=left+' '+button.textContent;byId('after').alt=right+' '+button.textContent;byId('left').textContent=left;byId('right').textContent=right;byId('description').textContent=description;for(const b of document.querySelectorAll('button'))b.setAttribute('aria-pressed',String(b===button));});
+byId('slider').addEventListener('input',event=>{const value=event.target.value;byId('layer').style.clipPath=`inset(0 0 0 ${value}%)`;byId('divider').style.left=`${value}%`;});
+</script></html>

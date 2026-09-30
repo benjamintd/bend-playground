@@ -1,0 +1,11 @@
+30 measured frames from results/policy-profile-meadow.csv
+Host elapsed milliseconds; frame excludes CSV output and window presentation.
+Stage         Backend     Median       P95       Max
+simulation    CPU          0.252     0.426     0.432
+geometry      CPU          0.607     0.987     1.645
+binning       CPU          1.073     1.280     1.690
+raster        GPU         19.482    20.541    22.002
+post          GPU          2.501     2.630     2.640
+work                      23.962    26.384    26.422
+other                      0.005     0.010     0.010
+frame                     23.966    26.391    26.427

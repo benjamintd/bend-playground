@@ -1,4 +1,5 @@
 import Base
+import ../profile/frame.bend as Profile
 import ./viewport.bend as Viewport
 import ../core/time.bend as Time
 import ../render/hud.bend as Hud
@@ -11,6 +12,22 @@ type Input is Data:
     mx: F32, my: F32, power: F32, time: F32, antialias: Bool, defocus: Bool, high: Bool}
 type Metrics is Data:
   Metrics{simulation_us: U32, render_us: U32, count: U32}
+  Measured{simulation_us: U32, render_us: U32, count: U32, profile: Profile.Sample}
+def summary(m: Metrics) -> U32 & U32 & U32:
+  match m:
+    case Metrics{s,r,n}: (s,r,n)
+    case Measured{s,r,n,_}: (s,r,n)
+def details(~title: String, ~help: String, gpu: Bool, aa: Bool, dof: Bool, high: Bool, m: Metrics) -> String:
+  match m:
+    case Metrics{sim,draw,count}:
+      title ++ "\n" ++ Bool.pick(String,gpu,"METAL\n","CPU\n") ++ U32.show(count) ++ " ELEMENTS\n"
+        ++ Bool.pick(String,high,"2048 PX\n","1024 PX\n") ++ Bool.pick(String,aa,"AA ON\n","AA OFF\n")
+        ++ Bool.pick(String,dof,"DOF ON\n","DOF OFF\n") ++ "SIM " ++ U32.show((sim / 1000 : U32))
+        ++ " MS\nDRAW " ++ U32.show((draw / 1000 : U32)) ++ " MS\n" ++ help
+    case Measured{_,_,_,profile}:
+      title ++ "\n" ++ Bool.pick(String,high,"2048 PX\n","1024 PX\n")
+        ++ Bool.pick(String,aa,"AA ON ","AA OFF ") ++ Bool.pick(String,dof,"DOF ON\n","DOF OFF\n")
+        ++ Profile.label(profile) ++ "G CPU OR GPU\nA EDGES D FOCUS\nQ RESOLUTION\nSPACE PAUSE\nH DETAILS"
 def event(c: Input, e: Event, +sx: F32, +sy: F32) -> Input:
   Input{g,p,r,q,h,+v,s,x,y,f,t,aa,dof,high} = c
   match e:
@@ -62,11 +79,10 @@ def presented(~S: Type, ~title: String, tick: U32, start: Nat, sx: F32, sy: F32,
 def show(~S: Type, ~title: String, ~help: String, tick: U32, start: Nat, sx: F32, sy: F32, +c: Input,
   w: Window, r: S & Image & Metrics) -> IO(Window & S & Image & Input):
   Input{gpu,_,_,_,h,_,_,_,_,_,_,aa,dof,high} = c
-  (s,image,Metrics{sim,draw,count}) = r
+  (s,image,metrics) = r
   do IO<Window & S & Image & Input>:
     w : Window <- Viewport.resolution(w,Bool.pick(U32,high,2048,1024))
-    result : Window & Image & List<Event> <- Window.frame(w,overlay(h,title ++ "\n" ++ Bool.pick(String,gpu,"METAL\n","CPU\n")
-      ++ U32.show(count) ++ " ELEMENTS\n" ++ Bool.pick(String,high,"2048 PX\n","1024 PX\n") ++ "SIM " ++ U32.show((sim / 1000 : U32)) ++ " MS\nDRAW " ++ U32.show((draw / 1000 : U32)) ++ " MS\n" ++ help,image))
+    result : Window & Image & List<Event> <- Window.frame(w,overlay(h,details(~title,~help,gpu,aa,dof,high,metrics),image))
     presented(~S,~title,tick,start,sx,sy,c,s,result)
 def reset(~S: Type, ~create: U32 -> U32 -> IO(S), on: Bool, preset: U32, seed: U32, s: S) -> IO(S):
   match on:

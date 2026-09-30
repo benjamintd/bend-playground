@@ -1,0 +1,129 @@
+{
+  "description": "Native windows, 8 CPU threads, same renderer and simulation. Before reproduces the original unconditional 60 Hz loop; after invokes Turn's current poll/check loop. CPU percent is whole-process user+system CPU time / wall time (100% = one core). Startup/first render excluded. These are CPU-time proxies for energy, not watts or battery measurements. The background case keeps the game window visible but unfocused using an inert second window; hidden/minimized cases exercise OS lifecycle states. Other desktop work and the user's old Turn process were not stopped.",
+  "binary_sha256": "a1334325527928cd77a6d6fbfaa5a891e0b55112a35d92be0d1173343bd0d5bc",
+  "runs": [
+    {
+      "case": "background",
+      "version": "before",
+      "wall_us": 5025734,
+      "process_cpu_us": 11339518,
+      "cpu_percent": 225.62909218832513,
+      "frames": 269,
+      "iterations": 269,
+      "simulation_ticks": 600,
+      "final_active": true,
+      "frames_per_second": 53.52452000046163
+    },
+    {
+      "case": "background",
+      "version": "after",
+      "wall_us": 5636708,
+      "process_cpu_us": 20195,
+      "cpu_percent": 0.35827649755850405,
+      "frames": 0,
+      "iterations": 10,
+      "simulation_ticks": 0,
+      "final_active": false,
+      "frames_per_second": 0.0
+    },
+    {
+      "case": "hidden",
+      "version": "after",
+      "wall_us": 5012673,
+      "process_cpu_us": 11287,
+      "cpu_percent": 0.22516928592788715,
+      "frames": 0,
+      "iterations": 6,
+      "simulation_ticks": 0,
+      "final_active": false,
+      "frames_per_second": 0.0
+    },
+    {
+      "case": "hidden",
+      "version": "before",
+      "wall_us": 5027337,
+      "process_cpu_us": 11281064,
+      "cpu_percent": 224.39442591574826,
+      "frames": 272,
+      "iterations": 272,
+      "simulation_ticks": 600,
+      "final_active": true,
+      "frames_per_second": 54.104190747507076
+    },
+    {
+      "case": "minimized",
+      "version": "before",
+      "wall_us": 5042261,
+      "process_cpu_us": 12061123,
+      "cpu_percent": 239.20068794534834,
+      "frames": 280,
+      "iterations": 280,
+      "simulation_ticks": 602,
+      "final_active": true,
+      "frames_per_second": 55.53064389169859
+    },
+    {
+      "case": "minimized",
+      "version": "after",
+      "wall_us": 5133878,
+      "process_cpu_us": 24286,
+      "cpu_percent": 0.4730537032629135,
+      "frames": 0,
+      "iterations": 8,
+      "simulation_ticks": 0,
+      "final_active": false,
+      "frames_per_second": 0.0
+    },
+    {
+      "case": "menu",
+      "version": "after",
+      "wall_us": 5385648,
+      "process_cpu_us": 14742,
+      "cpu_percent": 0.2737275068849654,
+      "frames": 0,
+      "iterations": 7,
+      "simulation_ticks": 0,
+      "final_active": false,
+      "frames_per_second": 0.0,
+      "foreground_sample_valid": false
+    },
+    {
+      "case": "menu",
+      "version": "before",
+      "wall_us": 5037523,
+      "process_cpu_us": 18644667,
+      "cpu_percent": 370.1157691984732,
+      "frames": 232,
+      "iterations": 232,
+      "simulation_ticks": 0,
+      "final_active": true,
+      "frames_per_second": 46.05438029761849
+    },
+    {
+      "case": "idle",
+      "version": "before",
+      "wall_us": 5032489,
+      "process_cpu_us": 10354288,
+      "cpu_percent": 205.7488451539586,
+      "frames": 242,
+      "iterations": 242,
+      "simulation_ticks": 541,
+      "final_active": true,
+      "frames_per_second": 48.087536803359136
+    },
+    {
+      "case": "idle",
+      "version": "after",
+      "wall_us": 5829641,
+      "process_cpu_us": 2168247,
+      "cpu_percent": 37.19349098855315,
+      "frames": 50,
+      "iterations": 57,
+      "simulation_ticks": 129,
+      "final_active": false,
+      "frames_per_second": 8.576857477158542,
+      "foreground_sample_valid": false
+    }
+  ],
+  "foreground_note": "The foreground idle/menu samples lost focus and are excluded from performance claims. Background, hidden and minimized samples passed zero-frame/zero-simulation and CPU checks."
+}

@@ -1,0 +1,28 @@
+{
+  "date": "2026-09-28T09:30:01.697964+00:00",
+  "latest_release": "2.0.32",
+  "release_commit": "573002f01ec6c52416d44489543f69a9625facf8",
+  "official_archive_sha256": "d7debc002f59264f648dc94e45c2a9fab23e4b1ee0a390bf2acd8b1673e0cf55",
+  "global_version": "2.0.32",
+  "project_pin": [
+    "2.0.27",
+    "95317d952c8fe5be18ef49f916b2a57250cfb0aa"
+  ],
+  "decision": "User explicitly chose working Metal support; project pin retained, global installation upgraded.",
+  "checks": {
+    "latest_proofs": "PASS",
+    "latest_js_suites": "PASS (build/bend-2.0.32-tests.log)",
+    "latest_native_args": "PASS after dropping executable from IO.args",
+    "latest_native_suite": "BLOCKED at native-test GPU build; no claim of passing native tests on 2.0.32",
+    "latest_official_gpu_smoke": "FAIL during --gpu-build: Compiler encountered an internal error",
+    "latest_source_gpu_smoke": "Same failure with clean source tag",
+    "latest_official_smoke_cpu": "PASS: 134209536 from failed build executable with --gpu off",
+    "retained_pin_gpu_smoke": "PASS: freshly compiled, --gpu on, 134209536"
+  },
+  "source_files": {
+    "repros/gpu_smoke.bend": "90190cab805e62e0955248b39a8698babf33757647de95e2ed74c886cd736ff5",
+    "repros/metal-2.0.32-crash.json": "66313fc1eb5e384e5005dd8ff6ca0f1a00ac36e2974f5f9fcc12cbe395193001"
+  },
+  "issue_draft": "repros/metal-2.0.32-issue.md",
+  "issue_posted": false
+}

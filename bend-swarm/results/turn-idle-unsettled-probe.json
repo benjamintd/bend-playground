@@ -1,0 +1,72 @@
+{
+  "description": "Native windows, 8 CPU threads, same renderer and simulation. Before reproduces the original unconditional 60 Hz loop; after invokes Turn's current poll/check loop. CPU percent is whole-process user+system CPU time / wall time (100% = one core). Startup/first render excluded. These are CPU-time proxies for energy, not watts or battery measurements. Other desktop work and the user's old Turn process were not stopped.",
+  "binary_sha256": "21b02df5eb9da2c67b873fb0511d5d474ddd95225d06ff1dd39b56f095a89004",
+  "runs": [
+    {
+      "case": "idle",
+      "version": "before",
+      "wall_us": 5032200,
+      "process_cpu_us": 10178971,
+      "cpu_percent": 202.27675768053732,
+      "frames": 239,
+      "iterations": 239,
+      "simulation_ticks": 543,
+      "frames_per_second": 47.49413775287151
+    },
+    {
+      "case": "idle",
+      "version": "after",
+      "wall_us": 5052783,
+      "process_cpu_us": 7186150,
+      "cpu_percent": 142.22162321239603,
+      "frames": 142,
+      "iterations": 145,
+      "simulation_ticks": 586,
+      "frames_per_second": 28.1033244451622
+    },
+    {
+      "case": "menu",
+      "version": "after",
+      "wall_us": 5215130,
+      "process_cpu_us": 44002,
+      "cpu_percent": 0.8437373564992627,
+      "frames": 0,
+      "iterations": 9,
+      "simulation_ticks": 0,
+      "frames_per_second": 0.0
+    },
+    {
+      "case": "menu",
+      "version": "before",
+      "wall_us": 5025457,
+      "process_cpu_us": 18091345,
+      "cpu_percent": 359.9940264139162,
+      "frames": 225,
+      "iterations": 225,
+      "simulation_ticks": 0,
+      "frames_per_second": 44.77204759686532
+    },
+    {
+      "case": "background",
+      "version": "before",
+      "wall_us": 5035559,
+      "process_cpu_us": 9882628,
+      "cpu_percent": 196.2568207422453,
+      "frames": 238,
+      "iterations": 238,
+      "simulation_ticks": 543,
+      "frames_per_second": 47.26386881774198
+    },
+    {
+      "case": "background",
+      "version": "after",
+      "wall_us": 5780732,
+      "process_cpu_us": 979763,
+      "cpu_percent": 16.948770501728845,
+      "frames": 19,
+      "iterations": 30,
+      "simulation_ticks": 75,
+      "frames_per_second": 3.286780982062479
+    }
+  ]
+}

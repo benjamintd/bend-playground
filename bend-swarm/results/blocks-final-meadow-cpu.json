@@ -1,0 +1,324 @@
+{
+  "date": "2026-09-28T07:54:12.441761+00:00",
+  "os": "macOS-15.7.4-arm64-arm-64bit",
+  "cpu": "Apple M2 Pro",
+  "gpu": [
+    {
+      "sppci_model": "Apple M2 Pro",
+      "sppci_cores": "16"
+    }
+  ],
+  "memory_gb": 16.0,
+  "bend_version": [
+    "2.0.27",
+    "95317d952c8fe5be18ef49f916b2a57250cfb0aa"
+  ],
+  "source_sha256": {
+    "before": "784c8a7f35219db349bfe4b0571ee2e747de2df4f838f928cd627f9812cf8544",
+    "after": "9a960cdb934753451e5e7ed6f5948986b940180c4c7f7798fa59bec2dd5bf80c"
+  },
+  "binaries": {
+    "before": {
+      "path": "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/meadow-before",
+      "sha256": "fd90ebe1c66625c484768fa29c2babe7d36775b7ee23b0b9fc0aa8d5064e25f8",
+      "gpu_sha256": null
+    },
+    "after": {
+      "path": "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/meadow-frame",
+      "sha256": "59efc38b44248d243e3ff2bf3b4c537e2249d265252e720f19791ca409c3cb08",
+      "gpu_sha256": null
+    }
+  },
+  "demo": "meadow",
+  "backend": "cpu",
+  "effects": "raw",
+  "resolution": 1024,
+  "scene": {
+    "seed": 42,
+    "preset": 1
+  },
+  "threads": 10,
+  "warmup": 120,
+  "samples": 600,
+  "scope": "Headless full frame including old Image reclamation; excludes window/HUD/display. Sequential processes, alternating pair order. Each run restarts the same seeded scene. GPU simulation may diverge numerically; these are evolving scenes, not frozen render-only probes.",
+  "runs": [
+    {
+      "kind": "control",
+      "pair": 0,
+      "label": "before",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/meadow-before",
+        "--gpu",
+        "off",
+        "--threads",
+        "10",
+        "--",
+        "cpu",
+        "raw"
+      ],
+      "date": "2026-09-28T07:54:12.873054+00:00",
+      "returncode": 0,
+      "stderr": "",
+      "csv": "blocks-final-meadow-cpu-control0-before.csv",
+      "summary": {
+        "simulation_ms": {
+          "median": 0.233,
+          "p95": 0.312
+        },
+        "render_ms": {
+          "median": 12.336500000000001,
+          "p95": 17.091
+        },
+        "frame_ms": {
+          "median": 12.5655,
+          "p95": 17.301
+        }
+      }
+    },
+    {
+      "kind": "control",
+      "pair": 1,
+      "label": "before",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/meadow-before",
+        "--gpu",
+        "off",
+        "--threads",
+        "10",
+        "--",
+        "cpu",
+        "raw"
+      ],
+      "date": "2026-09-28T07:54:22.489227+00:00",
+      "returncode": 0,
+      "stderr": "",
+      "csv": "blocks-final-meadow-cpu-control1-before.csv",
+      "summary": {
+        "simulation_ms": {
+          "median": 0.233,
+          "p95": 0.409
+        },
+        "render_ms": {
+          "median": 14.8295,
+          "p95": 21.443
+        },
+        "frame_ms": {
+          "median": 15.064,
+          "p95": 21.976
+        }
+      }
+    },
+    {
+      "kind": "pair",
+      "pair": 0,
+      "label": "before",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/meadow-before",
+        "--gpu",
+        "off",
+        "--threads",
+        "10",
+        "--",
+        "cpu",
+        "raw"
+      ],
+      "date": "2026-09-28T07:54:34.007548+00:00",
+      "returncode": 0,
+      "stderr": "",
+      "csv": "blocks-final-meadow-cpu-pair0-before.csv",
+      "summary": {
+        "simulation_ms": {
+          "median": 0.234,
+          "p95": 0.318
+        },
+        "render_ms": {
+          "median": 13.5275,
+          "p95": 18.325
+        },
+        "frame_ms": {
+          "median": 13.756499999999999,
+          "p95": 18.63
+        }
+      }
+    },
+    {
+      "kind": "pair",
+      "pair": 0,
+      "label": "after",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/meadow-frame",
+        "--gpu",
+        "off",
+        "--threads",
+        "10",
+        "--",
+        "cpu",
+        "raw"
+      ],
+      "date": "2026-09-28T07:54:44.379415+00:00",
+      "returncode": 0,
+      "stderr": "",
+      "csv": "blocks-final-meadow-cpu-pair0-after.csv",
+      "summary": {
+        "simulation_ms": {
+          "median": 0.23,
+          "p95": 0.303
+        },
+        "render_ms": {
+          "median": 9.722,
+          "p95": 12.123
+        },
+        "frame_ms": {
+          "median": 9.9535,
+          "p95": 12.396
+        }
+      }
+    },
+    {
+      "kind": "pair",
+      "pair": 1,
+      "label": "after",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/meadow-frame",
+        "--gpu",
+        "off",
+        "--threads",
+        "10",
+        "--",
+        "cpu",
+        "raw"
+      ],
+      "date": "2026-09-28T07:54:51.963213+00:00",
+      "returncode": 0,
+      "stderr": "",
+      "csv": "blocks-final-meadow-cpu-pair1-after.csv",
+      "summary": {
+        "simulation_ms": {
+          "median": 0.3805,
+          "p95": 3.348
+        },
+        "render_ms": {
+          "median": 17.18,
+          "p95": 47.388
+        },
+        "frame_ms": {
+          "median": 17.7905,
+          "p95": 49.447
+        }
+      }
+    },
+    {
+      "kind": "pair",
+      "pair": 1,
+      "label": "before",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/meadow-before",
+        "--gpu",
+        "off",
+        "--threads",
+        "10",
+        "--",
+        "cpu",
+        "raw"
+      ],
+      "date": "2026-09-28T07:55:08.916852+00:00",
+      "returncode": 0,
+      "stderr": "",
+      "csv": "blocks-final-meadow-cpu-pair1-before.csv",
+      "summary": {
+        "simulation_ms": {
+          "median": 0.4005,
+          "p95": 3.307
+        },
+        "render_ms": {
+          "median": 20.2545,
+          "p95": 47.428
+        },
+        "frame_ms": {
+          "median": 20.9655,
+          "p95": 47.83
+        }
+      }
+    },
+    {
+      "kind": "pair",
+      "pair": 2,
+      "label": "before",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/meadow-before",
+        "--gpu",
+        "off",
+        "--threads",
+        "10",
+        "--",
+        "cpu",
+        "raw"
+      ],
+      "date": "2026-09-28T07:55:26.332778+00:00",
+      "returncode": 0,
+      "stderr": "",
+      "csv": "blocks-final-meadow-cpu-pair2-before.csv",
+      "summary": {
+        "simulation_ms": {
+          "median": 0.365,
+          "p95": 2.133
+        },
+        "render_ms": {
+          "median": 18.9225,
+          "p95": 32.865
+        },
+        "frame_ms": {
+          "median": 19.496499999999997,
+          "p95": 34.037
+        }
+      }
+    },
+    {
+      "kind": "pair",
+      "pair": 2,
+      "label": "after",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/meadow-frame",
+        "--gpu",
+        "off",
+        "--threads",
+        "10",
+        "--",
+        "cpu",
+        "raw"
+      ],
+      "date": "2026-09-28T07:55:41.734961+00:00",
+      "returncode": 0,
+      "stderr": "",
+      "csv": "blocks-final-meadow-cpu-pair2-after.csv",
+      "summary": {
+        "simulation_ms": {
+          "median": 0.544,
+          "p95": 6.14
+        },
+        "render_ms": {
+          "median": 19.889499999999998,
+          "p95": 42.056
+        },
+        "frame_ms": {
+          "median": 21.4735,
+          "p95": 48.42
+        }
+      }
+    }
+  ],
+  "median_of_run_medians": {
+    "before": {
+      "simulation_ms": 0.365,
+      "render_ms": 18.9225,
+      "frame_ms": 19.496499999999997
+    },
+    "after": {
+      "simulation_ms": 0.3805,
+      "render_ms": 17.18,
+      "frame_ms": 17.7905
+    }
+  },
+  "desktop_load": "Other desktop applications remained active. A process snapshot during these runs found a separate Bend Turn snapshot job and macOS system services consuming CPU. No builds/tests from this task overlapped timed runs. These are not idle-machine or sustained window-FPS measurements.",
+  "comparison_notes": "Three pairs in AB/BA/AB order; A/A controls for meadow. CPU results are materially confounded by changing desktop load; the unmodified simulation stage also varies."
+}

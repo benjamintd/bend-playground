@@ -1,0 +1,74 @@
+{
+  "source_files": {
+    "engine/render/coverage.bend": "461eeab0a307a51273b6af87893eed29bf78f2b418bb0ede019f931b12008cfc",
+    "engine/render/post.bend": "67afa6bad33b30cb00ddd36fb8424bb66eadf321118a919a49f887f493ecff5c",
+    "engine/render/finish.bend": "8f31a8e9b887fa6ea855be8bb1f98411abe2c566cb3206954ec54e33e9afe86d",
+    "engine/render/mesh.bend": "c12b58ef51e4e8001d10b90f1118bf6dbfb1e55c09285862434a13e96f905c0b",
+    "demos/cloth/frame.bend": "bffd950818a5ed8dea6006e6c5b46a1f3347f7e1283da4f13cb86729d014074e",
+    "demos/cloth/main.bend": "3f51207c2e49d948cb76e978fbddac85b7b0600f67208ea1626b249a575fa176",
+    "engine/platform/player.bend": "9ae6770a25c4e83a240140ad8f5344e0b4ecb6e7493febc479e8b97d9cb07191"
+  },
+  "checks": {
+    "js_suites": "scripts/test: PASS, build/quality-tests-final.log",
+    "native_quality": "CPU and Metal: 2048 raster, downsample, rotated thin-line coverage, repeated image replacement, CPU/GPU tile plans and image-only AA presentation",
+    "native_post": "CPU and Metal: final 25-texel filter, 1021 probes against independent bilinear reference",
+    "moving_axis_edges": {
+      "phases": 512,
+      "area_squared_error_reduction_percent": 75
+    },
+    "post_js": {
+      "bilinear_filter_probes": 480,
+      "screen_space_radius_widths": [
+        512,
+        1024,
+        2048
+      ]
+    },
+    "cloth_resolution": "Low-high-low retains deformation, previous positions, grab and pause; unchanged quality reuses buffers",
+    "build": "scripts/build: PASS, build/quality-build-final.log"
+  },
+  "scope": "Existing unchanged Life-image and splats-high fixture outputs were reused by quality-check.py; mesh/coverage and showcase/post native outputs were freshly generated.",
+  "exports": {
+    "quality-aa-before.png": {
+      "sha256": "1c1006d58a89785e12db9ae567a343cc9ed5fb2edbd20be16dd28f813835f211",
+      "size": [
+        1024,
+        1024
+      ]
+    },
+    "quality-aa-after.png": {
+      "sha256": "e51d9462f08d0b75affa5649dbf6bcf5cffa4785ef9e65e054f1d1084b285d6d",
+      "size": [
+        1024,
+        1024
+      ]
+    },
+    "quality-dof-before.png": {
+      "sha256": "964d7a5438db817660f8d7773e10b1cd00462f78a1a752b167746a0f22aaacf1",
+      "size": [
+        1024,
+        1024
+      ]
+    },
+    "quality-dof-after.png": {
+      "sha256": "8c0dce8f7576c62a5d36b473e19b03924530c6f60e1b48419a32d851b60834ab",
+      "size": [
+        1024,
+        1024
+      ]
+    },
+    "quality-dof-high.png": {
+      "sha256": "0c9dde9aea05fb00c05b867ac4e220021ddb9273767d8af3491b9f768d54e79b",
+      "size": [
+        2048,
+        2048
+      ]
+    }
+  },
+  "exports_note": "Exported before the equivalent AA image-only presentation specialization; native full-image checks validate pixel/Image agreement after specialization.",
+  "bend_version": [
+    "2.0.27",
+    "95317d952c8fe5be18ef49f916b2a57250cfb0aa"
+  ],
+  "subsequent_validation": "cloth-fix-validation.json records fresh full native tests after the interactive CPU-solver change."
+}

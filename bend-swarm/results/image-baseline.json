@@ -1,0 +1,99 @@
+{
+  "date": "2026-09-28T07:20:23.012413+00:00",
+  "source_sha256": "784c8a7f35219db349bfe4b0571ee2e747de2df4f838f928cd627f9812cf8544",
+  "machine": {
+    "os": "macOS-15.7.4-arm64-arm-64bit",
+    "cpu": "Apple M2 Pro",
+    "gpu": [
+      {
+        "sppci_model": "Apple M2 Pro",
+        "sppci_cores": "16"
+      }
+    ],
+    "memory_gb": 16.0
+  },
+  "runs": [
+    {
+      "command": [
+        "build/life-before",
+        "--gpu",
+        "on",
+        "--threads",
+        "10",
+        "--",
+        "gpu",
+        "aa",
+        "high"
+      ],
+      "tag": "image-baseline-life-gpu-high-aa",
+      "binary_sha256": "74ddd23220542d37bab9e9f5cc1ce54160548d934f670de21e6b90191f0a8a5d",
+      "stderr": "bend: compiling the GPU program (/Users/benjamintd/Personal/bend-playground/bend-swarm/build/life-before.gpu is missing or stale)\n",
+      "summary": {
+        "simulation_us": 4.4015,
+        "render_us": 13.1585,
+        "frame_us": 17.592
+      }
+    },
+    {
+      "command": [
+        "build/life-before",
+        "--gpu",
+        "off",
+        "--threads",
+        "10",
+        "--",
+        "cpu",
+        "aa",
+        "high"
+      ],
+      "tag": "image-baseline-life-cpu-high-aa",
+      "binary_sha256": "74ddd23220542d37bab9e9f5cc1ce54160548d934f670de21e6b90191f0a8a5d",
+      "stderr": "",
+      "summary": {
+        "simulation_us": 2.003,
+        "render_us": 15.7555,
+        "frame_us": 17.9075
+      }
+    },
+    {
+      "command": [
+        "build/meadow-before",
+        "--gpu",
+        "off",
+        "--threads",
+        "10",
+        "--",
+        "cpu",
+        "raw"
+      ],
+      "tag": "image-baseline-meadow-cpu-standard-raw",
+      "binary_sha256": "fd90ebe1c66625c484768fa29c2babe7d36775b7ee23b0b9fc0aa8d5064e25f8",
+      "stderr": "",
+      "summary": {
+        "simulation_us": 0.229,
+        "render_us": 16.1045,
+        "frame_us": 16.351
+      }
+    },
+    {
+      "command": [
+        "build/meadow-before",
+        "--gpu",
+        "on",
+        "--threads",
+        "10",
+        "--",
+        "gpu",
+        "aa"
+      ],
+      "tag": "image-baseline-meadow-gpu-standard-aa",
+      "binary_sha256": "fd90ebe1c66625c484768fa29c2babe7d36775b7ee23b0b9fc0aa8d5064e25f8",
+      "stderr": "bend: compiling the GPU program (/Users/benjamintd/Personal/bend-playground/bend-swarm/build/meadow-before.gpu is missing or stale)\n",
+      "summary": {
+        "simulation_us": 1.0385,
+        "render_us": 25.095,
+        "frame_us": 26.177
+      }
+    }
+  ]
+}

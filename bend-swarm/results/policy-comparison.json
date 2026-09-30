@@ -1,0 +1,590 @@
+{
+  "machine": "macOS-15.7.4-arm64-arm-64bit",
+  "scope": "Sequential headless same-policy raw frame comparisons; other desktop work was not stopped. Two orders; no isolated speedup claim.",
+  "runs": [
+    {
+      "scene": "cloth",
+      "backend": "cpu",
+      "pair": 0,
+      "version": "before",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/policy-before/cloth-frame",
+        "--gpu",
+        "off",
+        "--threads",
+        "10",
+        "--",
+        "cpu",
+        "5",
+        "raw",
+        "12",
+        "30"
+      ],
+      "binary_sha256": "9aeea00a2866602de790ccd3303a8f8bf3b3c9a8c63437fcb38ae60a5290f5e7",
+      "capture": "results/policy-cloth-cpu-pair0-before.csv",
+      "warmup": 12,
+      "samples": 30,
+      "seconds": 0.5818479061126709,
+      "us": {
+        "simulation_us": {
+          "median": 9198.5,
+          "p95": 10251
+        },
+        "render_us": {
+          "median": 3114.5,
+          "p95": 3497
+        },
+        "frame_us": {
+          "median": 12070.5,
+          "p95": 13501
+        }
+      }
+    },
+    {
+      "scene": "cloth",
+      "backend": "cpu",
+      "pair": 0,
+      "version": "after",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/cloth-frame",
+        "--gpu",
+        "off",
+        "--threads",
+        "10",
+        "--",
+        "cpu",
+        "5",
+        "raw",
+        "12",
+        "30"
+      ],
+      "binary_sha256": "6f1fd24c1bca6e56100e157b1122898369d46afaa5a197ec318954b73fbe3a74",
+      "capture": "results/policy-cloth-cpu-pair0-after.csv",
+      "warmup": 12,
+      "samples": 30,
+      "seconds": 0.5760021209716797,
+      "us": {
+        "simulation_us": {
+          "median": 9288.0,
+          "p95": 12605
+        },
+        "render_us": {
+          "median": 3086.5,
+          "p95": 3234
+        },
+        "frame_us": {
+          "median": 12310.0,
+          "p95": 15807
+        }
+      }
+    },
+    {
+      "scene": "cloth",
+      "backend": "cpu",
+      "pair": 1,
+      "version": "after",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/cloth-frame",
+        "--gpu",
+        "off",
+        "--threads",
+        "10",
+        "--",
+        "cpu",
+        "5",
+        "raw",
+        "12",
+        "30"
+      ],
+      "binary_sha256": "6f1fd24c1bca6e56100e157b1122898369d46afaa5a197ec318954b73fbe3a74",
+      "capture": "results/policy-cloth-cpu-pair1-after.csv",
+      "warmup": 12,
+      "samples": 30,
+      "seconds": 0.5776557922363281,
+      "us": {
+        "simulation_us": {
+          "median": 9187.0,
+          "p95": 9887
+        },
+        "render_us": {
+          "median": 3096.0,
+          "p95": 3270
+        },
+        "frame_us": {
+          "median": 12223.5,
+          "p95": 12956
+        }
+      }
+    },
+    {
+      "scene": "cloth",
+      "backend": "cpu",
+      "pair": 1,
+      "version": "before",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/policy-before/cloth-frame",
+        "--gpu",
+        "off",
+        "--threads",
+        "10",
+        "--",
+        "cpu",
+        "5",
+        "raw",
+        "12",
+        "30"
+      ],
+      "binary_sha256": "9aeea00a2866602de790ccd3303a8f8bf3b3c9a8c63437fcb38ae60a5290f5e7",
+      "capture": "results/policy-cloth-cpu-pair1-before.csv",
+      "warmup": 12,
+      "samples": 30,
+      "seconds": 0.5743238925933838,
+      "us": {
+        "simulation_us": {
+          "median": 9129.0,
+          "p95": 10084
+        },
+        "render_us": {
+          "median": 3116.5,
+          "p95": 3236
+        },
+        "frame_us": {
+          "median": 12258.0,
+          "p95": 13140
+        }
+      }
+    },
+    {
+      "scene": "cloth",
+      "backend": "hybrid",
+      "pair": 0,
+      "version": "before",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/policy-before/cloth-frame",
+        "--gpu",
+        "on",
+        "--threads",
+        "10",
+        "--",
+        "hybrid",
+        "5",
+        "raw",
+        "12",
+        "30"
+      ],
+      "binary_sha256": "9aeea00a2866602de790ccd3303a8f8bf3b3c9a8c63437fcb38ae60a5290f5e7",
+      "capture": "results/policy-cloth-hybrid-pair0-before.csv",
+      "warmup": 12,
+      "samples": 30,
+      "seconds": 1.2671959400177002,
+      "us": {
+        "simulation_us": {
+          "median": 9489.0,
+          "p95": 10977
+        },
+        "render_us": {
+          "median": 6590.0,
+          "p95": 8827
+        },
+        "frame_us": {
+          "median": 16048.5,
+          "p95": 19494
+        }
+      }
+    },
+    {
+      "scene": "cloth",
+      "backend": "hybrid",
+      "pair": 0,
+      "version": "after",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/cloth-frame",
+        "--gpu",
+        "on",
+        "--threads",
+        "10",
+        "--",
+        "hybrid",
+        "5",
+        "raw",
+        "12",
+        "30"
+      ],
+      "binary_sha256": "6f1fd24c1bca6e56100e157b1122898369d46afaa5a197ec318954b73fbe3a74",
+      "capture": "results/policy-cloth-hybrid-pair0-after.csv",
+      "warmup": 12,
+      "samples": 30,
+      "seconds": 1.0187232494354248,
+      "us": {
+        "simulation_us": {
+          "median": 10206.5,
+          "p95": 21150
+        },
+        "render_us": {
+          "median": 6361.5,
+          "p95": 10162
+        },
+        "frame_us": {
+          "median": 16667.5,
+          "p95": 27826
+        }
+      }
+    },
+    {
+      "scene": "cloth",
+      "backend": "hybrid",
+      "pair": 1,
+      "version": "after",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/cloth-frame",
+        "--gpu",
+        "on",
+        "--threads",
+        "10",
+        "--",
+        "hybrid",
+        "5",
+        "raw",
+        "12",
+        "30"
+      ],
+      "binary_sha256": "6f1fd24c1bca6e56100e157b1122898369d46afaa5a197ec318954b73fbe3a74",
+      "capture": "results/policy-cloth-hybrid-pair1-after.csv",
+      "warmup": 12,
+      "samples": 30,
+      "seconds": 0.9011049270629883,
+      "us": {
+        "simulation_us": {
+          "median": 9340.5,
+          "p95": 11371
+        },
+        "render_us": {
+          "median": 6371.0,
+          "p95": 7712
+        },
+        "frame_us": {
+          "median": 15934.0,
+          "p95": 17760
+        }
+      }
+    },
+    {
+      "scene": "cloth",
+      "backend": "hybrid",
+      "pair": 1,
+      "version": "before",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/policy-before/cloth-frame",
+        "--gpu",
+        "on",
+        "--threads",
+        "10",
+        "--",
+        "hybrid",
+        "5",
+        "raw",
+        "12",
+        "30"
+      ],
+      "binary_sha256": "9aeea00a2866602de790ccd3303a8f8bf3b3c9a8c63437fcb38ae60a5290f5e7",
+      "capture": "results/policy-cloth-hybrid-pair1-before.csv",
+      "warmup": 12,
+      "samples": 30,
+      "seconds": 0.917100191116333,
+      "us": {
+        "simulation_us": {
+          "median": 9412.5,
+          "p95": 12724
+        },
+        "render_us": {
+          "median": 6292.5,
+          "p95": 7351
+        },
+        "frame_us": {
+          "median": 15919.5,
+          "p95": 19672
+        }
+      }
+    },
+    {
+      "scene": "meadow",
+      "backend": "cpu",
+      "pair": 0,
+      "version": "before",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/policy-before/meadow-frame",
+        "--gpu",
+        "off",
+        "--threads",
+        "10",
+        "--",
+        "cpu",
+        "raw"
+      ],
+      "binary_sha256": "bf3cad28ae959744238c31faf18d15b6856e051817472114d33a148be3791e0e",
+      "capture": "results/policy-meadow-cpu-pair0-before.csv",
+      "warmup": 120,
+      "samples": 600,
+      "seconds": 8.347715854644775,
+      "us": {
+        "simulation_us": {
+          "median": 215.5,
+          "p95": 298
+        },
+        "render_us": {
+          "median": 10716.5,
+          "p95": 13182
+        },
+        "frame_us": {
+          "median": 10942.5,
+          "p95": 13404
+        }
+      }
+    },
+    {
+      "scene": "meadow",
+      "backend": "cpu",
+      "pair": 0,
+      "version": "after",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/meadow-frame",
+        "--gpu",
+        "off",
+        "--threads",
+        "10",
+        "--",
+        "cpu",
+        "raw"
+      ],
+      "binary_sha256": "5dd7ec1472f418487351627387fc2e34a63eb09d8072de6e222951a545d6d8c4",
+      "capture": "results/policy-meadow-cpu-pair0-after.csv",
+      "warmup": 120,
+      "samples": 600,
+      "seconds": 7.535737037658691,
+      "us": {
+        "simulation_us": {
+          "median": 214.0,
+          "p95": 270
+        },
+        "render_us": {
+          "median": 10091.5,
+          "p95": 11849
+        },
+        "frame_us": {
+          "median": 10283.5,
+          "p95": 12080
+        }
+      }
+    },
+    {
+      "scene": "meadow",
+      "backend": "cpu",
+      "pair": 1,
+      "version": "after",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/meadow-frame",
+        "--gpu",
+        "off",
+        "--threads",
+        "10",
+        "--",
+        "cpu",
+        "raw"
+      ],
+      "binary_sha256": "5dd7ec1472f418487351627387fc2e34a63eb09d8072de6e222951a545d6d8c4",
+      "capture": "results/policy-meadow-cpu-pair1-after.csv",
+      "warmup": 120,
+      "samples": 600,
+      "seconds": 7.898401737213135,
+      "us": {
+        "simulation_us": {
+          "median": 217.0,
+          "p95": 316
+        },
+        "render_us": {
+          "median": 10583.0,
+          "p95": 12618
+        },
+        "frame_us": {
+          "median": 10821.0,
+          "p95": 12889
+        }
+      }
+    },
+    {
+      "scene": "meadow",
+      "backend": "cpu",
+      "pair": 1,
+      "version": "before",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/policy-before/meadow-frame",
+        "--gpu",
+        "off",
+        "--threads",
+        "10",
+        "--",
+        "cpu",
+        "raw"
+      ],
+      "binary_sha256": "bf3cad28ae959744238c31faf18d15b6856e051817472114d33a148be3791e0e",
+      "capture": "results/policy-meadow-cpu-pair1-before.csv",
+      "warmup": 120,
+      "samples": 600,
+      "seconds": 8.1387460231781,
+      "us": {
+        "simulation_us": {
+          "median": 219.0,
+          "p95": 330
+        },
+        "render_us": {
+          "median": 10508.0,
+          "p95": 13355
+        },
+        "frame_us": {
+          "median": 10746.5,
+          "p95": 13649
+        }
+      }
+    },
+    {
+      "scene": "meadow",
+      "backend": "gpu",
+      "pair": 0,
+      "version": "before",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/policy-before/meadow-frame",
+        "--gpu",
+        "on",
+        "--threads",
+        "10",
+        "--",
+        "gpu",
+        "raw"
+      ],
+      "binary_sha256": "bf3cad28ae959744238c31faf18d15b6856e051817472114d33a148be3791e0e",
+      "capture": "results/policy-meadow-gpu-pair0-before.csv",
+      "warmup": 120,
+      "samples": 600,
+      "seconds": 10.130420446395874,
+      "us": {
+        "simulation_us": {
+          "median": 1023.0,
+          "p95": 1138
+        },
+        "render_us": {
+          "median": 11255.5,
+          "p95": 12249
+        },
+        "frame_us": {
+          "median": 12293.5,
+          "p95": 13260
+        }
+      }
+    },
+    {
+      "scene": "meadow",
+      "backend": "gpu",
+      "pair": 0,
+      "version": "after",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/meadow-frame",
+        "--gpu",
+        "on",
+        "--threads",
+        "10",
+        "--",
+        "gpu",
+        "raw"
+      ],
+      "binary_sha256": "5dd7ec1472f418487351627387fc2e34a63eb09d8072de6e222951a545d6d8c4",
+      "capture": "results/policy-meadow-gpu-pair0-after.csv",
+      "warmup": 120,
+      "samples": 600,
+      "seconds": 8.855950117111206,
+      "us": {
+        "simulation_us": {
+          "median": 1024.0,
+          "p95": 1144
+        },
+        "render_us": {
+          "median": 10869.5,
+          "p95": 11945
+        },
+        "frame_us": {
+          "median": 11899.5,
+          "p95": 13017
+        }
+      }
+    },
+    {
+      "scene": "meadow",
+      "backend": "gpu",
+      "pair": 1,
+      "version": "after",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/meadow-frame",
+        "--gpu",
+        "on",
+        "--threads",
+        "10",
+        "--",
+        "gpu",
+        "raw"
+      ],
+      "binary_sha256": "5dd7ec1472f418487351627387fc2e34a63eb09d8072de6e222951a545d6d8c4",
+      "capture": "results/policy-meadow-gpu-pair1-after.csv",
+      "warmup": 120,
+      "samples": 600,
+      "seconds": 8.901478290557861,
+      "us": {
+        "simulation_us": {
+          "median": 1027.5,
+          "p95": 1145
+        },
+        "render_us": {
+          "median": 11032.5,
+          "p95": 11934
+        },
+        "frame_us": {
+          "median": 12082.0,
+          "p95": 12990
+        }
+      }
+    },
+    {
+      "scene": "meadow",
+      "backend": "gpu",
+      "pair": 1,
+      "version": "before",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/policy-before/meadow-frame",
+        "--gpu",
+        "on",
+        "--threads",
+        "10",
+        "--",
+        "gpu",
+        "raw"
+      ],
+      "binary_sha256": "bf3cad28ae959744238c31faf18d15b6856e051817472114d33a148be3791e0e",
+      "capture": "results/policy-meadow-gpu-pair1-before.csv",
+      "warmup": 120,
+      "samples": 600,
+      "seconds": 8.942827224731445,
+      "us": {
+        "simulation_us": {
+          "median": 1017.5,
+          "p95": 1135
+        },
+        "render_us": {
+          "median": 10998.0,
+          "p95": 12079
+        },
+        "frame_us": {
+          "median": 12033.0,
+          "p95": 13114
+        }
+      }
+    }
+  ]
+}

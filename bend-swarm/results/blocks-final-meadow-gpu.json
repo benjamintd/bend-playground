@@ -1,0 +1,324 @@
+{
+  "date": "2026-09-28T07:55:59.066350+00:00",
+  "os": "macOS-15.7.4-arm64-arm-64bit",
+  "cpu": "Apple M2 Pro",
+  "gpu": [
+    {
+      "sppci_model": "Apple M2 Pro",
+      "sppci_cores": "16"
+    }
+  ],
+  "memory_gb": 16.0,
+  "bend_version": [
+    "2.0.27",
+    "95317d952c8fe5be18ef49f916b2a57250cfb0aa"
+  ],
+  "source_sha256": {
+    "before": "784c8a7f35219db349bfe4b0571ee2e747de2df4f838f928cd627f9812cf8544",
+    "after": "2d78cf126f80cc93d8ed09c3689ac6bcbba5676f1c122da0aa01fae56436af61"
+  },
+  "binaries": {
+    "before": {
+      "path": "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/meadow-before",
+      "sha256": "fd90ebe1c66625c484768fa29c2babe7d36775b7ee23b0b9fc0aa8d5064e25f8",
+      "gpu_sha256": null
+    },
+    "after": {
+      "path": "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/meadow-frame",
+      "sha256": "59efc38b44248d243e3ff2bf3b4c537e2249d265252e720f19791ca409c3cb08",
+      "gpu_sha256": null
+    }
+  },
+  "demo": "meadow",
+  "backend": "gpu",
+  "effects": "raw",
+  "resolution": 1024,
+  "scene": {
+    "seed": 42,
+    "preset": 1
+  },
+  "threads": 10,
+  "warmup": 120,
+  "samples": 600,
+  "scope": "Headless full frame including old Image reclamation; excludes window/HUD/display. Sequential processes, alternating pair order. Each run restarts the same seeded scene. GPU simulation may diverge numerically; these are evolving scenes, not frozen render-only probes.",
+  "runs": [
+    {
+      "kind": "control",
+      "pair": 0,
+      "label": "before",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/meadow-before",
+        "--gpu",
+        "on",
+        "--threads",
+        "10",
+        "--",
+        "gpu",
+        "raw"
+      ],
+      "date": "2026-09-28T07:55:59.778370+00:00",
+      "returncode": 0,
+      "stderr": "bend: compiling the GPU program (/Users/benjamintd/Personal/bend-playground/bend-swarm/build/meadow-before.gpu is missing or stale)\n",
+      "csv": "blocks-final-meadow-gpu-control0-before.csv",
+      "summary": {
+        "simulation_ms": {
+          "median": 1.377,
+          "p95": 3.191
+        },
+        "render_ms": {
+          "median": 17.9205,
+          "p95": 23.834
+        },
+        "frame_ms": {
+          "median": 19.383,
+          "p95": 26.601
+        }
+      }
+    },
+    {
+      "kind": "control",
+      "pair": 1,
+      "label": "before",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/meadow-before",
+        "--gpu",
+        "on",
+        "--threads",
+        "10",
+        "--",
+        "gpu",
+        "raw"
+      ],
+      "date": "2026-09-28T07:56:14.900463+00:00",
+      "returncode": 0,
+      "stderr": "bend: compiling the GPU program (/Users/benjamintd/Personal/bend-playground/bend-swarm/build/meadow-before.gpu is missing or stale)\n",
+      "csv": "blocks-final-meadow-gpu-control1-before.csv",
+      "summary": {
+        "simulation_ms": {
+          "median": 1.536,
+          "p95": 6.278
+        },
+        "render_ms": {
+          "median": 18.631500000000003,
+          "p95": 40.718
+        },
+        "frame_ms": {
+          "median": 20.231,
+          "p95": 49.522
+        }
+      }
+    },
+    {
+      "kind": "pair",
+      "pair": 0,
+      "label": "before",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/meadow-before",
+        "--gpu",
+        "on",
+        "--threads",
+        "10",
+        "--",
+        "gpu",
+        "raw"
+      ],
+      "date": "2026-09-28T07:56:32.704562+00:00",
+      "returncode": 0,
+      "stderr": "bend: compiling the GPU program (/Users/benjamintd/Personal/bend-playground/bend-swarm/build/meadow-before.gpu is missing or stale)\n",
+      "csv": "blocks-final-meadow-gpu-pair0-before.csv",
+      "summary": {
+        "simulation_ms": {
+          "median": 1.1059999999999999,
+          "p95": 4.713
+        },
+        "render_ms": {
+          "median": 17.249000000000002,
+          "p95": 33.131
+        },
+        "frame_ms": {
+          "median": 18.444,
+          "p95": 39.549
+        }
+      }
+    },
+    {
+      "kind": "pair",
+      "pair": 0,
+      "label": "after",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/meadow-frame",
+        "--gpu",
+        "on",
+        "--threads",
+        "10",
+        "--",
+        "gpu",
+        "raw"
+      ],
+      "date": "2026-09-28T07:56:48.822529+00:00",
+      "returncode": 0,
+      "stderr": "bend: compiling the GPU program (/Users/benjamintd/Personal/bend-playground/bend-swarm/build/meadow-frame.gpu is missing or stale)\n",
+      "csv": "blocks-final-meadow-gpu-pair0-after.csv",
+      "summary": {
+        "simulation_ms": {
+          "median": 1.0375,
+          "p95": 2.115
+        },
+        "render_ms": {
+          "median": 11.620999999999999,
+          "p95": 16.218
+        },
+        "frame_ms": {
+          "median": 12.6695,
+          "p95": 18.885
+        }
+      }
+    },
+    {
+      "kind": "pair",
+      "pair": 1,
+      "label": "after",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/meadow-frame",
+        "--gpu",
+        "on",
+        "--threads",
+        "10",
+        "--",
+        "gpu",
+        "raw"
+      ],
+      "date": "2026-09-28T07:56:59.237421+00:00",
+      "returncode": 0,
+      "stderr": "bend: compiling the GPU program (/Users/benjamintd/Personal/bend-playground/bend-swarm/build/meadow-frame.gpu is missing or stale)\n",
+      "csv": "blocks-final-meadow-gpu-pair1-after.csv",
+      "summary": {
+        "simulation_ms": {
+          "median": 0.989,
+          "p95": 1.181
+        },
+        "render_ms": {
+          "median": 11.232,
+          "p95": 12.071
+        },
+        "frame_ms": {
+          "median": 12.241499999999998,
+          "p95": 13.156
+        }
+      }
+    },
+    {
+      "kind": "pair",
+      "pair": 1,
+      "label": "before",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/meadow-before",
+        "--gpu",
+        "on",
+        "--threads",
+        "10",
+        "--",
+        "gpu",
+        "raw"
+      ],
+      "date": "2026-09-28T07:57:08.332212+00:00",
+      "returncode": 0,
+      "stderr": "bend: compiling the GPU program (/Users/benjamintd/Personal/bend-playground/bend-swarm/build/meadow-before.gpu is missing or stale)\n",
+      "csv": "blocks-final-meadow-gpu-pair1-before.csv",
+      "summary": {
+        "simulation_ms": {
+          "median": 1.0185,
+          "p95": 1.726
+        },
+        "render_ms": {
+          "median": 16.4835,
+          "p95": 19.118
+        },
+        "frame_ms": {
+          "median": 17.583,
+          "p95": 20.434
+        }
+      }
+    },
+    {
+      "kind": "pair",
+      "pair": 2,
+      "label": "before",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/meadow-before",
+        "--gpu",
+        "on",
+        "--threads",
+        "10",
+        "--",
+        "gpu",
+        "raw"
+      ],
+      "date": "2026-09-28T07:57:21.188331+00:00",
+      "returncode": 0,
+      "stderr": "bend: compiling the GPU program (/Users/benjamintd/Personal/bend-playground/bend-swarm/build/meadow-before.gpu is missing or stale)\n",
+      "csv": "blocks-final-meadow-gpu-pair2-before.csv",
+      "summary": {
+        "simulation_ms": {
+          "median": 1.004,
+          "p95": 1.356
+        },
+        "render_ms": {
+          "median": 14.642,
+          "p95": 18.122
+        },
+        "frame_ms": {
+          "median": 15.642,
+          "p95": 19.558
+        }
+      }
+    },
+    {
+      "kind": "pair",
+      "pair": 2,
+      "label": "after",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/meadow-frame",
+        "--gpu",
+        "on",
+        "--threads",
+        "10",
+        "--",
+        "gpu",
+        "raw"
+      ],
+      "date": "2026-09-28T07:57:33.169142+00:00",
+      "returncode": 0,
+      "stderr": "bend: compiling the GPU program (/Users/benjamintd/Personal/bend-playground/bend-swarm/build/meadow-frame.gpu is missing or stale)\n",
+      "csv": "blocks-final-meadow-gpu-pair2-after.csv",
+      "summary": {
+        "simulation_ms": {
+          "median": 0.992,
+          "p95": 1.279
+        },
+        "render_ms": {
+          "median": 11.095,
+          "p95": 12.306
+        },
+        "frame_ms": {
+          "median": 12.1105,
+          "p95": 13.453
+        }
+      }
+    }
+  ],
+  "median_of_run_medians": {
+    "before": {
+      "simulation_ms": 1.0185,
+      "render_ms": 16.4835,
+      "frame_ms": 17.583
+    },
+    "after": {
+      "simulation_ms": 0.992,
+      "render_ms": 11.232,
+      "frame_ms": 12.241499999999998
+    }
+  },
+  "desktop_load": "Other desktop applications remained active. A process snapshot during these runs found a separate Bend Turn snapshot job and macOS system services consuming CPU. No builds/tests from this task overlapped timed runs. These are not idle-machine or sustained window-FPS measurements.",
+  "comparison_notes": "Three pairs in AB/BA/AB order; A/A controls for meadow. CPU results are materially confounded by changing desktop load; the unmodified simulation stage also varies."
+}

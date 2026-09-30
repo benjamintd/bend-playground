@@ -1,0 +1,229 @@
+{
+  "description": "Sequential headless before/after runs in ABBA order; no builds or tests from this task run concurrently. Host elapsed time; desktop load is uncontrolled. Turn measures 25 warmed rotation frames, excluding simulation, presentation and pacing. Camera and Meadow use 20 warmup frames and 80 samples per run.",
+  "runs": [
+    {
+      "case": "turn-cpu",
+      "version": "before",
+      "binary_sha256": "b781dbde3bc2d57f10dcb2dabfaab462e645428ebc25dcb969f628d4c9b67f8c",
+      "frames": 25,
+      "ms_per_frame": 8.14084
+    },
+    {
+      "case": "turn-cpu",
+      "version": "after",
+      "binary_sha256": "08344a8db8e08805ec7a1c6255a16e5f7dcab863fd230a21a5dc8ca1c6a77277",
+      "frames": 25,
+      "ms_per_frame": 8.06708
+    },
+    {
+      "case": "turn-cpu",
+      "version": "after",
+      "binary_sha256": "08344a8db8e08805ec7a1c6255a16e5f7dcab863fd230a21a5dc8ca1c6a77277",
+      "frames": 25,
+      "ms_per_frame": 7.89676
+    },
+    {
+      "case": "turn-cpu",
+      "version": "before",
+      "binary_sha256": "b781dbde3bc2d57f10dcb2dabfaab462e645428ebc25dcb969f628d4c9b67f8c",
+      "frames": 25,
+      "ms_per_frame": 7.60276
+    },
+    {
+      "case": "mono-metal",
+      "version": "before",
+      "binary_sha256": "d72a7cacefcd835f109594eab16fd7f9e2b122eeadb906ba464fec77095ffe2f",
+      "metal_sha256": "eab31d5565b0f6dfad63466a117fe73f8b31dd642c931067435957ec3b4220a9",
+      "capture": "results/api-mono-metal-0-before.csv",
+      "samples": 80,
+      "median_ms": {
+        "simulation_us": 0.001,
+        "geometry_us": 0.117,
+        "binning_us": 0.3155,
+        "raster_us": 9.2435,
+        "post_us": 0.0,
+        "work_us": 9.9545
+      }
+    },
+    {
+      "case": "mono-metal",
+      "version": "after",
+      "binary_sha256": "df45878b199084f90a69b271b77a67fcee8da40c5a061d6b49844e2df91207c5",
+      "metal_sha256": "bb4be6d720e2244d3da2d6bf7778f741c6ab8dcf1d5acc015dd0e51cd4016b4c",
+      "capture": "results/api-mono-metal-1-after.csv",
+      "samples": 80,
+      "median_ms": {
+        "simulation_us": 0.001,
+        "geometry_us": 0.1115,
+        "binning_us": 0.3195,
+        "raster_us": 9.235,
+        "post_us": 0.0,
+        "work_us": 9.7615
+      }
+    },
+    {
+      "case": "mono-metal",
+      "version": "after",
+      "binary_sha256": "df45878b199084f90a69b271b77a67fcee8da40c5a061d6b49844e2df91207c5",
+      "metal_sha256": "bb4be6d720e2244d3da2d6bf7778f741c6ab8dcf1d5acc015dd0e51cd4016b4c",
+      "capture": "results/api-mono-metal-2-after.csv",
+      "samples": 80,
+      "median_ms": {
+        "simulation_us": 0.001,
+        "geometry_us": 0.1235,
+        "binning_us": 0.318,
+        "raster_us": 9.313,
+        "post_us": 0.0,
+        "work_us": 9.827
+      }
+    },
+    {
+      "case": "mono-metal",
+      "version": "before",
+      "binary_sha256": "d72a7cacefcd835f109594eab16fd7f9e2b122eeadb906ba464fec77095ffe2f",
+      "metal_sha256": "eab31d5565b0f6dfad63466a117fe73f8b31dd642c931067435957ec3b4220a9",
+      "capture": "results/api-mono-metal-3-before.csv",
+      "samples": 80,
+      "median_ms": {
+        "simulation_us": 0.001,
+        "geometry_us": 0.1225,
+        "binning_us": 0.319,
+        "raster_us": 9.147,
+        "post_us": 0.0,
+        "work_us": 9.8885
+      }
+    },
+    {
+      "case": "voxel-metal",
+      "version": "before",
+      "binary_sha256": "d72a7cacefcd835f109594eab16fd7f9e2b122eeadb906ba464fec77095ffe2f",
+      "metal_sha256": "eab31d5565b0f6dfad63466a117fe73f8b31dd642c931067435957ec3b4220a9",
+      "capture": "results/api-voxel-metal-0-before.csv",
+      "samples": 80,
+      "median_ms": {
+        "simulation_us": 0.002,
+        "geometry_us": 0.4195,
+        "binning_us": 0.5675,
+        "raster_us": 8.6785,
+        "post_us": 0.0,
+        "work_us": 9.8405
+      }
+    },
+    {
+      "case": "voxel-metal",
+      "version": "after",
+      "binary_sha256": "df45878b199084f90a69b271b77a67fcee8da40c5a061d6b49844e2df91207c5",
+      "metal_sha256": "bb4be6d720e2244d3da2d6bf7778f741c6ab8dcf1d5acc015dd0e51cd4016b4c",
+      "capture": "results/api-voxel-metal-1-after.csv",
+      "samples": 80,
+      "median_ms": {
+        "simulation_us": 0.002,
+        "geometry_us": 0.4105,
+        "binning_us": 0.5685,
+        "raster_us": 8.9455,
+        "post_us": 0.0,
+        "work_us": 10.142
+      }
+    },
+    {
+      "case": "voxel-metal",
+      "version": "after",
+      "binary_sha256": "df45878b199084f90a69b271b77a67fcee8da40c5a061d6b49844e2df91207c5",
+      "metal_sha256": "bb4be6d720e2244d3da2d6bf7778f741c6ab8dcf1d5acc015dd0e51cd4016b4c",
+      "capture": "results/api-voxel-metal-2-after.csv",
+      "samples": 80,
+      "median_ms": {
+        "simulation_us": 0.002,
+        "geometry_us": 0.4295,
+        "binning_us": 0.587,
+        "raster_us": 8.9,
+        "post_us": 0.0,
+        "work_us": 10.2195
+      }
+    },
+    {
+      "case": "voxel-metal",
+      "version": "before",
+      "binary_sha256": "d72a7cacefcd835f109594eab16fd7f9e2b122eeadb906ba464fec77095ffe2f",
+      "metal_sha256": "eab31d5565b0f6dfad63466a117fe73f8b31dd642c931067435957ec3b4220a9",
+      "capture": "results/api-voxel-metal-3-before.csv",
+      "samples": 80,
+      "median_ms": {
+        "simulation_us": 0.002,
+        "geometry_us": 0.4555,
+        "binning_us": 0.5995,
+        "raster_us": 8.9255,
+        "post_us": 0.0,
+        "work_us": 10.346
+      }
+    },
+    {
+      "case": "meadow-metal-dof",
+      "version": "before",
+      "binary_sha256": "1752a229e2d00fe758af890b98efe1d043623a41f4a4fe88b89e9d5b18bda1bc",
+      "metal_sha256": "5b18f2064cdbd650aebf982487e285f10711fc5a0089619045bfc025172bb935",
+      "capture": "results/api-meadow-metal-dof-0-before.csv",
+      "samples": 80,
+      "median_ms": {
+        "simulation_us": 1.2895,
+        "geometry_us": 1.2335,
+        "binning_us": 3.3345,
+        "raster_us": 18.3885,
+        "post_us": 10.336,
+        "work_us": 34.74,
+        "frame_us": 34.749
+      }
+    },
+    {
+      "case": "meadow-metal-dof",
+      "version": "after",
+      "binary_sha256": "5d5ee490575413ec22c5e082d99b83318681efe9286471e7960c934502dce579",
+      "metal_sha256": "1619c02306b59ca6f79cacdeeb2f691d8dbf1bf56d8583b8ad77e89aefa830e9",
+      "capture": "results/api-meadow-metal-dof-1-after.csv",
+      "samples": 80,
+      "median_ms": {
+        "simulation_us": 1.2725,
+        "geometry_us": 1.21,
+        "binning_us": 3.346,
+        "raster_us": 18.454,
+        "post_us": 10.324,
+        "work_us": 34.7055,
+        "frame_us": 34.7185
+      }
+    },
+    {
+      "case": "meadow-metal-dof",
+      "version": "after",
+      "binary_sha256": "5d5ee490575413ec22c5e082d99b83318681efe9286471e7960c934502dce579",
+      "metal_sha256": "1619c02306b59ca6f79cacdeeb2f691d8dbf1bf56d8583b8ad77e89aefa830e9",
+      "capture": "results/api-meadow-metal-dof-2-after.csv",
+      "samples": 80,
+      "median_ms": {
+        "simulation_us": 1.245,
+        "geometry_us": 1.197,
+        "binning_us": 3.295,
+        "raster_us": 18.427,
+        "post_us": 10.314,
+        "work_us": 34.693,
+        "frame_us": 34.698
+      }
+    },
+    {
+      "case": "meadow-metal-dof",
+      "version": "before",
+      "binary_sha256": "1752a229e2d00fe758af890b98efe1d043623a41f4a4fe88b89e9d5b18bda1bc",
+      "metal_sha256": "5b18f2064cdbd650aebf982487e285f10711fc5a0089619045bfc025172bb935",
+      "capture": "results/api-meadow-metal-dof-3-before.csv",
+      "samples": 80,
+      "median_ms": {
+        "simulation_us": 1.281,
+        "geometry_us": 1.202,
+        "binning_us": 3.2995,
+        "raster_us": 18.37,
+        "post_us": 10.333,
+        "work_us": 34.595,
+        "frame_us": 34.5995
+      }
+    }
+  ]
+}

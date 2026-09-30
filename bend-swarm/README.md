@@ -1,14 +1,17 @@
 # Bend simulation engine
 
 A GPU-native simulation engine experiment in **Bend 2.0.27**, with a reusable
-2D/3D spatial API and four native demos: boids, cloth, wind-driven meadow and Particle Life.
+2D/3D spatial API, movable cameras, and native demos: boids, cloth, wind-driven meadow,
+Particle Life, a monochrome kinetic sculpture and a destructible voxel landscape.
 The same Bend simulations and renderers run on CPU or Metal. No custom foreign
 simulation or rendering kernels are used.
 
 ## Run
 
 Prerequisites: Bun, Git, and Bend's native prerequisites (on this Mac, Apple
-Clang and Metal). The system Bend installation is left unchanged.
+Clang and Metal). `scripts/bend` uses the project pin independently of global Bend.
+Global Bend was updated to 2.0.32; this engine retains 2.0.27 because 2.0.32
+crashes the Metal compiler on this M2 Pro. See [environment details](docs/ENVIRONMENT.md).
 
 ```sh
 cd bend-swarm
@@ -17,6 +20,8 @@ scripts/build
 scripts/run-cloth   # 3D cloth
 scripts/run-meadow  # 4,096 curved grass blades
 scripts/run-life    # 8,192 interacting particles, six species
+scripts/run-monochrome # strictly black-and-white animated 3D
+scripts/run-voxels     # carve and rebuild a voxel landscape
 # scripts/run      # 131,072 boids
 ```
 
@@ -24,6 +29,22 @@ On macOS, the build also creates app bundles for each demo in `build/`.
 Launchers require a GPU; run `build/cloth --gpu off` or
 `build/swarm --gpu off` explicitly for a CPU-only session. G changes dispatch
 inside the app; a runtime started with `--gpu off` always executes on CPU.
+
+### Camera demos
+
+`scripts/build-camera` builds only the two new demos and their headless runner.
+**O** switches perspective/orthographic, **F** switches orbit/flight, **Q** selects
+1024/2048 pixels, **G** switches CPU/Metal, and **Space** pauses animation while
+leaving the camera active. Use **W/S**, **A/D**, **E/C** to move and **I/J/K/L** to
+look. Drag to orbit Monochrome; in Voxels, left click carves, right click adds a
+block, and middle drag looks around. **R** resets and **Escape** closes.
+
+Both share the [camera API](docs/CAMERA_API.md), clipping, depth, picking and
+viewport conventions. Voxels caches chunk meshes and rebuilds affected neighbors
+after boundary edits. Scroll/pinch gestures await the platform input adapter.
+
+![Monochrome kinetic sculpture](results/monochrome-preview.png)
+![Destructible voxel landscape](results/voxels-preview.png)
 
 ### Cloth
 
@@ -37,14 +58,14 @@ framebuffer with a smooth 64×64 visual surface. Both modes simulate the same
 32×32 physical grid; higher quality never quadruples the physics workload.
 
 - **Drag the fabric:** pull a nearby vertex with a compliant spring in the view plane.
-- **Space:** pause. **R:** reset. **W:** wind. **G:** CPU/GPU. **Q:** quality/reset. **H:** details.
+- **Space:** pause. **R:** reset. **W:** wind. **G:** CPU/Metal rendering (physics stays on CPU). **Q:** resolution (keeps the current simulation and grab). **H:** details.
 - **A:** four-sample geometry anti-aliasing. **D:** depth of field. Both are off initially to preserve the frame budget.
 - **Escape:** close.
 
 The interactive loop advances fixed 1/120-second physics steps from elapsed time
 and paces presentation at 60 Hz. Catch-up is capped at two steps after a stall to prevent runaway work.
-The demo starts on CPU with a coarse execution plan for this small mesh; **G**
-compares the same algorithm on Metal. The HUD identifies the selected backend.
+The small contact solver stays on CPU; **G** switches only drawing between CPU
+and Metal. The HUD identifies both stages.
 
 Surface contacts retain the previous side of each face/edge, and dragging is
 bounded rather than teleporting a vertex. This remains a discrete PBD example,
@@ -64,6 +85,8 @@ shared engine modules. Everything is simulated and drawn in Bend. **Q** switches
 - **Hold the mouse:** gust. **1 / 2 / 3:** calm, breeze, strong wind.
 - **A:** four-sample geometry anti-aliasing. **D:** subtle depth of field. **Q:** resolution.
 - **Space:** pause. **R:** reset. **G:** CPU/GPU. **H:** details. **Escape:** close.
+
+Antialiasing uses four rotated sample positions to better resolve thin edges. Depth of field changes smoothly with depth and keeps the same apparent strength at both resolutions. The details overlay shows the active effects.
 
 Meadow starts on CPU at 1024² with effects off. A, D and Q are explicit quality choices; they cost frame time.
 
@@ -122,7 +145,28 @@ kernel remains as a reference. Unsafe sharing stays inside documented engine
 primitives; callback ownership obligations are tested contracts, not formal
 race-freedom guarantees.
 
+## Execution policy and profiler
+
+Cloth and Meadow expose independent CPU/GPU choices for simulation, geometry,
+binning, raster and post-processing. Cloth keeps CPU simulation by default.
+Press **H** for the stage timings; **G** retains its existing processor toggle.
+For a capture with stage medians and spikes:
+
+```sh
+build/profile --gpu on --threads 10 -- cloth hybrid dof standard 120 600 > results/cloth-profile.csv
+python3 scripts/profile-report.py results/cloth-profile.csv
+```
+
+See [the policy API and timing scope](docs/EXECUTION.md). Timings are host elapsed
+costs, including synchronization; window presentation and pacing are separate.
+
 ## Verify and measure
+
+The engine's [event-driven window API](docs/WINDOW_LOOP.md) separates input and
+lifecycle polling from presentation, with shared static/animated frame cadence.
+TURN uses it to suspend background work and keep static menus asleep. Build with
+`scripts/build-turn` and run `scripts/run-turn`; other demos retain their own
+loop policies. `scripts/test-window` checks the native macOS adapter separately.
 
 ```sh
 scripts/test
@@ -131,6 +175,8 @@ python3 scripts/bench.py --agents 131072 --backend gpu
 python3 scripts/bench-cloth.py --backend gpu
 python3 scripts/bench-cloth.py --backend cpu
 python3 scripts/bench-cloth.py --backend cpu --quality high
+# Active native windows, including display and frame pacing:
+python3 scripts/bench-cloth-interactive.py --window --window-default --tag cloth-window-local
 scripts/preview-cloth
 python3 scripts/bench-showcase.py --demo meadow --backend cpu --effects aa --tag meadow-local
 python3 scripts/bench-showcase.py --demo life --backend gpu --effects aa --tag life-local
@@ -147,6 +193,11 @@ postprocessing. Native quality checks cover 2048² mesh/sprite output, full Imag
 assembly, four-sample depth coverage and exact supersampling resolve. Native
 GPU checks require an available Metal device.
 
+The mesh renderer batches four adjacent pixels per triangle read. Regression
+tests compare the block loop with scalar queries and verify every output pixel
+and retained depth over a varying background. Saved native binaries can be
+compared in alternating order with `python3 scripts/compare-showcase.py --help`.
+
 On this Apple M2 Pro, a sequential 120-warmup/600-sample comparison measured
 **33.11 ms** median for 131,072 boids through the generic API and **38.61 ms**
 for the preserved specialized executable. These are complete headless frame
@@ -159,3 +210,5 @@ interactive Swarm Metal internal error also remains unresolved; passing these
 headless tests does not establish that its trigger is fixed. See
 [STATUS.md](docs/STATUS.md), [FINDINGS.md](docs/FINDINGS.md),
 [ARCHITECTURE.md](docs/ARCHITECTURE.md), and the [original brief](docs/BRIEF.md).
+The [engine simplification review](docs/ENGINE_REVIEW.md) records the shared
+image/tile/spatial modules, ownership checks and before/after measurements.

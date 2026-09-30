@@ -60,6 +60,12 @@ analytic sprite falloff, not a bloom pipeline.
 
 Installed 2.0.5 is too old for the requested APIs. Project-local upstream 2.0.27 works without altering the system installation or compiler. GPU smoke test passes on Metal; the application sandbox reports no GPU, so benchmarks explicitly request `--gpu on`.
 
+September 28 update: global Bend is now 2.0.32. Both the official binary and a
+clean source build of that release crash Apple's Metal compiler on the small
+parallel-sum smoke test on this M2 Pro / macOS 15.7.4. A fresh 2.0.27 build
+still passes. The user selected keeping this working project pin. Details and
+an unsubmitted upstream report are in `repros/metal-2.0.32-issue.md`.
+
 The shader guide predates some array improvements. Current Base and `tests/run/stencil3d.bend` establish the newer shared-block approach: scalar indexed reads, exclusive output ranges, one fork tree, joins, double-buffer swap. A tree match on a shared array copies it; ordinary indexed reads do not.
 
 Bend helpers must destructure computed tuple results as parameters. A helper declared before a recursive function cannot call its unfilled law in live safe code. Rendering tiles is statically unrolled at 1/2/4/8 pixels, avoiding that issue and avoiding per-pixel forks.
@@ -235,3 +241,94 @@ as the default: 25.640 ms median full frame, including 15.523 ms rendering.
 The benchmark can still select this plan with `-- hybrid`. Standard CPU quality
 remains the interactive default. No sustained 60 FPS claim is made for high
 quality. Raw baseline, cache, hybrid and window results remain under `results/`.
+
+
+## Reuse triangle reads across pixels (2026-09-28)
+
+The regular mesh rasterizer previously walked a tile's candidate IDs and loaded
+a complete triangle again for every pixel. It now walks that list once per 2×2
+block, maintaining four independent fragments. The sample/depth/shading
+equations, candidate order, tile ownership and Image assembly are unchanged.
+This divides candidate ID and triangle reads by four, while preserving the
+same number of geometric samples. No extra persistent buffer, atomic, fork
+or GPU launch is introduced. Four-sample AA retains its separate path.
+
+The scalar query is retained as a test reference. The new regression checks
+22,272 fragments with distinct backgrounds, variable depth/light, ties, both
+windings and partial candidate ranges. A full 512² render also compares every
+pixel and retained depth against scalar samples over a spatially varying
+background. Existing native CPU/Metal 512²/1024²/2048² coverage and Image checks
+pass. Performance pairs and reproducible commands are in PERF.md.
+
+Three earlier experiments were rejected:
+
+- Uniform 2×2 Image compaction preserved pixels but was slower in all four
+  exploratory full-frame runs. Records: `image-baseline.json`,
+  `image-compact.json` and their CSVs.
+- Conservative triangle/tile culling reduced false candidates and passed
+  independent polygon clipping and native image checks, but its repeated
+  comparisons did not establish a gain. Records: `culling-exploratory-*`,
+  `culling-rejected-*`, `culling-validation.json`, and the saved
+  `culling-rejected.patch`. The production index keeps its original bins.
+- Preparing grass curves/orientations once and sharing projected ribbon
+  sections also preserved the full meadow image but added no clear gain in
+  the full pipeline. The candidate included culling; see
+  `isolated-exploratory.json` and `ribbon-preparation-rejected.patch`. Neither
+  geometry nor culling changes remain in the production source.
+
+Desktop load mattered: two old Bend Turn processes were initially consuming
+more than two CPU cores. They had exited before the later comparisons; no
+process was actually suspended. Other desktop applications remained active.
+Alternating run order and A/A controls are essential; early CPU timing
+differences did not reliably survive repetition. All historical raw samples
+are preserved rather than relabeled as improvements.
+
+
+## Rendering quality follow-up (2026-09-28)
+
+The previous four-sample grid repeated two coordinates per axis. Rotating it
+produces four distinct horizontal and vertical coverage thresholds; the
+independent 512-phase axis-edge area test measures 75% lower squared error.
+Oblique coverage, occlusion, native quarter-covered slivers, and full Image
+ownership checks still pass. This is a spatial improvement, not temporal AA.
+
+Defocus previously rounded the radius, switched on at 0.75 pixels, and capped
+at three pixels at every resolution. It now uses a continuously sampled
+Gaussian-weighted kernel and a screen-space radius referenced to 1024 pixels.
+The implementation gathers 25 weighted texels equivalent to nine bilinear
+samples, rejects depth discontinuities before weighting, and skips zero weights.
+Both native backends match the independent reference within one color unit.
+The effect is smoother but costs more than the old nine nearest-neighbor reads;
+it remains optional. No foreground dilation or linear-light/HDR pipeline was
+added. Frozen exports show both resolutions and before/after images.
+
+Cloth's Q key previously rebuilt the physical state and cleared a live grab.
+It now replaces only its size-dependent drawing buffers. The paused/deformed
+state, previous positions and grab survive a low/high/low round trip. The
+macOS presentation surface explicitly follows 512/1024 output size. Effect
+status fits within the 16-line Cloth HUD.
+
+Combining coverage and Image assembly into one tile pass did not produce a
+repeatable GPU speedup and was rejected (`quality-fusion-rejected.patch`). The
+final AA-only path keeps separate tile passes but skips the unnecessary
+resolved-fragment read and pixel rewrite during Image assembly. Benchmark
+records distinguish the rejected fusion, initial 36-fetch filter, 25-texel
+filter, and final Image-only assembly. See PERF.md for measured tradeoffs.
+
+## Engine consolidation (2026-09-28)
+
+Shared statically unrolled Image assembly and one affine Image/aliased state
+tile tree replace five renderer-specific implementations. Histogram and
+scatter also share one closed-operation traversal. The engine's unsafe
+sharing is now isolated in its interval and tile trees. Tests explicitly
+exercise source Image ownership, duplicate writers and unused capacity.
+
+Centralizing the CPU/GPU selector as well caused a native device-dispatch
+failure despite passing the JavaScript and CPU checks. Keeping each renderer's
+bang explicit passed the full native matrix. Preserve that shape on the
+pinned toolchain; see `repros/tiles-indirect-dispatch.md` and its rejected patch.
+The underlying compiler/runtime cause is not established.
+
+Before/after source counts, timings, validation and decisions are in
+[ENGINE_REVIEW.md](ENGINE_REVIEW.md). Performance controls matter: unchanged
+stages and saved binaries showed substantial desktop-load variation.

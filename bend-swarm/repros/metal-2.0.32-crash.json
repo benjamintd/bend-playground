@@ -1,0 +1,206 @@
+{
+  "process": "MTLCompilerService",
+  "exception": {
+    "codes": "0x0000000000000001, 0x0000000000000010",
+    "rawCodes": [
+      1,
+      16
+    ],
+    "type": "EXC_BAD_ACCESS",
+    "signal": "SIGSEGV",
+    "subtype": "KERN_INVALID_ADDRESS at 0x0000000000000010"
+  },
+  "termination": {
+    "namespace": "SIGNAL",
+    "code": 11,
+    "indicator": "Segmentation fault: 11"
+  },
+  "faulting_thread_frames": [
+    {
+      "imageOffset": 14404440,
+      "imageIndex": 8
+    },
+    {
+      "imageOffset": 14427984,
+      "imageIndex": 8
+    },
+    {
+      "imageOffset": 14427984,
+      "imageIndex": 8
+    },
+    {
+      "symbol": "llvm::MachineFunctionPass::runOnFunction(llvm::Function&)",
+      "symbolLocation": 392,
+      "imageOffset": 10302084,
+      "imageIndex": 8
+    },
+    {
+      "symbol": "llvm::FPPassManager::runOnFunction(llvm::Function&)",
+      "symbolLocation": 700,
+      "imageOffset": 13205380,
+      "imageIndex": 8
+    },
+    {
+      "imageOffset": 6363468,
+      "imageIndex": 8
+    },
+    {
+      "symbol": "llvm::legacy::PassManagerImpl::run(llvm::Module&)",
+      "symbolLocation": 672,
+      "imageOffset": 13207604,
+      "imageIndex": 8
+    },
+    {
+      "imageOffset": 5943228,
+      "imageIndex": 8
+    },
+    {
+      "imageOffset": 5918712,
+      "imageIndex": 8
+    },
+    {
+      "symbol": "llvm::AGX::AGXCompilePlan::execute(llvm::AGX::CompileRequest&)",
+      "symbolLocation": 868,
+      "imageOffset": 5947784,
+      "imageIndex": 8
+    },
+    {
+      "symbol": "AGCLLVMCtx::compile(AGCLLVMObject*, llvm::Module&, AGCFastMathFlags, llvm::AGX::PipelineType, llvm::AGX::CodeGenOptions&, bool)",
+      "symbolLocation": 1376,
+      "imageOffset": 1318260,
+      "imageIndex": 9
+    },
+    {
+      "symbol": "AGCLLVMUserObject::compile()",
+      "symbolLocation": 30036,
+      "imageOffset": 811652,
+      "imageIndex": 9
+    },
+    {
+      "symbol": "AGCCodeGenServiceBuildRequestInternal(AGCCodeGenService*, void const*, unsigned long, void const*, unsigned long, llvm::Module*, AGCTargetArch, _AGCStreamToken&, void const**, unsigned long*, APIKind)",
+      "symbolLocation": 7092,
+      "imageOffset": 22916,
+      "imageIndex": 9
+    },
+    {
+      "symbol": "MTLCompilerBuildRequestWithOptions",
+      "symbolLocation": 124,
+      "imageOffset": 15616,
+      "imageIndex": 9
+    },
+    {
+      "symbol": "MTLCompilerPluginInterface::compilerBuildRequest(bool, unsigned int, void const*, unsigned long, unsigned int, void const*, BackendCompilationOutput&)",
+      "symbolLocation": 256,
+      "imageOffset": 568288,
+      "imageIndex": 10
+    },
+    {
+      "symbol": "MTLCompilerObject::backendCompileModule(BinaryRequestData&, BackendCompilationOutput&, unsigned long long, std::__1::vector<CompileTimeData, std::__1::allocator<CompileTimeData>>&)",
+      "symbolLocation": 428,
+      "imageOffset": 545992,
+      "imageIndex": 10
+    },
+    {
+      "symbol": "MTLCompilerObject::backendCompileExecutableRequest(BinaryRequestData&)",
+      "symbolLocation": 556,
+      "imageOffset": 569708,
+      "imageIndex": 10
+    },
+    {
+      "symbol": "MTLCompilerObject::buildRequest(unsigned int, unsigned int, void const*, unsigned long, void (unsigned int, void const*, unsigned long, char const*) block_pointer)",
+      "symbolLocation": 708,
+      "imageOffset": 586000,
+      "imageIndex": 10
+    },
+    {
+      "symbol": "split_stack_call",
+      "symbolLocation": 24,
+      "imageOffset": 627616,
+      "imageIndex": 10
+    },
+    {
+      "symbol": "MTLCodeGenServiceBuildRequest",
+      "symbolLocation": 324,
+      "imageOffset": 570848,
+      "imageIndex": 10
+    },
+    {
+      "symbol": "invocation function for block in MTLCompilerServiceHandleEvent(NSObject<OS_xpc_object>*)",
+      "symbolLocation": 1092,
+      "imageOffset": 4392,
+      "imageIndex": 0
+    },
+    {
+      "symbol": "_xpc_connection_call_event_handler",
+      "symbolLocation": 112,
+      "imageOffset": 59440,
+      "imageIndex": 5
+    },
+    {
+      "symbol": "_xpc_connection_mach_event",
+      "symbolLocation": 1196,
+      "imageOffset": 53548,
+      "imageIndex": 5
+    },
+    {
+      "symbol": "_dispatch_client_callout4",
+      "symbolLocation": 16,
+      "imageOffset": 112804,
+      "imageIndex": 3
+    },
+    {
+      "symbol": "_dispatch_mach_msg_invoke",
+      "symbolLocation": 464,
+      "imageOffset": 123152,
+      "imageIndex": 3
+    },
+    {
+      "symbol": "_dispatch_lane_serial_drain",
+      "symbolLocation": 332,
+      "imageOffset": 41400,
+      "imageIndex": 3
+    },
+    {
+      "symbol": "_dispatch_mach_invoke",
+      "symbolLocation": 472,
+      "imageOffset": 126580,
+      "imageIndex": 3
+    },
+    {
+      "symbol": "_dispatch_lane_serial_drain",
+      "symbolLocation": 332,
+      "imageOffset": 41400,
+      "imageIndex": 3
+    },
+    {
+      "symbol": "_dispatch_lane_invoke",
+      "symbolLocation": 388,
+      "imageOffset": 44588,
+      "imageIndex": 3
+    },
+    {
+      "symbol": "_dispatch_root_queue_drain_deferred_wlh",
+      "symbolLocation": 292,
+      "imageOffset": 86628,
+      "imageIndex": 3
+    },
+    {
+      "symbol": "_dispatch_workloop_worker_thread",
+      "symbolLocation": 540,
+      "imageOffset": 84712,
+      "imageIndex": 3
+    },
+    {
+      "symbol": "_pthread_wqthread",
+      "symbolLocation": 292,
+      "imageOffset": 11808,
+      "imageIndex": 4
+    },
+    {
+      "symbol": "start_wqthread",
+      "symbolLocation": 8,
+      "imageOffset": 7028,
+      "imageIndex": 4
+    }
+  ]
+}

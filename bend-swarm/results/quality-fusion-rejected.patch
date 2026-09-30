@@ -1,0 +1,58 @@
+--- a/engine/render/coverage.bend
++++ b/engine/render/coverage.bend
+@@ -2,6 +2,7 @@
+ import ./mesh.bend as M
+ import ./downsample.bend as Resolve
+ import ../parallel/regions.bend as Region
++import ../spatial/layout.bend as L
+ 
+ type Query is Type:
+   Query{triangles: Array<M.Triangle>, ids: Array<U32>, a: M.Fragment, b: M.Fragment, c: M.Fragment, d: M.Fragment}
+@@ -61,3 +62,34 @@
+   match gpu:
+     case True{}: root!(~level,14n,b)
+     case False{}: root(~level,8n,b)
++
++# AA-only frames resolve and build their Image inside the same tile task.
++# The buffer-only entry above remains available for depth-of-field processing.
++def image_raster(~level: Nat, +x: U32, +y: U32, b: M.Drawing) -> M.Drawing:
++  M.Drawing{tris,offsets,ids,pixels,fragments} = b
++  +cell = (U32.shrn(x,Nat.add(level,2n)) + U32.shrn(y,Nat.add(level,2n)) * 128 : U32)
++  start(~level,cell,tris,ids,pixels,fragments,Array.get(U32,offsets,cell))
++def image_tile(~level: Nat, small: Bool, +x: U32, +y: U32, b: M.Drawing, old: Image) -> M.Drawing & Image:
++  match small:
++    case True{}: M.tile_done(~level,x,y,image_raster(~level,x,y,b))
++    case False{}:
++      M.tile8_done(~level,x,y,image_raster(~level,(x + U32.shln(4,level) : U32),(y + U32.shln(4,level) : U32),
++        image_raster(~level,x,(y + U32.shln(4,level) : U32),image_raster(~level,(x + U32.shln(4,level) : U32),y,image_raster(~level,x,y,b)))))
++# Read-only triangle/bin/background aliases; disjoint pixel/resolved-fragment
++# writes. Join only aliases of these same allocations. Reclaim old Image tiles.
++@unsafe
++def image_tree(~level: Nat, ~small: Bool, +depth: Nat, +x: U32, +y: U32, +b: M.Drawing, old: M.Four) -> M.Drawing & Image:
++  match depth:
++    case 0n:
++      M.Four{a,c,d,e} = old
++      image_tile(~level,small,x,y,b,Qua{a,c,d,e})
++    case 1n+k:
++      M.Four{a,c,d,e} = old
++      +h = U32.shln((L.word(small,4,8) * U32.shln(1,level) : U32),k)
++      ra rb rc rd = image_tree(~level,~small,k,x,y,b,M.open(a)) image_tree(~level,~small,k,(x + h : U32),y,b,M.open(c))
++        image_tree(~level,~small,k,x,(y + h : U32),b,M.open(d)) image_tree(~level,~small,k,(x + h : U32),(y + h : U32),b,M.open(e))
++      M.joined(ra,rb,rc,rd)
++def draw(~level: Nat, gpu: Bool, b: M.Drawing, old: Image) -> M.Drawing & Image:
++  match gpu:
++    case True{}: image_tree!(~level,~True{},7n,0,0,b,M.open(old))
++    case False{}: image_tree(~level,~False{},6n,0,0,b,M.open(old))
+--- a/engine/render/finish.bend
++++ b/engine/render/finish.bend
+@@ -19,7 +19,9 @@
+     case False{}: enabled(~level,True{},gpu,settings,b,old)
+     case True{}:
+       Post.Settings{_,dof,focus,aperture} = settings
+-      post(~level,gpu,Post.Settings{False{},dof,focus,aperture},old,Coverage.render(~level,gpu,b))
++      match dof:
++        case False{}: Coverage.draw(~level,gpu,b,old)
++        case True{}: post(~level,gpu,Post.Settings{False{},True{},focus,aperture},old,Coverage.render(~level,gpu,b))
+ def effects(~level: Nat, on: Bool, aa: Bool, gpu: Bool, settings: Post.Settings, b: Mesh.Drawing, old: Image) -> Mesh.Drawing & Image:
+   match on:
+     case False{}: Mesh.render_level(~level,gpu,b,old)

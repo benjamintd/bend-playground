@@ -1,0 +1,332 @@
+{
+  "date": "2026-09-28",
+  "toolchain": [
+    "2.0.27",
+    "95317d952c8fe5be18ef49f916b2a57250cfb0aa"
+  ],
+  "baseline": "results/engine-baseline-source.json",
+  "source": {
+    "engine/core/math.bend": {
+      "lines": 24,
+      "code": 19,
+      "sha256": "c508967caabb15144fa88782aaee214c683fb04a9c01ba534b08b9ea48a1a3e5"
+    },
+    "engine/core/time.bend": {
+      "lines": 9,
+      "code": 6,
+      "sha256": "020f120b92e28bcd438d6909da82571de734188864527c0bc3112612e5c18abf"
+    },
+    "engine/core/time.c": {
+      "lines": 6,
+      "code": 6,
+      "sha256": "3bc0e690b0942c0a229b78a8a3325508585f2f3b770d6b7cf3e4b284ba514a32"
+    },
+    "engine/core/time.js": {
+      "lines": 2,
+      "code": 2,
+      "sha256": "0c111dad85fac5569b1fe100d229efcb76899a9b93572be75a75cf0c0fb72c9b"
+    },
+    "engine/core/vec3.bend": {
+      "lines": 44,
+      "code": 42,
+      "sha256": "69932b48bb45e47d40b704d4cad45ac7b66203e075a6d37381296d970961de70"
+    },
+    "engine/fields/wind.bend": {
+      "lines": 9,
+      "code": 7,
+      "sha256": "2bc9b99a5ce1fdda85ca314fb21541cc60502d2af87af87fb763ca605f988d6e"
+    },
+    "engine/geometry/curve.bend": {
+      "lines": 9,
+      "code": 8,
+      "sha256": "4cf81460205e9941ea10f276c750b498bcc1abe3494cb5fa998387ab8eb74a19"
+    },
+    "engine/geometry/grid_surface.bend": {
+      "lines": 47,
+      "code": 41,
+      "sha256": "1dde382e078ed85f705300858c9d1292d0be93067dbe5be984a10b7e769538d1"
+    },
+    "engine/parallel/map.bend": {
+      "lines": 23,
+      "code": 18,
+      "sha256": "a5c1195fd0427a5fc7850e3be426e384242cc8e23bc5bb9f007ffa01edd4fe28"
+    },
+    "engine/parallel/partition.bend": {
+      "lines": 19,
+      "code": 15,
+      "sha256": "9e93bb4b5c8f0404009225c9e9d2a116f93b04143e27e766074acbb2bb657902"
+    },
+    "engine/parallel/plan.bend": {
+      "lines": 5,
+      "code": 3,
+      "sha256": "8420e5e5b486b5fded9662e2cd06eb387254c3d47004ecdcb3fac96733bb4077"
+    },
+    "engine/parallel/policy.bend": {
+      "lines": 24,
+      "code": 19,
+      "sha256": "29ff71fe1f0ce0b6e6a6bad275c857c070c26ba3febac21d607eaaecbc62487c"
+    },
+    "engine/parallel/policy.c": {
+      "lines": 7,
+      "code": 6,
+      "sha256": "69f833eaddc5a025c11dbe7c060778a17ab0a4ddfc3e8cbcaade53a227456170"
+    },
+    "engine/parallel/policy.js": {
+      "lines": 2,
+      "code": 2,
+      "sha256": "15d7f4c842a78a1a6e59661ca576cb782f01c574702c3068e98d1de2c0c60038"
+    },
+    "engine/parallel/reduce.bend": {
+      "lines": 28,
+      "code": 22,
+      "sha256": "be7249791e203ee398d93f4013058dd454e73574fc0f6e94c1873e7b84eb7163"
+    },
+    "engine/parallel/regions.bend": {
+      "lines": 18,
+      "code": 12,
+      "sha256": "b9e0bab9f7d9e92409b1f8231ab2bf74b307b419bbe7f9fc277bbacadca22a85"
+    },
+    "engine/parallel/scan.bend": {
+      "lines": 19,
+      "code": 14,
+      "sha256": "066a2d489671ed133ef061c64a06a0d181120821888dc69962454adf29763dd9"
+    },
+    "engine/platform/arguments.bend": {
+      "lines": 8,
+      "code": 3,
+      "sha256": "c2a68eacd246e74d4366e199f14ed617fdf34e482b74e9e6c5bd61adcbc15e72"
+    },
+    "engine/platform/player.bend": {
+      "lines": 119,
+      "code": 116,
+      "sha256": "51e93259218a399f577b251dd22bd0f1077b617552270d813a39353e117b463b"
+    },
+    "engine/platform/resolution.c": {
+      "lines": 15,
+      "code": 12,
+      "sha256": "c43b2f42cb28bba32dcf427ef2fdcf0f02c127372b8d6af98e67bbff979600fa"
+    },
+    "engine/platform/resolution.js": {
+      "lines": 2,
+      "code": 2,
+      "sha256": "3f4267f03f480c053f9d1256267f3f22220c1b6d13d8f92970169ae51a0cedfb"
+    },
+    "engine/platform/viewport.bend": {
+      "lines": 10,
+      "code": 7,
+      "sha256": "8da520437a0aa1ffc1db47ce42158bf5dbcf42b2198f67200738ae02089bbd2f"
+    },
+    "engine/platform/viewport.c": {
+      "lines": 22,
+      "code": 16,
+      "sha256": "c246b8365b443f3caebfa51d2a68645cbd661ced84d821a1dd9f79a3e883f56b"
+    },
+    "engine/platform/viewport.js": {
+      "lines": 2,
+      "code": 2,
+      "sha256": "8bb96a6c9c98c54dd454fe72f0c1d90dd32841bc29f6f439024d89045262d548"
+    },
+    "engine/profile/frame.bend": {
+      "lines": 32,
+      "code": 28,
+      "sha256": "722f8435c9611450752723f9429cfae604ca90d74e247cb7c8b00486c106bf8b"
+    },
+    "engine/render/camera.bend": {
+      "lines": 32,
+      "code": 29,
+      "sha256": "32026fbdf2eff3c63d010e80c3c418c5353b4bb98fd41be2b53829d596f91c46"
+    },
+    "engine/render/color.bend": {
+      "lines": 13,
+      "code": 12,
+      "sha256": "f6c6cd8018f1ba6a6d40ef1f99665e96c41d96ccbce3ae84dcc6ab516f870782"
+    },
+    "engine/render/coverage.bend": {
+      "lines": 63,
+      "code": 61,
+      "sha256": "461eeab0a307a51273b6af87893eed29bf78f2b418bb0ede019f931b12008cfc"
+    },
+    "engine/render/downsample.bend": {
+      "lines": 36,
+      "code": 31,
+      "sha256": "d9507f9281a458ee06a513871d9ddae14d889b0ff7b80885254d6576ae73b724"
+    },
+    "engine/render/finish.bend": {
+      "lines": 81,
+      "code": 75,
+      "sha256": "a8bd6f5c0c1443a1247891d6bf4822b4779d311cb82e355217ea23c3778dd724"
+    },
+    "engine/render/hud.bend": {
+      "lines": 95,
+      "code": 83,
+      "sha256": "3ca0d17e14cc17dd730c09408c016563aafa79218728cfa6085d7a9d86b10f9b"
+    },
+    "engine/render/image.bend": {
+      "lines": 53,
+      "code": 48,
+      "sha256": "f1c83d172d918839459f1e8313659d1e11ac2dce5d490c9b68b83c0e4b422617"
+    },
+    "engine/render/mesh.bend": {
+      "lines": 350,
+      "code": 289,
+      "sha256": "0263b1b6983824771f3cdeca1a6c4668d0d5510ad6fd6741635e7f5bc7a576e7"
+    },
+    "engine/render/particles.bend": {
+      "lines": 89,
+      "code": 72,
+      "sha256": "b0ec8a6db254e4b10dc661455aae830578543f965ec612e1b3cc7d5bc52ba774"
+    },
+    "engine/render/post.bend": {
+      "lines": 173,
+      "code": 159,
+      "sha256": "3fc0b754cd1473c75451d37e51abcd878825f3ef7242fe688139978eaa9ca4fe"
+    },
+    "engine/render/splats.bend": {
+      "lines": 127,
+      "code": 120,
+      "sha256": "14529c6bb9f9ffb223b8671e745ad223e10019cfe9eb0f7972729b805a31b20c"
+    },
+    "engine/render/tiles.bend": {
+      "lines": 37,
+      "code": 26,
+      "sha256": "7d264c034e2790aeb35903ba0dbc4da002415795710fb7e7262dbfcab67a9073"
+    },
+    "engine/spatial/grid.bend": {
+      "lines": 66,
+      "code": 46,
+      "sha256": "e68705058a7fe4942a88471865247121024c2063c69fdceedbf79991d07bab70"
+    },
+    "engine/spatial/internal/index.bend": {
+      "lines": 145,
+      "code": 113,
+      "sha256": "3e447f337f39b69675be3ce8139a4218faf1234446845e7b915bde2cce7b171e"
+    },
+    "engine/spatial/internal/stencil.bend": {
+      "lines": 225,
+      "code": 192,
+      "sha256": "12f759c6da36074965dd4deec5898b1005e3bd297fc269e09da2db74b67a383c"
+    },
+    "engine/spatial/layout.bend": {
+      "lines": 74,
+      "code": 57,
+      "sha256": "06dfd7610f2f9ba9fafdd3f0538e5b09aed959c47b0d835bbe504d7745708863"
+    },
+    "engine/spatial/reference.bend": {
+      "lines": 14,
+      "code": 9,
+      "sha256": "899624029490fd73835cf3df4c1135157ad5028272416ec05eb1ef2f1eb2f184"
+    },
+    "engine/spatial.bend": {
+      "lines": 52,
+      "code": 38,
+      "sha256": "414913a62dfea0d06442a0095de229016f26f72e14bc4188ff8950fdcfec97f2"
+    }
+  },
+  "before": {
+    "files": 41,
+    "lines": 2429,
+    "code": 2044,
+    "unsafe_definitions": 6
+  },
+  "after": {
+    "files": 43,
+    "lines": 2230,
+    "code": 1888,
+    "unsafe_definitions": 2
+  },
+  "checks": [
+    "scripts/test (proof and complete JS suites; each structural pass)",
+    "CPU/Metal policy: 34 cases per backend; 512/1024/2048; repeated Image reuse",
+    "CPU/Metal full Image quality, 2048 wrapped sprites, Particle Life image reuse",
+    "CPU/Metal crossings: 120 frames with independent boids oracle",
+    "CPU/Metal spatial-api: all-pairs membership, empty and partial populations",
+    "CPU/Metal Cloth: 8x8/32x32, one and 180 steps; pins/contacts/bounded stretch",
+    "CPU/Metal showcase: independent 1021-sample postprocess oracle, 240 grass steps, Life/sprites"
+  ],
+  "native_policy_final": "passed: all 68 CPU/Metal backend/effect/resolution cases",
+  "app_build": "passed: scripts/build and rebuilt CPU Cloth / Metal Meadow profiler smoke runs",
+  "benchmarks": {
+    "initial": [
+      "results/engine-before.json",
+      "results/engine-image.json",
+      "results/engine-tiles.json"
+    ],
+    "image_cpu_controls": "results/engine-image-control.json",
+    "tile_controls": [
+      "results/engine-tiles-control-image.json",
+      "results/engine-tiles-control-direct.json"
+    ],
+    "spatial": [
+      "results/engine-spatial-before0.json",
+      "results/engine-spatial-after0.json",
+      "results/engine-spatial-after1.json",
+      "results/engine-spatial-before1.json"
+    ],
+    "post_combined": [
+      "results/engine-post-before0.json",
+      "results/engine-post-after0.json",
+      "results/engine-post-after1.json",
+      "results/engine-post-before1.json"
+    ],
+    "post_isolated": [
+      "results/engine-post-isolated-before0.json",
+      "results/engine-post-isolated-after0.json",
+      "results/engine-post-isolated-after1.json",
+      "results/engine-post-isolated-before1.json"
+    ]
+  },
+  "notes": [
+    "Headless timings; stage timings are host elapsed, not GPU hardware timestamps.",
+    "No own builds/tests/apps ran concurrently with timed benchmarks. Other desktop workloads left running.",
+    "Isolated post baseline differs only in engine/render/post.bend; source copy lives under build/engine-post-control.",
+    "An indirect generic GPU dispatch wrapper was rejected; reproduction and patch are in repros/tiles-indirect-dispatch.*.",
+    "No Bend/compiler patches or foreign simulation/rendering kernels."
+  ],
+  "logs": [
+    "build/engine-image-tests.log",
+    "build/engine-tiles-direct-native.log",
+    "build/engine-spatial-tests.log",
+    "build/engine-spatial-native.log",
+    "build/engine-post-native.log",
+    "build/engine-post-isolated.log",
+    "build/engine-final-build.log"
+  ],
+  "artifacts": {
+    "build/Bend Swarm.app/Contents/MacOS/swarm": {
+      "bytes": 1956248,
+      "sha256": "c586f1cdd1dbe52d87e32397629577bf8d1bd5e3d6784d4d5ec9294d6e82ec46"
+    },
+    "build/Bend Swarm.app/Contents/MacOS/swarm.gpu": {
+      "bytes": 647840,
+      "sha256": "c7d5a705cf80a7429b0eab42ca093c415bdd9b8db1fbdc7dbdfdb74370d8f75d"
+    },
+    "build/Bend Cloth.app/Contents/MacOS/cloth": {
+      "bytes": 3490728,
+      "sha256": "6975869087baf58ae992ae8c6bb4e7a82c9768afe255373bb09154dad1996c6c"
+    },
+    "build/Bend Cloth.app/Contents/MacOS/cloth.gpu": {
+      "bytes": 3469568,
+      "sha256": "dd46ee25220bc820ed8d4c9d8eb27ad7df37389c76f34a26ca0fc88957f849cb"
+    },
+    "build/Bend Meadow.app/Contents/MacOS/meadow": {
+      "bytes": 2663960,
+      "sha256": "34a568ec58aeb6224b3fcb4dd12fb01823cd44d43cb737e1b94a00ce9485d704"
+    },
+    "build/Bend Meadow.app/Contents/MacOS/meadow.gpu": {
+      "bytes": 1550928,
+      "sha256": "2fd3fcb01609a914f2a54eefeb0fe558f2d4dee498f2ca3c213a3fda011c7e08"
+    },
+    "build/Bend Particle Life.app/Contents/MacOS/life": {
+      "bytes": 2093768,
+      "sha256": "91eca5e2d5c06e4539067e964f4d15aefbbf9774d902a5dd883432eec28a2afe"
+    },
+    "build/Bend Particle Life.app/Contents/MacOS/life.gpu": {
+      "bytes": 909024,
+      "sha256": "8d952b3c4af727f2f21c07f7a265a5825f1d90633a4d7e3885e1558a28cf6c44"
+    }
+  },
+  "smoke_captures": [
+    "build/engine-final-cloth-smoke.csv",
+    "build/engine-final-meadow-smoke.csv"
+  ]
+}

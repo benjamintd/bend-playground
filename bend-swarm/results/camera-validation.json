@@ -1,0 +1,71 @@
+{
+  "date": "2026-09-28",
+  "bend_pin": [
+    "2.0.27",
+    "95317d952c8fe5be18ef49f916b2a57250cfb0aa"
+  ],
+  "checks": {
+    "proof_and_full_engine_js_suite": "passed scripts/test after final sampler change",
+    "native_mesh": "passed CPU/Metal independent coverage/checksum fixtures",
+    "native_policy": "passed 34 cases per backend, all 8 policies and 4 effect modes plus 1024/2048 trees",
+    "native_camera": "12 captures, six CPU/Metal pairs, pixel-identical; strict black/white includes 2048\u00b2",
+    "image_export": "byte-identical full 512\u00b2 P3 output before/after linear-time export change",
+    "metal_real_workload": "corrected renderer passed 5 warmup + 20 samples, then two 30 + 120 frame timing runs",
+    "app_bundles": "executables and GPU companions match final built files",
+    "interactive": "Monochrome projection, pause, resolution, orbit/fly and CPU/Metal switching verified during development; final shared input logic covered by JS tests",
+    "review": "read-only camera/voxel/input review and generated-C inspection; no sampler closure allocation in corrected generated path",
+    "diff_whitespace": "git diff --check passed"
+  },
+  "limitations": [
+    "Input remains keyboard and pointer-button based; native scroll/pinch/focus adapter is proposed, not implemented.",
+    "Bounded session-local voxel landscape, no streaming or persistence.",
+    "Headless host timings exclude native presentation and run under uncontrolled shared desktop load.",
+    "No complete Turn campaign validation claimed by this task; separate Turn work was active."
+  ],
+  "source_sha256": {
+    "benches/camera.bend": "b5c43407e8e96012d152950de5f24948e8d761756b694e06aea54173ceadb125",
+    "benches/image_dump.bend": "8294298924b226795da21f5e336ceaf2497e31a7274f4be86e26fa84df124a37",
+    "demos/camera_lab/app.bend": "a52c2f4f26d4515efa77805326d2dc346936bfbf0cfd2ab7dca18c105f66edf7",
+    "demos/camera_lab/input.bend": "847749188aaacc40e0a4e489211cd18e50d4e6c7b690a353079c90b1c6d1a8e8",
+    "demos/monochrome/main.bend": "073ddf591b7b597834df1e94536aecd51e5a92c0b07908c780b8278b64d9acce",
+    "demos/monochrome/scene.bend": "fd8a42a1c739be9dd4fca10862b02b94a6ee0cd0b77e0a47fefc4561ff469955",
+    "demos/voxels/landscape.bend": "16f02e326c1010d80321b9d3e99f145be3977750f1c325dd86149c5306b165e5",
+    "demos/voxels/main.bend": "96560ba8537bbcfdc5caf8112933c4df85d2e140d0e1ffcd463e72659757f150",
+    "engine/camera.bend": "a2c2bdf206efd9e81ebb791b76f5dfc08a185bec1def7f4600ccb67279afdf8b",
+    "engine/camera_controls.bend": "272499110cbd2502181f3942f23a5026f8660d88fd7b40b94e44f48c01f2f6d6",
+    "engine/geometry/solid.bend": "ce38841b4b9573ecec4bd0af86c94587c95e142c7d03ff99a793b1d56d4fcbed",
+    "engine/platform/crisp.bend": "634e22279c5b27a1b953cb3caf649bf19ce3bd796cd44df63c6de890dcbd8e6a",
+    "engine/platform/crisp.c": "a2f8d9691d1c7984fa06c91db602ce6a4e83e4e4e6e3000fb6245733b93c46e1",
+    "engine/platform/crisp.js": "4ad0cba22dfb7d82515da9c0bf1cf131bad9da502705049fbf62874899426a1f",
+    "engine/render/mesh.bend": "121ad7c59a954b153285543f14b5885d4667213d066851ff3886a4d5579e80fa",
+    "engine/render/project.bend": "50bf8cd7bf1dcb621e0d389162e7b980de233d1d695130838a2f83c1b0f07417",
+    "engine/render/scene.bend": "0f067c456afe4895b4e0942013b71d3b78d9f18d11c4caae3cadf006c6bf0617",
+    "engine/voxel/world.bend": "840873f87d57782937878bc9964b9d98667b39e242bd8b422ac8c8dfce4c2372",
+    "scripts/build-camera": "83ab595776951cf8baa7f8222183cdf2a4c0c23b8a304d03b45b0921efe49c12",
+    "scripts/run-monochrome": "003668b75fa5aebf47f5b004c511074d896e6a1155f8927308bd10f5774f6b32",
+    "scripts/run-voxels": "e37d1c908556cf2cb756b11f19f35fa7030d7c1f3bc366d864b6218b54eaa88b",
+    "scripts/test": "ad0f357d7609df7f8313658bdbadd69606e0a2c638a98f177ec625219d1921c3",
+    "tests/camera-demos.js": "262e7c004eac46ba2ec6dc53232d542442ebb75c6aaa1191f6150e4fd99f2df4",
+    "tests/camera-native-check.py": "5d957822eb88c510f7ec91bfa4c7b869695ae7c58cd332a845330970d1949529",
+    "tests/camera.js": "d2f1ff73fc10cf5bf5560a50d6ca57fa66c6ac3b4550e0ad2eb80a89e8317c77",
+    "tests/voxels.js": "8f2be1f9a7f33c1f7cdcc89e4956adc45f621779ae607edae449a27dfe2c139a"
+  },
+  "binary_sha256": {
+    "build/monochrome": "100961c89cee3ba34fc267fcaa1909c8565ad818dfca75e0733f64676e2acb67",
+    "build/monochrome.gpu": "74308d13f147b7f788a52a7f1e7aecb18fd14a752777d7ec10279e96c64570a7",
+    "build/voxels": "5290ec8d9f495ede4e2f93a83dfb2745edbdcff0f82c9419827f2f9a17177977",
+    "build/voxels.gpu": "9535e0d0371c6aaf11705a5829269d9864f9f83ff431160b09c85e308fca865d",
+    "build/camera": "d72a7cacefcd835f109594eab16fd7f9e2b122eeadb906ba464fec77095ffe2f",
+    "build/camera.gpu": "eab31d5565b0f6dfad63466a117fe73f8b31dd642c931067435957ec3b4220a9",
+    "build/camera-profile-choice": "1752a229e2d00fe758af890b98efe1d043623a41f4a4fe88b89e9d5b18bda1bc",
+    "build/camera-profile-choice.gpu": "5b18f2064cdbd650aebf982487e285f10711fc5a0089619045bfc025172bb935",
+    "build/mesh-native": "7f017766229d45742599e9addfdaea17e938464801d1c5b0e9b19ef68b864594",
+    "build/mesh-native.gpu": "0aa84836828f2c8041bc194cb71d4ab87a633ba37e33deddf5b1a83995a031e3",
+    "build/policy-native": "447c80c89152b0d9881ce50c5af59b46de9db8a92aa9e2d503d1fab414b2acda",
+    "build/policy-native.gpu": "afc60a21988e043a99182830acc7d0a1f9514942d0417126d0a151ef9f2815bc"
+  },
+  "js_log_sha256": "a382557b9101c677f3d3067d013a4b5f013534721d65d29074dbbf002686c589",
+  "native_images": "results/camera-native-validation.json",
+  "performance": "results/camera-performance.json",
+  "rejected_selector": "repros/camera-closure-selector.md"
+}

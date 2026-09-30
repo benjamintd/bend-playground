@@ -1,0 +1,9 @@
+#!/bin/sh
+set -eu
+root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+cd "$root"
+# Check the pin through the supported launcher before using its bundler plugin.
+scripts/bend version
+scripts/bend demos/turn/PROOF.bend
+scripts/bend demos/turn/CAMPAIGN_PROOF.bend
+BEND_NO_TELEMETRY=1 bun scripts/build-web.js

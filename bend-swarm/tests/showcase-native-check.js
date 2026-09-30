@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import LifeTest from './life.bend';
 import {reference} from './life.js';
+import {defocus} from './post-reference.js';
 const rows=backend=>fs.readFileSync(`build/showcase-${backend}.csv`,'utf8').trim().split('\n').map(l=>{const [kind,...values]=l.split(',');return {kind,v:values.map(Number)};});
 const cpu=rows('cpu'),gpu=rows('gpu');assert.equal(cpu.length,5214);assert.equal(gpu.length,cpu.length);
 const source=LifeTest.fixture();
@@ -12,9 +13,7 @@ const luma=c=>{const [r,g,b]=rgb(c);return .299*r+.587*g+.114*b;};
 function expectedPost(i) {
   const x=i%512,y=Math.floor(i/512),center=get(x,y);
   if(x>=256) {
-    const samples=[];
-    for(let dy=-2;dy<=2;dy+=2) for(let dx=-2;dx<=2;dx+=2) {const n=get(x+dx,y+dy);if(Math.abs(n.depth-center.depth)<2)samples.push(rgb(n.color));}
-    return [0,1,2].map(k=>Math.floor(samples.reduce((s,c)=>s+c[k],0)/samples.length));
+    return defocus(get,512,x,y,1);
   }
   const n=get(x,y-1).color,s=get(x,y+1).color,e=get(x+1,y).color,w=get(x-1,y).color;
   const levels=[center.color,n,s,e,w].map(luma),lo=Math.min(...levels),hi=Math.max(...levels);

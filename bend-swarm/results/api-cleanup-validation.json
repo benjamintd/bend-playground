@@ -1,0 +1,322 @@
+{
+  "date": "2026-09-28",
+  "toolchain": [
+    "2.0.27",
+    "95317d952c8fe5be18ef49f916b2a57250cfb0aa"
+  ],
+  "scope": "API cleanup and Turn batch integration; no gameplay/projection/text raster changes or packaging",
+  "changed_engine_files": [
+    "engine/camera.bend",
+    "engine/render/batch.bend",
+    "engine/render/finish.bend",
+    "engine/render/project.bend",
+    "engine/render/scene.bend"
+  ],
+  "changed_turn_files": [
+    "demos/turn/assets/generate-font.py",
+    "demos/turn/font.bend",
+    "demos/turn/render.bend",
+    "demos/turn/view.bend"
+  ],
+  "source_sha256": {
+    "engine/camera.bend": "7481a0043fbcd796184aacf5f14a1f3116c115c7551296611b998ea441b6570e",
+    "engine/camera_controls.bend": "272499110cbd2502181f3942f23a5026f8660d88fd7b40b94e44f48c01f2f6d6",
+    "engine/core/math.bend": "c508967caabb15144fa88782aaee214c683fb04a9c01ba534b08b9ea48a1a3e5",
+    "engine/core/time.bend": "020f120b92e28bcd438d6909da82571de734188864527c0bc3112612e5c18abf",
+    "engine/core/time.c": "3bc0e690b0942c0a229b78a8a3325508585f2f3b770d6b7cf3e4b284ba514a32",
+    "engine/core/time.js": "0c111dad85fac5569b1fe100d229efcb76899a9b93572be75a75cf0c0fb72c9b",
+    "engine/core/vec3.bend": "69932b48bb45e47d40b704d4cad45ac7b66203e075a6d37381296d970961de70",
+    "engine/fields/wind.bend": "2bc9b99a5ce1fdda85ca314fb21541cc60502d2af87af87fb763ca605f988d6e",
+    "engine/geometry/curve.bend": "4cf81460205e9941ea10f276c750b498bcc1abe3494cb5fa998387ab8eb74a19",
+    "engine/geometry/grid_surface.bend": "1dde382e078ed85f705300858c9d1292d0be93067dbe5be984a10b7e769538d1",
+    "engine/geometry/solid.bend": "ce38841b4b9573ecec4bd0af86c94587c95e142c7d03ff99a793b1d56d4fcbed",
+    "engine/parallel/map.bend": "a5c1195fd0427a5fc7850e3be426e384242cc8e23bc5bb9f007ffa01edd4fe28",
+    "engine/parallel/partition.bend": "9e93bb4b5c8f0404009225c9e9d2a116f93b04143e27e766074acbb2bb657902",
+    "engine/parallel/plan.bend": "8420e5e5b486b5fded9662e2cd06eb387254c3d47004ecdcb3fac96733bb4077",
+    "engine/parallel/policy.bend": "29ff71fe1f0ce0b6e6a6bad275c857c070c26ba3febac21d607eaaecbc62487c",
+    "engine/parallel/policy.c": "69f833eaddc5a025c11dbe7c060778a17ab0a4ddfc3e8cbcaade53a227456170",
+    "engine/parallel/policy.js": "15d7f4c842a78a1a6e59661ca576cb782f01c574702c3068e98d1de2c0c60038",
+    "engine/parallel/reduce.bend": "be7249791e203ee398d93f4013058dd454e73574fc0f6e94c1873e7b84eb7163",
+    "engine/parallel/regions.bend": "b9e0bab9f7d9e92409b1f8231ab2bf74b307b419bbe7f9fc277bbacadca22a85",
+    "engine/parallel/scan.bend": "066a2d489671ed133ef061c64a06a0d181120821888dc69962454adf29763dd9",
+    "engine/platform/arguments.bend": "c2a68eacd246e74d4366e199f14ed617fdf34e482b74e9e6c5bd61adcbc15e72",
+    "engine/platform/crisp.bend": "634e22279c5b27a1b953cb3caf649bf19ce3bd796cd44df63c6de890dcbd8e6a",
+    "engine/platform/crisp.c": "a2f8d9691d1c7984fa06c91db602ce6a4e83e4e4e6e3000fb6245733b93c46e1",
+    "engine/platform/crisp.js": "4ad0cba22dfb7d82515da9c0bf1cf131bad9da502705049fbf62874899426a1f",
+    "engine/platform/player.bend": "51e93259218a399f577b251dd22bd0f1077b617552270d813a39353e117b463b",
+    "engine/platform/resolution.c": "c43b2f42cb28bba32dcf427ef2fdcf0f02c127372b8d6af98e67bbff979600fa",
+    "engine/platform/resolution.js": "3f4267f03f480c053f9d1256267f3f22220c1b6d13d8f92970169ae51a0cedfb",
+    "engine/platform/viewport.bend": "8da520437a0aa1ffc1db47ce42158bf5dbcf42b2198f67200738ae02089bbd2f",
+    "engine/platform/viewport.c": "c246b8365b443f3caebfa51d2a68645cbd661ced84d821a1dd9f79a3e883f56b",
+    "engine/platform/viewport.js": "8bb96a6c9c98c54dd454fe72f0c1d90dd32841bc29f6f439024d89045262d548",
+    "engine/profile/frame.bend": "722f8435c9611450752723f9429cfae604ca90d74e247cb7c8b00486c106bf8b",
+    "engine/render/batch.bend": "1bb9d43e3860475a5735a7a161b1787e3f2ee796210bb3d9e05836545a306c04",
+    "engine/render/camera.bend": "32026fbdf2eff3c63d010e80c3c418c5353b4bb98fd41be2b53829d596f91c46",
+    "engine/render/color.bend": "f6c6cd8018f1ba6a6d40ef1f99665e96c41d96ccbce3ae84dcc6ab516f870782",
+    "engine/render/coverage.bend": "461eeab0a307a51273b6af87893eed29bf78f2b418bb0ede019f931b12008cfc",
+    "engine/render/downsample.bend": "d9507f9281a458ee06a513871d9ddae14d889b0ff7b80885254d6576ae73b724",
+    "engine/render/finish.bend": "bce57e4614c7a905d5c48d3167ebb9dcfe998df420cb0efaebafca26f21b9f62",
+    "engine/render/hud.bend": "3ca0d17e14cc17dd730c09408c016563aafa79218728cfa6085d7a9d86b10f9b",
+    "engine/render/image.bend": "f1c83d172d918839459f1e8313659d1e11ac2dce5d490c9b68b83c0e4b422617",
+    "engine/render/mesh.bend": "121ad7c59a954b153285543f14b5885d4667213d066851ff3886a4d5579e80fa",
+    "engine/render/particles.bend": "b0ec8a6db254e4b10dc661455aae830578543f965ec612e1b3cc7d5bc52ba774",
+    "engine/render/post.bend": "3fc0b754cd1473c75451d37e51abcd878825f3ef7242fe688139978eaa9ca4fe",
+    "engine/render/project.bend": "601a5f150b09f8e6eb405bedec31d294f5a658e435b73fe45d16ecce5004d4b0",
+    "engine/render/scene.bend": "4e2f1824a9c595d434ed466cb523fa4689b139bcdd0046e63df22318a306ec02",
+    "engine/render/splats.bend": "14529c6bb9f9ffb223b8671e745ad223e10019cfe9eb0f7972729b805a31b20c",
+    "engine/render/tiles.bend": "7d264c034e2790aeb35903ba0dbc4da002415795710fb7e7262dbfcab67a9073",
+    "engine/spatial/grid.bend": "e68705058a7fe4942a88471865247121024c2063c69fdceedbf79991d07bab70",
+    "engine/spatial/internal/index.bend": "3e447f337f39b69675be3ce8139a4218faf1234446845e7b915bde2cce7b171e",
+    "engine/spatial/internal/stencil.bend": "12f759c6da36074965dd4deec5898b1005e3bd297fc269e09da2db74b67a383c",
+    "engine/spatial/layout.bend": "06dfd7610f2f9ba9fafdd3f0538e5b09aed959c47b0d835bbe504d7745708863",
+    "engine/spatial/reference.bend": "899624029490fd73835cf3df4c1135157ad5028272416ec05eb1ef2f1eb2f184",
+    "engine/spatial.bend": "414913a62dfea0d06442a0095de229016f26f72e14bc4188ff8950fdcfec97f2",
+    "engine/voxel/world.bend": "840873f87d57782937878bc9964b9d98667b39e242bd8b422ac8c8dfce4c2372",
+    "demos/turn/CAMPAIGN_LAWS.bend": "0ca97be1fbdbc818af1d87ac3871699e1f76277765a14a87a942a32a86bf76cb",
+    "demos/turn/CAMPAIGN_PROOF.bend": "1e09eb18451091ff2cb43c9241336b74bc12f0517cd4aee7a05b56740e99c688",
+    "demos/turn/LAWS.bend": "210d85b4a9d0834e3fae4d4968986243782eb0b89f573315115afa52665a3e55",
+    "demos/turn/PROOF.bend": "38569d983f6ac2fdee3f20f2946335cc3464747b7a86a4fc2609e48cd82cb11b",
+    "demos/turn/assets/generate-font.py": "5b1b7477b510ccd42be55a929aa3181855cd288e66700317e36855d19263cc00",
+    "demos/turn/collision.bend": "67886d4525e0e3ff5367c91d9cbecc86a6341a8d08d4c884eabdd66ce7a40849",
+    "demos/turn/font.bend": "aa739b4d1b8044e2790d8772c47216bc8bc41f7e33597617847b157ef428312c",
+    "demos/turn/levels.bend": "ffe42a590460c1a42d636cfc6f3181ef7dd7cfd4f16a415b91bd60adbe721bf5",
+    "demos/turn/main.bend": "f4ee5e73bce479bba4b0130650187303e5f0436eef563224f4c224c90010b403",
+    "demos/turn/model.bend": "ec5137c92a13641e30eedc4f60c8e6c8e1620d882f99c0adb314f12d7f9e77af",
+    "demos/turn/physics.bend": "ec4a64910766898936426b08bfd09dc51c891cc8b7f46f813f824938fa8558ce",
+    "demos/turn/play.bend": "7b28408196579847f9d77b4916178a1f5b1a571f2c0d6f214d7cb6bfe502c06e",
+    "demos/turn/projection.bend": "ab2dfb2dec5472d382532e000122e85b2a1400214997eafe51a9e9234543e4e5",
+    "demos/turn/render.bend": "cb9f9575bf18ad8719b8f6ca8aefd22460d0bcb64f2110e08133396a78cf5b57",
+    "demos/turn/resolution-check.bend": "fcc597eb814244372a026fc092510cc1e3ad0a850b21e413f0022826e528a82e",
+    "demos/turn/rules.bend": "4976b6967ea6396fb8eea8fd70dd397cbccedd1f3d81784c27bdb0f475755b6a",
+    "demos/turn/snapshot.bend": "1547d8dc98c8fb19d00fb672e26db35d65419402c5659f2b6477833d07514eeb",
+    "demos/turn/solutions.bend": "d2c84eba942f97ab0e8bd71acb73d199ccbc5ed44574a80e2f38bfba8ab0a513",
+    "demos/turn/style.bend": "7fe57ac280c2693efa31ed3350e039376c03eb56d4021dfcc63bb9e2f57e3878",
+    "demos/turn/terrain.bend": "51148ea9aa8dc1df953877d31a8492dbbc616bfaf52810ea50225e3e252fe1e7",
+    "demos/turn/text-coverage.bend": "01aecc7fc6425cd095dc69bedbf6972733fd5c11e9688c7d5510dbb9481fa09c",
+    "demos/turn/view.bend": "78557d12b4e8fe7c706f7528b86e00003c7b642c3e78d8d5f633ede893c98e4e",
+    "demos/turn/world.bend": "f5abbe47e4ee018bd12979ba751d4ec957c401c6fcba6c70f65b3fdffe6b635b"
+  },
+  "size": {
+    "engine_before": {
+      "physical_lines": 2803,
+      "code_lines": 2424,
+      "definitions": 497
+    },
+    "engine_after": {
+      "physical_lines": 2825,
+      "code_lines": 2435,
+      "definitions": 500
+    },
+    "turn_before": {
+      "physical_lines": 7753,
+      "code_lines": 7554
+    },
+    "turn_after": {
+      "physical_lines": 7741,
+      "code_lines": 7542,
+      "definitions": 786
+    },
+    "note": "Engine counts .bend/.c/.js; Turn counts .bend plus the font generator (including generated font and campaign data). Engine validation adds code while finishing/geometry ownership removes duplication. Tests and docs excluded."
+  },
+  "checks": {
+    "engine_suite": "scripts/test: Bend PROOF plus all 25 JavaScript suites passed",
+    "camera_contract": "tests/camera.js passed after the final tiny-normal guard; overflow, underflow, viewport, projection/rays and clipping",
+    "batch_contract": "capacity rounding, repeated growth retaining every triangle, clear and allocation reuse",
+    "finish_native": "34 CPU and 34 Metal policy/effect/resolution cases passed; tests/policy-native-check.py",
+    "scene_native": "6 consecutive frames per backend; target resizing 512/1024/2048/down, blank-after-populated, exact pixel counts and actual backend with GPU requested under --gpu off",
+    "turn_visual": "494 scenes; peak 21383 triangles; forced one-triangle growth and repeat scene equal preallocated geometry",
+    "turn_projection": "395 cubes, 2370 faces, 78 three-turn cycles, 390 camera poses",
+    "turn_font": "47 glyphs; 18 covered and 30 ordinary tiles equal independent oracles; generated font --check passed",
+    "turn_native": "25 frames with one-triangle initial reserve, all 1048576 pixels equal a fresh final frame, count/capacity retained",
+    "proofs": "PROOF.bend and Turn PROOF.bend / CAMPAIGN_PROOF.bend checked successfully; puzzle sources unchanged",
+    "builds": "scripts/build-camera and scripts/build-turn passed; existing app bundles rebuilt",
+    "whitespace": "git diff --check passed"
+  },
+  "turn_snapshots": [
+    {
+      "fixture": "menu",
+      "size": [
+        1024,
+        1024
+      ],
+      "ppm_sha256": "b7075a48150b1bfc968fc7777a3f6f725d92a5443806495995a1983cae2cff56",
+      "byte_identical": true
+    },
+    {
+      "fixture": "rooms",
+      "size": [
+        1024,
+        1024
+      ],
+      "ppm_sha256": "26c0f687ea8d5a7b8dc14a0a8799c0410181d691b387642374c17b3a196069e0",
+      "byte_identical": true
+    },
+    {
+      "fixture": "turn",
+      "size": [
+        1024,
+        1024
+      ],
+      "ppm_sha256": "342146353eb5114f0bf323bdca5f7824e350a048f99697554f699b6d726b4649",
+      "byte_identical": true
+    },
+    {
+      "fixture": "keyhole",
+      "size": [
+        1024,
+        1024
+      ],
+      "ppm_sha256": "dc37b6436c9ce6474183e55903dd19552f132c8ab7b18d119d5f286e58dd0f5b",
+      "byte_identical": true
+    }
+  ],
+  "camera_snapshots_unchanged": 12,
+  "camera_snapshots": [
+    {
+      "scene": "mono",
+      "projection": "perspective",
+      "size": 512,
+      "backend": "cpu",
+      "pixels": 262144,
+      "sha256": "fcd64bfa631276467888cc581d5028f1c24e1afa181d48a72137ad809c77b635"
+    },
+    {
+      "scene": "mono",
+      "projection": "perspective",
+      "size": 512,
+      "backend": "metal",
+      "pixels": 262144,
+      "sha256": "fcd64bfa631276467888cc581d5028f1c24e1afa181d48a72137ad809c77b635",
+      "cpu_metal_pixel_differences": 0
+    },
+    {
+      "scene": "mono",
+      "projection": "ortho",
+      "size": 512,
+      "backend": "cpu",
+      "pixels": 262144,
+      "sha256": "4328db15a91b78d2c5efb168ae7043afbe5dfdedebdbb51645c637eeda6f333e"
+    },
+    {
+      "scene": "mono",
+      "projection": "ortho",
+      "size": 512,
+      "backend": "metal",
+      "pixels": 262144,
+      "sha256": "4328db15a91b78d2c5efb168ae7043afbe5dfdedebdbb51645c637eeda6f333e",
+      "cpu_metal_pixel_differences": 0
+    },
+    {
+      "scene": "voxel",
+      "projection": "perspective",
+      "size": 512,
+      "backend": "cpu",
+      "pixels": 262144,
+      "sha256": "28ab1e76b9b75003e83c758928840e719facda3fa98b98227c1d38cf6eb7dc0e"
+    },
+    {
+      "scene": "voxel",
+      "projection": "perspective",
+      "size": 512,
+      "backend": "metal",
+      "pixels": 262144,
+      "sha256": "28ab1e76b9b75003e83c758928840e719facda3fa98b98227c1d38cf6eb7dc0e",
+      "cpu_metal_pixel_differences": 0
+    },
+    {
+      "scene": "voxel",
+      "projection": "ortho",
+      "size": 512,
+      "backend": "cpu",
+      "pixels": 262144,
+      "sha256": "96706216c6f428043a21103d2e6d0aaaf74651037f125639ca8628d496b3a94e"
+    },
+    {
+      "scene": "voxel",
+      "projection": "ortho",
+      "size": 512,
+      "backend": "metal",
+      "pixels": 262144,
+      "sha256": "96706216c6f428043a21103d2e6d0aaaf74651037f125639ca8628d496b3a94e",
+      "cpu_metal_pixel_differences": 0
+    },
+    {
+      "scene": "mono",
+      "projection": "perspective",
+      "size": 2048,
+      "backend": "cpu",
+      "pixels": 4194304,
+      "sha256": "2584be0d63ef1e23ec055e698bc68cec9aef3b265c33dd154367a1d9e6192d7d"
+    },
+    {
+      "scene": "mono",
+      "projection": "perspective",
+      "size": 2048,
+      "backend": "metal",
+      "pixels": 4194304,
+      "sha256": "2584be0d63ef1e23ec055e698bc68cec9aef3b265c33dd154367a1d9e6192d7d",
+      "cpu_metal_pixel_differences": 0
+    },
+    {
+      "scene": "voxel",
+      "projection": "ortho",
+      "size": 1024,
+      "backend": "cpu",
+      "pixels": 1048576,
+      "sha256": "6741e2258c2714cfb886e4c9cac01bc2caabaab4b03f2f2c6489ba8465f56505"
+    },
+    {
+      "scene": "voxel",
+      "projection": "ortho",
+      "size": 1024,
+      "backend": "metal",
+      "pixels": 1048576,
+      "sha256": "6741e2258c2714cfb886e4c9cac01bc2caabaab4b03f2f2c6489ba8465f56505",
+      "cpu_metal_pixel_differences": 0
+    }
+  ],
+  "performance": "results/api-cleanup-performance.json",
+  "performance_summary_ms": {
+    "turn-cpu": {
+      "before": 7.8718,
+      "after": 7.981920000000001,
+      "change_percent": 1.3989176554282334
+    },
+    "mono-metal": {
+      "before": 9.9215,
+      "after": 9.79425,
+      "change_percent": -1.282568160056441
+    },
+    "voxel-metal": {
+      "before": 10.093250000000001,
+      "after": 10.18075,
+      "change_percent": 0.8669160082233063
+    },
+    "meadow-metal-dof": {
+      "before": 34.667500000000004,
+      "after": 34.69925,
+      "change_percent": 0.0915843369149627
+    }
+  },
+  "binary_sha256": {
+    "build/camera": "df45878b199084f90a69b271b77a67fcee8da40c5a061d6b49844e2df91207c5",
+    "build/api-profile": "5d5ee490575413ec22c5e082d99b83318681efe9286471e7960c934502dce579",
+    "build/turn": "569b81f228deb8a3df7768a10b70d0b143834b116f773f232617b1d04d1e20c7",
+    "build/monochrome": "319e20a0e1430c8fa2b85799239820f78fd165da96b64dd8d4d8fbd2fbeacb4f",
+    "build/voxels": "da7667a7a5eda4e408683e35e69beedceacedb97cb5fe7c776c63be2a89e54f9",
+    "build/scene-native": "e0dc8c407122ae5a8364eb865ec2273a09e5c7f61d545622061e4420ff9f9577",
+    "build/turn-native-render-test": "a3da08a6813468c84fe122a73af00614bea13b676827aff128d4410efaf76803",
+    "build/api-turn-before/snapshot": "1bc500938fed306e20b7cac3aeb3bf8ba2057ecec27b2918fece30a065373ca3",
+    "build/api-turn-after/snapshot": "861a196ab122a50f1929df9ff23393dadc0df656e580f30a96a83c96ecee7101"
+  },
+  "test_logs": [
+    "build/api-final-tests.log",
+    "build/api-camera-tests.log",
+    "build/api-turn-font.log",
+    "build/api-turn-visual.log",
+    "build/api-turn-projection.log",
+    "build/api-turn-native.log",
+    "build/api-camera-native.log",
+    "build/api-app-build.log"
+  ]
+}

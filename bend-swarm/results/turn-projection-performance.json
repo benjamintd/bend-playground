@@ -1,0 +1,132 @@
+{
+  "cpu_threads": 8,
+  "resolution": 1024,
+  "before_antialiasing": true,
+  "after_antialiasing": false,
+  "runs": [
+    {
+      "sample": 0,
+      "mode": "render",
+      "version": "before",
+      "total_us": 401934,
+      "frames": 25,
+      "ms_per_frame": 16.07736
+    },
+    {
+      "sample": 0,
+      "mode": "render",
+      "version": "after",
+      "total_us": 142444,
+      "frames": 25,
+      "ms_per_frame": 5.69776
+    },
+    {
+      "sample": 1,
+      "mode": "render",
+      "version": "after",
+      "total_us": 160207,
+      "frames": 25,
+      "ms_per_frame": 6.40828
+    },
+    {
+      "sample": 1,
+      "mode": "render",
+      "version": "before",
+      "total_us": 463470,
+      "frames": 25,
+      "ms_per_frame": 18.5388
+    },
+    {
+      "sample": 2,
+      "mode": "render",
+      "version": "before",
+      "total_us": 385265,
+      "frames": 25,
+      "ms_per_frame": 15.4106
+    },
+    {
+      "sample": 2,
+      "mode": "render",
+      "version": "after",
+      "total_us": 140146,
+      "frames": 25,
+      "ms_per_frame": 5.60584
+    },
+    {
+      "sample": 0,
+      "mode": "native_presentation",
+      "version": "before",
+      "total_us": 5059451,
+      "frames": 120,
+      "ms_per_frame": 42.16209166666667
+    },
+    {
+      "sample": 0,
+      "mode": "native_presentation",
+      "version": "after",
+      "total_us": 1175394,
+      "frames": 120,
+      "ms_per_frame": 9.79495
+    },
+    {
+      "sample": 1,
+      "mode": "native_presentation",
+      "version": "after",
+      "total_us": 1154638,
+      "frames": 120,
+      "ms_per_frame": 9.621983333333334
+    },
+    {
+      "sample": 1,
+      "mode": "native_presentation",
+      "version": "before",
+      "total_us": 2843944,
+      "frames": 120,
+      "ms_per_frame": 23.69953333333333
+    },
+    {
+      "sample": 2,
+      "mode": "native_presentation",
+      "version": "before",
+      "total_us": 2490176,
+      "frames": 120,
+      "ms_per_frame": 20.751466666666666
+    },
+    {
+      "sample": 2,
+      "mode": "native_presentation",
+      "version": "after",
+      "total_us": 1012010,
+      "frames": 120,
+      "ms_per_frame": 8.433416666666666
+    }
+  ],
+  "engine_hashes": {
+    "engine/render/finish.bend": "ee76c310984591e06fddec1dbe340765f639c766eab031feabd150033efcd607",
+    "engine/render/post.bend": "49ff7bf1f031f7efe3c2019c141ecb732cfe70560d93b04ad17b2e673cce74cf",
+    "engine/render/hud.bend": "3ca0d17e14cc17dd730c09408c016563aafa79218728cfa6085d7a9d86b10f9b",
+    "engine/render/particles.bend": "37c0ac7c4af21ec187fe832d1dcad286df627671d06fca2737d863ba4063a14d",
+    "engine/render/coverage.bend": "461eeab0a307a51273b6af87893eed29bf78f2b418bb0ede019f931b12008cfc",
+    "engine/render/downsample.bend": "3b107f8e79f71af7b57230fb9f8ed390daf247f9c1f04d22a16d685ff3e30db8",
+    "engine/render/color.bend": "f6c6cd8018f1ba6a6d40ef1f99665e96c41d96ccbce3ae84dcc6ab516f870782",
+    "engine/render/mesh.bend": "c12b58ef51e4e8001d10b90f1118bf6dbfb1e55c09285862434a13e96f905c0b",
+    "engine/render/splats.bend": "ac704958b6b1134c322ff24d13471c95e2ae9362601b746aef05df254fb7e7e8",
+    "engine/render/camera.bend": "32026fbdf2eff3c63d010e80c3c418c5353b4bb98fd41be2b53829d596f91c46"
+  },
+  "median_ms": {
+    "render": {
+      "before": 16.07736,
+      "after": 5.69776
+    },
+    "native_presentation": {
+      "before": 23.69953333333333,
+      "after": 9.621983333333334
+    }
+  },
+  "notes": [
+    "Three alternating before/after samples. First-level rotation, CPU, 8 threads, 1024-square output.",
+    "Native presentation compares both implementations in one binary using the same shared engine code; 25 warm-up frames, then 120 measured frames per sample.",
+    "Before uses character-selected slices and four-sample AA; after draws the entire fixed world, culls internal/back faces, uses four triangles per painted face, and selects single-sample rendering.",
+    "The shared engine is concurrently under development; these are local measurements, not a guarantee for all hardware or all scenes. First before presentation sample has a large outlier, retained in the report."
+  ]
+}

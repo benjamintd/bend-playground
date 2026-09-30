@@ -1,0 +1,15 @@
+#!/bin/sh
+set -eu
+root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+cd "$root"
+scripts/bend PROOF.bend
+scripts/bend demos/turn/PROOF.bend
+scripts/bend demos/turn/CAMPAIGN_PROOF.bend
+for file in web/adapters/*.bend; do scripts/bend "$file" --check-only; done
+bun --preload ./.toolchain/bend/bend2/main.ts tests/turn/hints.js
+bun --preload ./.toolchain/bend/bend2/main.ts tests/turn/hint-routes.js
+scripts/bend tests/turn/hints-native.bend -o build/turn-hints-native
+build/turn-hints-native --gpu off --threads 8
+scripts/bend tests/web-cloth-native.bend -o build/web-cloth-native
+build/web-cloth-native --gpu off --threads 8
+bun tests/web-build.js

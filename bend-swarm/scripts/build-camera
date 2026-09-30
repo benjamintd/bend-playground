@@ -1,0 +1,22 @@
+#!/bin/sh
+set -eu
+root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+cd "$root"
+mkdir -p build
+scripts/bend demos/monochrome/main.bend -o build/monochrome
+scripts/bend demos/voxels/main.bend -o build/voxels
+scripts/bend benches/camera.bend -o build/camera
+if [ "$(uname)" = Darwin ]; then
+  for demo in monochrome voxels; do
+    case "$demo" in monochrome) name='Bend Monochrome';; voxels) name='Bend Voxels';; esac
+    app="build/$name.app/Contents"
+    mkdir -p "$app/MacOS"
+    cp "build/$demo" "$app/MacOS/$demo"
+    if [ -f "build/$demo.gpu" ]; then cp "build/$demo.gpu" "$app/MacOS/$demo.gpu"; fi
+    cat > "$app/Info.plist" <<PLIST
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0"><dict><key>CFBundleExecutable</key><string>$demo</string><key>CFBundleIdentifier</key><string>local.bend.$demo</string><key>CFBundleName</key><string>$name</string><key>CFBundlePackageType</key><string>APPL</string></dict></plist>
+PLIST
+  done
+fi

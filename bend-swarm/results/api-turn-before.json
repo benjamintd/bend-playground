@@ -1,0 +1,29 @@
+{
+  "sources": {
+    "demos/turn/CAMPAIGN_LAWS.bend": "0ca97be1fbdbc818af1d87ac3871699e1f76277765a14a87a942a32a86bf76cb",
+    "demos/turn/world.bend": "f5abbe47e4ee018bd12979ba751d4ec957c401c6fcba6c70f65b3fdffe6b635b",
+    "demos/turn/PROOF.bend": "38569d983f6ac2fdee3f20f2946335cc3464747b7a86a4fc2609e48cd82cb11b",
+    "demos/turn/levels.bend": "ffe42a590460c1a42d636cfc6f3181ef7dd7cfd4f16a415b91bd60adbe721bf5",
+    "demos/turn/play.bend": "7b28408196579847f9d77b4916178a1f5b1a571f2c0d6f214d7cb6bfe502c06e",
+    "demos/turn/CAMPAIGN_PROOF.bend": "1e09eb18451091ff2cb43c9241336b74bc12f0517cd4aee7a05b56740e99c688",
+    "demos/turn/LAWS.bend": "210d85b4a9d0834e3fae4d4968986243782eb0b89f573315115afa52665a3e55",
+    "demos/turn/font.bend": "3e76e54c10825afc47c5dd1aa23148bc1865d6d15d5116e1e847f43bb7c39b47",
+    "demos/turn/resolution-check.bend": "fcc597eb814244372a026fc092510cc1e3ad0a850b21e413f0022826e528a82e",
+    "demos/turn/physics.bend": "ec4a64910766898936426b08bfd09dc51c891cc8b7f46f813f824938fa8558ce",
+    "demos/turn/rules.bend": "4976b6967ea6396fb8eea8fd70dd397cbccedd1f3d81784c27bdb0f475755b6a",
+    "demos/turn/projection.bend": "ab2dfb2dec5472d382532e000122e85b2a1400214997eafe51a9e9234543e4e5",
+    "demos/turn/view.bend": "82a23382e00eb0eca1c076263642fbed0f3f88a309e40f5119dca9a101ba40ef",
+    "demos/turn/main.bend": "f4ee5e73bce479bba4b0130650187303e5f0436eef563224f4c224c90010b403",
+    "demos/turn/snapshot.bend": "1547d8dc98c8fb19d00fb672e26db35d65419402c5659f2b6477833d07514eeb",
+    "demos/turn/collision.bend": "67886d4525e0e3ff5367c91d9cbecc86a6341a8d08d4c884eabdd66ce7a40849",
+    "demos/turn/style.bend": "7fe57ac280c2693efa31ed3350e039376c03eb56d4021dfcc63bb9e2f57e3878",
+    "demos/turn/text-coverage.bend": "01aecc7fc6425cd095dc69bedbf6972733fd5c11e9688c7d5510dbb9481fa09c",
+    "demos/turn/model.bend": "ec5137c92a13641e30eedc4f60c8e6c8e1620d882f99c0adb314f12d7f9e77af",
+    "demos/turn/solutions.bend": "d2c84eba942f97ab0e8bd71acb73d199ccbc5ed44574a80e2f38bfba8ab0a513",
+    "demos/turn/render.bend": "a30d840e5cf9f45543787eeb206895e76227f6232d3110b2748f666bd3713ac8",
+    "demos/turn/terrain.bend": "51148ea9aa8dc1df953877d31a8492dbbc616bfaf52810ea50225e3e252fe1e7",
+    "demos/turn/assets/generate-font.py": "65c93036b53942b14b40acc473b9a813998210fecbb883e556da7100af76eb17"
+  },
+  "lines": 7753,
+  "code_lines": 7554
+}

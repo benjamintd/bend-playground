@@ -7,8 +7,9 @@ type Query is Type:
   Query{triangles: Array<M.Triangle>, ids: Array<U32>, a: M.Fragment, b: M.Fragment, c: M.Fragment, d: M.Fragment}
 def sampled(+x: F32, +y: F32, ids: Array<U32>, a: M.Fragment, b: M.Fragment, c: M.Fragment, d: M.Fragment, r: Array<M.Triangle> & M.Triangle) -> Query:
   (tris,+t) = r
-  Query{tris,ids,M.sample((x - 0.25 : F32),(y - 0.25 : F32),t,a),M.sample((x + 0.25 : F32),(y - 0.25 : F32),t,b),
-    M.sample((x - 0.25 : F32),(y + 0.25 : F32),t,c),M.sample((x + 0.25 : F32),(y + 0.25 : F32),t,d)}
+  # Rotated four-sample grid: four distinct horizontal and vertical positions.
+  Query{tris,ids,M.sample((x - 0.125 : F32),(y - 0.375 : F32),t,a),M.sample((x + 0.375 : F32),(y - 0.125 : F32),t,b),
+    M.sample((x - 0.375 : F32),(y + 0.125 : F32),t,c),M.sample((x + 0.125 : F32),(y + 0.375 : F32),t,d)}
 def identified(x: F32, y: F32, tris: Array<M.Triangle>, a: M.Fragment, b: M.Fragment, c: M.Fragment, d: M.Fragment, r: Array<U32> & U32) -> Query:
   (ids,id) = r
   sampled(x,y,ids,a,b,c,d,Array.get(M.Triangle,tris,id))

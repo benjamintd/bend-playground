@@ -51,15 +51,9 @@ def histogram_run(gpu: Bool, depth: Nat, n: U32, b: Build) -> Build:
   Build{x,y,counts,ids} = b
   built(I.histogram_run(~space(),~XY,~read,~join,gpu,depth,n,I.Build{XY{x,y},counts,ids}))
 
-def histogram(depth: Nat, n: U32, b: Build) -> Build:
-  histogram_run(False{},depth,n,b)
-
 def scatter_run(gpu: Bool, depth: Nat, n: U32, b: Build) -> Build:
   Build{x,y,counts,ids} = b
   built(I.scatter_run(~space(),~XY,~read,~join,gpu,depth,n,I.Build{XY{x,y},counts,ids}))
-
-def scatter(depth: Nat, n: U32, b: Build) -> Build:
-  scatter_run(False{},depth,n,b)
 
 def scan(g: Grid) -> Grid:
   Grid{counts,offsets,cursors,ids} = g

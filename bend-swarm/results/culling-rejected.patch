@@ -1,0 +1,84 @@
+diff --git a/bend-swarm/engine/render/mesh.bend b/bend-swarm/engine/render/mesh.bend
+index fb44acc..88e5b80 100644
+--- a/bend-swarm/engine/render/mesh.bend
++++ b/bend-swarm/engine/render/mesh.bend
+@@ -43,6 +43,41 @@ def bounds_level(~level: Nat,t: Triangle) -> Bounds:
+ type Binning is Type:
+   Binning{triangles: Array<Triangle>, counts: Array<U32>, ids: Array<U32>}
+ 
++# Conservative triangle/tile overlap after the axis-aligned bounds test.
++# Each inward edge stores its maximum over a tile as a linear function of
++# tile coordinates. Prepare once per triangle, then use two multiplies per
++# edge/cell. One pixel of padding plus a scale-aware roundoff allowance retains
++# boundary samples for both center sampling and four-sample coverage.
++type Edge is Data:
++  Edge{x: F32, y: F32, bias: F32}
++type Edges is Data:
++  Edges{a: Edge, b: Edge, c: Edge}
++
++def edge(~level: Nat, +ax: F32, +ay: F32, bx: F32, by: F32, +sign: F32) -> Edge:
++  +dx = ((ay - by) * sign : F32)
++  +dy = ((bx - ax) * sign : F32)
++  +size = U32.to_f32(U32.shln(4,level))
++  +span = (F32.abs(dx) + F32.abs(dy) : F32)
++  +error = ((F32.abs((dx * ax : F32)) + F32.abs((dy * ay : F32))
++    + span * U32.to_f32(U32.shln(512,level))) * 0.000001 : F32)
++  Edge{(dx * size : F32),(dy * size : F32),
++    ((F32.max(dx,0.0) + F32.max(dy,0.0)) * size - dx * ax - dy * ay + span + error : F32)}
++
++def edges(~level: Nat,t: Triangle) -> Edges:
++  Triangle{Vertex{+ax,+ay,_,_},Vertex{+bx,+by,_,_},Vertex{+cx,+cy,_,_},_} = t
++  +sign = L.pick((((bx - ax) * (cy - ay) - (by - ay) * (cx - ax) : F32) >= 0.0 : F32),1.0,F32.neg(1.0))
++  Edges{edge(~level,ax,ay,bx,by,sign),edge(~level,bx,by,cx,cy,sign),edge(~level,cx,cy,ax,ay,sign)}
++
++def edge_visible(x: F32, y: F32, e: Edge) -> Bool:
++  Edge{dx,dy,bias} = e
++  ((dx * x + dy * y + bias : F32) >= 0.0 : F32)
++
++def overlaps(+x: U32, +y: U32, e: Edges) -> Bool:
++  Edges{a,b,c} = e
++  +fx = U32.to_f32(x)
++  +fy = U32.to_f32(y)
++  edge_visible(fx,fy,a) && edge_visible(fx,fy,b) && edge_visible(fx,fy,c)
++
+ def incremented(scatter: Bool, id: U32, tris: Array<Triangle>, ids: Array<U32>, r: Array<U32> & U32) -> Binning:
+   match scatter:
+     case False{}:
+@@ -52,22 +87,29 @@ def incremented(scatter: Bool, id: U32, tris: Array<Triangle>, ids: Array<U32>,
+       (counts,slot) = r
+       Binning{tris,counts,Array.set(U32,ids,slot,id)}
+ 
+-def cells(~level: Nat,+n: Nat, +x: U32, +y: U32, +width: U32, +scatter: Bool, +id: U32, b: Binning) -> Binning:
++def bin_cell(visible: Bool, scatter: Bool, id: U32, cell: U32, b: Binning) -> Binning:
++  match visible:
++    case False{}: b
++    case True{}:
++      Binning{tris,counts,ids} = b
++      incremented(scatter,id,tris,ids,Array.atomic.add(counts,cell,1))
++
++def cells(~level: Nat,+n: Nat, +x: U32, +y: U32, +width: U32, +scatter: Bool, +id: U32, +e: Edges, b: Binning) -> Binning:
+   match n:
+     case 0n: b
+     case 1n+k:
+-      Binning{tris,counts,ids} = b
+       +i = U32.from_nat(k)
+-      cells(~level,k,x,y,width,scatter,id,incremented(scatter,id,tris,ids,
+-        Array.atomic.add(counts,(x + i % width + (y + i / width) * 128 : U32),1)))
++      +tx = (x + i % width : U32)
++      +ty = (y + i / width : U32)
++      cells(~level,k,x,y,width,scatter,id,e,bin_cell(overlaps(tx,ty,e),scatter,id,(tx + ty * 128 : U32),b))
+ 
+-def bounded(~level: Nat,scatter: Bool, id: U32, b: Binning, box: Bounds) -> Binning:
++def bounded(~level: Nat,scatter: Bool, id: U32, e: Edges, b: Binning, box: Bounds) -> Binning:
+   Bounds{x,y,+width,height} = box
+-  cells(~level,U32.to_nat((width * height : U32)),x,y,width,scatter,id,b)
++  cells(~level,U32.to_nat((width * height : U32)),x,y,width,scatter,id,e,b)
+ 
+ def bin_read(~level: Nat,scatter: Bool, id: U32, counts: Array<U32>, ids: Array<U32>, r: Array<Triangle> & Triangle) -> Binning:
+-  (tris,t) = r
+-  bounded(~level,scatter,id,Binning{tris,counts,ids},bounds_level(~level,t))
++  (tris,+t) = r
++  bounded(~level,scatter,id,edges(~level,t),Binning{tris,counts,ids},bounds_level(~level,t))
+ 
+ def bin_loop(~level: Nat,n: Nat, +i: U32, +scatter: Bool, b: Binning) -> Binning:
+   match n:

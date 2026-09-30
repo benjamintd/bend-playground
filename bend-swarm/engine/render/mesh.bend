@@ -1,4 +1,6 @@
 import Base
+import ./tiles.bend as Tiles
+import ./image.bend as ImageBuffer
 import ../parallel/regions.bend as Region
 import ../spatial/internal/index.bend as Scan
 import ../spatial/layout.bend as L
@@ -22,6 +24,15 @@ def empty() -> Index:
 def blank() -> Triangle:
   Triangle{Vertex{0.0,0.0,0.0,1.0},Vertex{0.0,0.0,0.0,1.0},Vertex{0.0,0.0,0.0,1.0},0}
 
+# RGB occupies 24 bits. Prepared camera triangles carry two explicit flags in
+# unused bits: bit 25 = clipped camera geometry, bit 24 = orthographic depth.
+# Keeping the packed layout avoids widening every raster candidate. Legacy
+# triangles retain their historical near threshold and lighting interpolation.
+def projected(a: Vertex, b: Vertex, c: Vertex, color: U32, orthographic: Bool) -> Triangle:
+  Triangle{a,b,c,U32.or(U32.and(color,16777215),L.word(orthographic,50331648,33554432))}
+def near_threshold(color: U32) -> F32:
+  L.pick(U32.is_eq(U32.and(color,33554432),0),0.1,0.0)
+
 def extent(~level: Nat,visible: Bool, +x: F32, +y: F32, mx: F32, my: F32) -> Bounds:
   match visible:
     case False{}: Bounds{0,0,0,0}
@@ -32,12 +43,12 @@ def extent(~level: Nat,visible: Bool, +x: F32, +y: F32, mx: F32, my: F32) -> Bou
         (F32.to_u32((F32.min(my,U32.to_f32((U32.shln(512,level) - 1 : U32))) / U32.to_f32(U32.shln(4,level)) : F32)) - ty + 1 : U32)}
 
 def bounds_level(~level: Nat,t: Triangle) -> Bounds:
-  Triangle{Vertex{+ax,+ay,az,_},Vertex{+bx,+by,bz,_},Vertex{+cx,+cy,cz,_},_} = t
+  Triangle{Vertex{+ax,+ay,az,_},Vertex{+bx,+by,bz,_},Vertex{+cx,+cy,cz,_},color} = t
   +x = F32.min(ax,F32.min(bx,cx))
   +y = F32.min(ay,F32.min(by,cy))
   +mx = F32.max(ax,F32.max(bx,cx))
   +my = F32.max(ay,F32.max(by,cy))
-  extent(~level,(F32.min(az,F32.min(bz,cz)) > 0.1 : F32) && (mx >= 0.0 : F32) && (my >= 0.0 : F32)
+  extent(~level,(F32.min(az,F32.min(bz,cz)) > near_threshold(color) : F32) && (mx >= 0.0 : F32) && (my >= 0.0 : F32)
     && (x < U32.to_f32(U32.shln(512,level)) : F32) && (y < U32.to_f32(U32.shln(512,level)) : F32),x,y,mx,my)
 
 type Binning is Type:
@@ -134,14 +145,39 @@ def shaded(+color: U32, +light: F32) -> U32:
     + F32.to_u32(F32.min(255.0,(U32.to_f32(U32.and(U32.shrn(color,8n),255)) * light : F32))) * 256
     + F32.to_u32(F32.min(255.0,(U32.to_f32(U32.and(color,255)) * light : F32))) : U32)
 
-def barycentric(valid: Bool, u: F32, +v: F32, +w: F32, az: F32, bz: F32, cz: F32, +al: F32, bl: F32, cl: F32, color: U32, old: Fragment) -> Fragment:
+def perspective_light(modern: Bool, u: F32, +v: F32, +w: F32, az: F32, bz: F32, cz: F32,
+  +al: F32, bl: F32, cl: F32, depth: F32) -> F32:
+  match modern:
+    case False{}: (al + v * (bl - al) + w * (cl - al) : F32)
+    case True{}: (al + depth * (v * (bl - al) / bz + w * (cl - al) / cz) : F32)
+def interpolated(ortho: Bool, modern: Bool, +u: F32, +v: F32, +w: F32, +az: F32, +bz: F32, +cz: F32,
+  +al: F32, +bl: F32, +cl: F32, color: U32, old: Fragment) -> Fragment:
+  match ortho:
+    case True{}: choose(True{},(u * az + v * bz + w * cz : F32),shaded(color,F32.max(0.0,(al + v * (bl - al) + w * (cl - al) : F32))),old)
+    case False{}:
+      +depth = (1.0 / F32.max((u / az + v / bz + w / cz : F32),0.000001) : F32)
+      choose(True{},depth,shaded(color,F32.max(0.0,perspective_light(modern,u,v,w,az,bz,cz,al,bl,cl,depth))),old)
+def interpolation_legacy(+u: F32, +v: F32, +w: F32, az: F32, bz: F32, cz: F32, +al: F32, bl: F32, cl: F32, color: U32, old: Fragment) -> Fragment:
+  choose(True{},(1.0 / F32.max((u / az + v / bz + w / cz : F32),0.000001) : F32),
+    shaded(color,F32.max(0.0,(al + v * (bl - al) + w * (cl - al) : F32))),old)
+def interpolation_camera(u: F32, v: F32, w: F32, az: F32, bz: F32, cz: F32, al: F32, bl: F32, cl: F32, +color: U32, old: Fragment) -> Fragment:
+  interpolated(U32.is_ne(U32.and(color,16777216),0),True{},u,v,w,az,bz,cz,al,bl,cl,color,old)
+# Keep selection first-order. Selecting curried functions here leaves heap
+# closures in generated pixel code on the pinned Bend compiler.
+def interpolation_choice(camera: Bool,
+  u: F32, v: F32, w: F32, az: F32, bz: F32, cz: F32, al: F32, bl: F32, cl: F32, color: U32, old: Fragment) -> Fragment:
+  match camera:
+    case True{}: interpolation_camera(u,v,w,az,bz,cz,al,bl,cl,color,old)
+    case False{}: interpolation_legacy(u,v,w,az,bz,cz,al,bl,cl,color,old)
+def interpolation(~camera: Bool, u: F32, v: F32, w: F32, az: F32, bz: F32, cz: F32, al: F32, bl: F32, cl: F32, color: U32, old: Fragment) -> Fragment:
+  interpolation_choice(camera,u,v,w,az,bz,cz,al,bl,cl,color,old)
+def barycentric_mode(~camera: Bool,valid: Bool, u: F32, v: F32, w: F32, az: F32, bz: F32, cz: F32, al: F32, bl: F32, cl: F32, +color: U32, old: Fragment) -> Fragment:
   match valid:
     case False{}: old
-    case True{}: choose(True{},
-      (1.0 / F32.max((u / az + v / bz + w / cz : F32),0.000001) : F32),shaded(color,F32.max(0.0,(al + v * (bl - al) + w * (cl - al) : F32))),old)
+    case True{}: interpolation(~camera,u,v,w,az,bz,cz,al,bl,cl,color,old)
 
-def weights(nonzero: Bool, +x: F32, +y: F32, +ax: F32, +ay: F32, +az: F32,
-  +bx: F32, +by: F32, +bz: F32, +cx: F32, +cy: F32, +cz: F32, +den: F32, al: F32, bl: F32, cl: F32, color: U32, old: Fragment) -> Fragment:
+def weights_mode(~camera: Bool,nonzero: Bool, +x: F32, +y: F32, +ax: F32, +ay: F32, +az: F32,
+  +bx: F32, +by: F32, +bz: F32, +cx: F32, +cy: F32, +cz: F32, +den: F32, al: F32, bl: F32, cl: F32, +color: U32, old: Fragment) -> Fragment:
   match nonzero:
     case False{}: old
     case True{}:
@@ -150,13 +186,13 @@ def weights(nonzero: Bool, +x: F32, +y: F32, +ax: F32, +ay: F32, +az: F32,
       +w = (1.0 - u - v : F32)
       # Bend evaluates arguments eagerly. Reject misses before depth and
       # lighting work, rather than computing a color that choose discards.
-      barycentric((F32.min(az,F32.min(bz,cz)) > 0.1 : F32) && (u >= 0.0 : F32)
+      barycentric_mode(~camera,(F32.min(az,F32.min(bz,cz)) > Bool.pick(F32,camera,0.0,0.1) : F32) && (u >= 0.0 : F32)
         && (v >= 0.0 : F32) && (w >= 0.0 : F32),u,v,w,az,bz,cz,al,bl,cl,color,old)
 
-def sample(x: F32, y: F32, t: Triangle, old: Fragment) -> Fragment:
+def sample_mode(~camera: Bool,x: F32, y: F32, t: Triangle, old: Fragment) -> Fragment:
   Triangle{Vertex{+ax,+ay,az,al},Vertex{+bx,+by,bz,bl},Vertex{+cx,+cy,cz,cl},color} = t
   +den = ((by - cy) * (ax - cx) + (cx - bx) * (ay - cy) : F32)
-  weights((F32.abs(den) > 0.00001 : F32),x,y,ax,ay,az,bx,by,bz,cx,cy,cz,den,al,bl,cl,color,old)
+  weights_mode(~camera,(F32.abs(den) > 0.00001 : F32),x,y,ax,ay,az,bx,by,bz,cx,cy,cz,den,al,bl,cl,color,old)
 
 # Allocate two framebuffer areas of Fragment. The first half is a static
 # backdrop_level, refilled only when camera/background changes. Raster reads it
@@ -177,7 +213,7 @@ type Query is Type:
 
 def sampled(x: F32, y: F32, ids: Array<U32>, old: Fragment, r: Array<Triangle> & Triangle) -> Query:
   (tris,t) = r
-  Query{tris,ids,sample(x,y,t,old)}
+  Query{tris,ids,sample_mode(~False{},x,y,t,old)}
 
 def queried(x: F32, y: F32, tris: Array<Triangle>, old: Fragment, r: Array<U32> & U32) -> Query:
   (ids,id) = r
@@ -203,191 +239,112 @@ def background_read(~level: Nat, i: U32, x: F32, y: F32, start: U32, count: U32,
   (background,fragment) = r
   written(~level,i,offsets,out,background,query(U32.to_nat(count),start,x,y,Query{tris,ids,fragment}))
 
-def pixels(~level: Nat, +n: Nat, +x: U32, +y: U32, +start: U32, +count: U32, b: Drawing) -> Drawing:
+# Read a tile candidate once for four adjacent pixels. Each sample keeps its
+# independent background/depth/color and uses the unchanged sample equation.
+type BlockQuery is Type:
+  BlockQuery{triangles: Array<Triangle>, ids: Array<U32>, a: Fragment, b: Fragment, c: Fragment, d: Fragment}
+def block_sampled_mode(~camera: Bool,+x: F32, +y: F32, ids: Array<U32>, a: Fragment, b: Fragment, c: Fragment, d: Fragment,
+  r: Array<Triangle> & Triangle) -> BlockQuery:
+  (tris,+t) = r
+  BlockQuery{tris,ids,sample_mode(~camera,x,y,t,a),sample_mode(~camera,(x + 1.0 : F32),y,t,b),
+    sample_mode(~camera,x,(y + 1.0 : F32),t,c),sample_mode(~camera,(x + 1.0 : F32),(y + 1.0 : F32),t,d)}
+def block_identified_mode(~camera: Bool,x: F32, y: F32, tris: Array<Triangle>, a: Fragment, b: Fragment, c: Fragment, d: Fragment,
+  r: Array<U32> & U32) -> BlockQuery:
+  (ids,id) = r
+  block_sampled_mode(~camera,x,y,ids,a,b,c,d,Array.get(Triangle,tris,id))
+def block_query_mode(~camera: Bool,n: Nat, +i: U32, +x: F32, +y: F32, q: BlockQuery) -> BlockQuery:
+  match n:
+    case 0n: q
+    case 1n+k:
+      BlockQuery{tris,ids,a,b,c,d} = q
+      block_query_mode(~camera,k,(i + 1 : U32),x,y,block_identified_mode(~camera,x,y,tris,a,b,c,d,Array.get(U32,ids,i)))
+def block_written(~level: Nat,+i: U32,offsets: Array<U32>,pixels: Array<U32>,background: Array<Fragment>,q: BlockQuery) -> Drawing:
+  BlockQuery{tris,ids,+a,+b,+c,+d} = q
+  Fragment{_,ac} = a
+  Fragment{_,bc} = b
+  Fragment{_,cc} = c
+  Fragment{_,dc} = d
+  +width = U32.shln(512,level)
+  +base = (U32.shln(262144,Nat.add(level,level)) + i : U32)
+  Drawing{tris,offsets,ids,
+    Array.set(U32,Array.set(U32,Array.set(U32,Array.set(U32,pixels,i,ac),(i + 1 : U32),bc),(i + width : U32),cc),(i + width + 1 : U32),dc),
+    Array.set(Fragment,Array.set(Fragment,Array.set(Fragment,Array.set(Fragment,background,base,a),(base + 1 : U32),b),(base + width : U32),c),(base + width + 1 : U32),d)}
+def block_background_d_mode(~camera: Bool,~level: Nat,i: U32,x: F32,y: F32,start: U32,count: U32,
+  tris: Array<Triangle>,offsets: Array<U32>,ids: Array<U32>,pixels: Array<U32>,a: Fragment,b: Fragment,c: Fragment,r: Array<Fragment> & Fragment) -> Drawing:
+  (background,d) = r
+  block_written(~level,i,offsets,pixels,background,block_query_mode(~camera,U32.to_nat(count),start,x,y,BlockQuery{tris,ids,a,b,c,d}))
+def block_background_c_mode(~camera: Bool,~level: Nat,+i: U32,x: F32,y: F32,start: U32,count: U32,
+  tris: Array<Triangle>,offsets: Array<U32>,ids: Array<U32>,pixels: Array<U32>,a: Fragment,b: Fragment,r: Array<Fragment> & Fragment) -> Drawing:
+  (background,c) = r
+  block_background_d_mode(~camera,~level,i,x,y,start,count,tris,offsets,ids,pixels,a,b,c,Array.get(Fragment,background,(i + U32.shln(512,level) + 1 : U32)))
+def block_background_b_mode(~camera: Bool,~level: Nat,+i: U32,x: F32,y: F32,start: U32,count: U32,
+  tris: Array<Triangle>,offsets: Array<U32>,ids: Array<U32>,pixels: Array<U32>,a: Fragment,r: Array<Fragment> & Fragment) -> Drawing:
+  (background,b) = r
+  block_background_c_mode(~camera,~level,i,x,y,start,count,tris,offsets,ids,pixels,a,b,Array.get(Fragment,background,(i + U32.shln(512,level) : U32)))
+def block_background_a_mode(~camera: Bool,~level: Nat,+i: U32,x: F32,y: F32,start: U32,count: U32,
+  tris: Array<Triangle>,offsets: Array<U32>,ids: Array<U32>,pixels: Array<U32>,r: Array<Fragment> & Fragment) -> Drawing:
+  (background,a) = r
+  block_background_b_mode(~camera,~level,i,x,y,start,count,tris,offsets,ids,pixels,a,Array.get(Fragment,background,(i + 1 : U32)))
+def blocks_mode(~camera: Bool,~level: Nat, +n: Nat, +x: U32, +y: U32, +start: U32, +count: U32, b: Drawing) -> Drawing:
   match n:
     case 0n: b
     case 1n+k:
       Drawing{tris,offsets,ids,out,background} = b
-      +i = U32.from_nat(k)
-      +px = (x + U32.and(i,(U32.shln(4,level) - 1 : U32)) : U32)
-      +py = (y + U32.shrn(i,Nat.add(level,2n)) : U32)
-      pixels(~level,k,x,y,start,count,background_read(~level,(px + py * U32.shln(512,level) : U32),
-        (U32.to_f32(px) + 0.5 : F32),(U32.to_f32(py) + 0.5 : F32),start,count,tris,offsets,ids,out,
-        Array.get(Fragment,background,(px + py * U32.shln(512,level) : U32))))
+      +j = U32.from_nat(k)
+      +px = (x + U32.and(j,(U32.shln(2,level) - 1 : U32)) * 2 : U32)
+      +py = (y + U32.shrn(j,Nat.add(level,1n)) * 2 : U32)
+      +i = (px + py * U32.shln(512,level) : U32)
+      blocks_mode(~camera,~level,k,x,y,start,count,block_background_a_mode(~camera,~level,i,(U32.to_f32(px) + 0.5 : F32),
+        (U32.to_f32(py) + 0.5 : F32),start,count,tris,offsets,ids,out,Array.get(Fragment,background,i)))
+def pixels_mode(~camera: Bool,~level: Nat,n: Nat,x: U32,y: U32,start: U32,count: U32,b: Drawing) -> Drawing:
+  blocks_mode(~camera,~level,U32.to_nat((U32.from_nat(n) / 4 : U32)),x,y,start,count,b)
 
-def range_end(~level: Nat, x: U32, y: U32, +start: U32,
+def range_end_mode(~camera: Bool,~level: Nat, x: U32, y: U32, +start: U32,
   tris: Array<Triangle>, ids: Array<U32>, out: Array<U32>, background: Array<Fragment>, r: Array<U32> & U32) -> Drawing:
   (offsets,end) = r
-  pixels(~level,U32.to_nat(U32.shln(16,Nat.add(level,level))),x,y,start,(end - start : U32),Drawing{tris,offsets,ids,out,background})
+  pixels_mode(~camera,~level,U32.to_nat(U32.shln(16,Nat.add(level,level))),x,y,start,(end - start : U32),Drawing{tris,offsets,ids,out,background})
 
-def range_start(~level: Nat, x: U32, y: U32, cell: U32,
+def range_start_mode(~camera: Bool,~level: Nat, x: U32, y: U32, cell: U32,
   tris: Array<Triangle>, ids: Array<U32>, out: Array<U32>, background: Array<Fragment>, r: Array<U32> & U32) -> Drawing:
   (offsets,start) = r
-  range_end(~level,x,y,start,tris,ids,out,background,Array.get(U32,offsets,(cell + 1 : U32)))
+  range_end_mode(~camera,~level,x,y,start,tris,ids,out,background,Array.get(U32,offsets,(cell + 1 : U32)))
 
-def raster(~level: Nat, +x: U32, +y: U32, b: Drawing) -> Drawing:
+def raster_mode(~camera: Bool,~level: Nat, +x: U32, +y: U32, b: Drawing) -> Drawing:
   Drawing{tris,offsets,ids,out,background} = b
   +cell = (U32.shrn(x,Nat.add(level,2n)) + U32.shrn(y,Nat.add(level,2n)) * 128 : U32)
-  range_start(~level,x,y,cell,tris,ids,out,background,Array.get(U32,offsets,cell))
-
-def pixel(r: Array<U32> & U32) -> Array<U32> & Image:
-  (pixels, c) = r
-  (pixels, Pix{c})
-
-def combine(a: Image, b: Image, c: Image, r: Array<U32> & Image) -> Array<U32> & Image:
-  (pixels, d) = r
-  (pixels, Qua{a, b, c, d})
-
-# Statically unrolled tiles; no recursive continuation or fork per pixel.
-def square1(~level: Nat,x: U32, y: U32, pixels: Array<U32>) -> Array<U32> & Image:
-  pixel(Array.get(U32, pixels, (x + y * U32.shln(512,level) : U32)))
-
-def square2_c(~level: Nat,x: U32, y: U32, a: Image, b: Image, r: Array<U32> & Image) -> Array<U32> & Image:
-  (pixels, c) = r
-  combine(a, b, c, square1(~level,x, y, pixels))
-
-def square2_b(~level: Nat,+x: U32, +y: U32, a: Image, r: Array<U32> & Image) -> Array<U32> & Image:
-  (pixels, b) = r
-  square2_c(~level,(x + 1 : U32), (y + 1 : U32), a, b, square1(~level,x, (y + 1 : U32), pixels))
-
-def square2_a(~level: Nat,+x: U32, +y: U32, r: Array<U32> & Image) -> Array<U32> & Image:
-  (pixels, a) = r
-  square2_b(~level,x, y, a, square1(~level,(x + 1 : U32), y, pixels))
-
-def square2(~level: Nat,+x: U32, +y: U32, pixels: Array<U32>) -> Array<U32> & Image:
-  square2_a(~level,x, y, square1(~level,x, y, pixels))
-
-def square4_c(~level: Nat,x: U32, y: U32, a: Image, b: Image, r: Array<U32> & Image) -> Array<U32> & Image:
-  (pixels, c) = r
-  combine(a, b, c, square2(~level,x, y, pixels))
-
-def square4_b(~level: Nat,+x: U32, +y: U32, a: Image, r: Array<U32> & Image) -> Array<U32> & Image:
-  (pixels, b) = r
-  square4_c(~level,(x + 2 : U32), (y + 2 : U32), a, b, square2(~level,x, (y + 2 : U32), pixels))
-
-def square4_a(~level: Nat,+x: U32, +y: U32, r: Array<U32> & Image) -> Array<U32> & Image:
-  (pixels, a) = r
-  square4_b(~level,x, y, a, square2(~level,(x + 2 : U32), y, pixels))
-
-def square4(~level: Nat,+x: U32, +y: U32, pixels: Array<U32>) -> Array<U32> & Image:
-  square4_a(~level,x, y, square2(~level,x, y, pixels))
-
-def square8_c(~level: Nat,x: U32, y: U32, a: Image, b: Image, r: Array<U32> & Image) -> Array<U32> & Image:
-  (pixels, c) = r
-  combine(a, b, c, square4(~level,x, y, pixels))
-
-def square8_b(~level: Nat,+x: U32, +y: U32, a: Image, r: Array<U32> & Image) -> Array<U32> & Image:
-  (pixels, b) = r
-  square8_c(~level,(x + 4 : U32), (y + 4 : U32), a, b, square4(~level,x, (y + 4 : U32), pixels))
-
-def square8_a(~level: Nat,+x: U32, +y: U32, r: Array<U32> & Image) -> Array<U32> & Image:
-  (pixels, a) = r
-  square8_b(~level,x, y, a, square4(~level,(x + 4 : U32), y, pixels))
-
-def square8_level(~level: Nat,+x: U32, +y: U32, pixels: Array<U32>) -> Array<U32> & Image:
-  square8_a(~level,x, y, square4(~level,x, y, pixels))
-def square16_c(~level: Nat,x: U32, y: U32, a: Image, b: Image, r: Array<U32> & Image) -> Array<U32> & Image:
-  (pixels, c) = r
-  combine(a, b, c, square8_level(~level,x, y, pixels))
-
-def square16_b(~level: Nat,+x: U32, +y: U32, a: Image, r: Array<U32> & Image) -> Array<U32> & Image:
-  (pixels, b) = r
-  square16_c(~level,(x + 8 : U32), (y + 8 : U32), a, b, square8_level(~level,x, (y + 8 : U32), pixels))
-
-def square16_a(~level: Nat,+x: U32, +y: U32, r: Array<U32> & Image) -> Array<U32> & Image:
-  (pixels, a) = r
-  square16_b(~level,x, y, a, square8_level(~level,(x + 8 : U32), y, pixels))
-
-def square16(~level: Nat,+x: U32, +y: U32, pixels: Array<U32>) -> Array<U32> & Image:
-  square16_a(~level,x, y, square8_level(~level,x, y, pixels))
+  range_start_mode(~camera,~level,x,y,cell,tris,ids,out,background,Array.get(U32,offsets,cell))
 
 def tile_image(tris: Array<Triangle>, offsets: Array<U32>, ids: Array<U32>, background: Array<Fragment>, r: Array<U32> & Image) -> Drawing & Image:
   (pixels,image) = r
   (Drawing{tris,offsets,ids,pixels,background},image)
 
-def square32_c(~level: Nat,x: U32, y: U32, a: Image, b: Image, r: Array<U32> & Image) -> Array<U32> & Image:
-  (pixels,c) = r
-  combine(a,b,c,square16(~level,x,y,pixels))
-def square32_b(~level: Nat,+x: U32, +y: U32, a: Image, r: Array<U32> & Image) -> Array<U32> & Image:
-  (pixels,b) = r
-  square32_c(~level,(x + 16 : U32),(y + 16 : U32),a,b,square16(~level,x,(y + 16 : U32),pixels))
-def square32_a(~level: Nat,+x: U32, +y: U32, r: Array<U32> & Image) -> Array<U32> & Image:
-  (pixels,a) = r
-  square32_b(~level,x,y,a,square16(~level,(x + 16 : U32),y,pixels))
-def square32(~level: Nat,+x: U32, +y: U32, pixels: Array<U32>) -> Array<U32> & Image:
-  square32_a(~level,x,y,square16(~level,x,y,pixels))
-def square_gpu(~level: Nat, size: U32, x: U32, y: U32, pixels: Array<U32>) -> Array<U32> & Image:
-  match size:
-    case 0: square4(~level,x,y,pixels)
-    case 1: square8_level(~level,x,y,pixels)
-    case _: square16(~level,x,y,pixels)
-def square_cpu(~level: Nat, size: U32, x: U32, y: U32, pixels: Array<U32>) -> Array<U32> & Image:
-  match size:
-    case 0: square8_level(~level,x,y,pixels)
-    case 1: square16(~level,x,y,pixels)
-    case _: square32(~level,x,y,pixels)
-def square_leaf_level(~level: Nat, small: Bool, x: U32, y: U32, pixels: Array<U32>) -> Array<U32> & Image:
-  match small:
-    case True{}: square_gpu(~level,U32.from_nat(level),x,y,pixels)
-    case False{}: square_cpu(~level,U32.from_nat(level),x,y,pixels)
-
 def tile_done(~level: Nat,x: U32, y: U32, b: Drawing) -> Drawing & Image:
   Drawing{tris,offsets,ids,pixels,background} = b
-  tile_image(tris,offsets,ids,background,square_leaf_level(~level,True{},x,y,pixels))
+  tile_image(tris,offsets,ids,background,ImageBuffer.leaf(~level,True{},x,y,pixels))
 
-def tile(~level: Nat, +x: U32, +y: U32, b: Drawing, old: Image) -> Drawing & Image:
-  tile_done(~level,x,y,raster(~level,x,y,b))
+def tile_mode(~camera: Bool,~level: Nat, +x: U32, +y: U32, b: Drawing, old: Image) -> Drawing & Image:
+  tile_done(~level,x,y,raster_mode(~camera,~level,x,y,b))
 
 def tile8_done(~level: Nat,x: U32, y: U32, b: Drawing) -> Drawing & Image:
   Drawing{tris,offsets,ids,pixels,background} = b
-  tile_image(tris,offsets,ids,background,square_leaf_level(~level,False{},x,y,pixels))
-def tile8(~level: Nat, +x: U32, +y: U32, b: Drawing, old: Image) -> Drawing & Image:
-  tile8_done(~level,x,y,raster(~level,(x + U32.shln(4,level) : U32),(y + U32.shln(4,level) : U32),
-    raster(~level,x,(y + U32.shln(4,level) : U32),raster(~level,(x + U32.shln(4,level) : U32),y,raster(~level,x,y,b)))))
-def tile_size(~level: Nat, small: Bool, x: U32, y: U32, b: Drawing, old: Image) -> Drawing & Image:
+  tile_image(tris,offsets,ids,background,ImageBuffer.leaf(~level,False{},x,y,pixels))
+def tile8_mode(~camera: Bool,~level: Nat, +x: U32, +y: U32, b: Drawing, old: Image) -> Drawing & Image:
+  tile8_done(~level,x,y,raster_mode(~camera,~level,(x + U32.shln(4,level) : U32),(y + U32.shln(4,level) : U32),
+    raster_mode(~camera,~level,x,(y + U32.shln(4,level) : U32),raster_mode(~camera,~level,(x + U32.shln(4,level) : U32),y,raster_mode(~camera,~level,x,y,b)))))
+def tile_size_mode(~camera: Bool,~level: Nat, small: Bool, x: U32, y: U32, b: Drawing, old: Image) -> Drawing & Image:
   match small:
-    case True{}: tile(~level,x,y,b,old)
-    case False{}: tile8(~level,x,y,b,old)
+    case True{}: tile_mode(~camera,~level,x,y,b,old)
+    case False{}: tile8_mode(~camera,~level,x,y,b,old)
 
 def join(a: Drawing, b: Drawing) -> Drawing:
   Drawing{at,ao,ai,ap,ab} = a
   Drawing{bt,bo,bi,bp,bb} = b
   Drawing{Array.join(Triangle,at,bt),Array.join(U32,ao,bo),Array.join(U32,ai,bi),Array.join(U32,ap,bp),Array.join(Fragment,ab,bb)}
 
-def joined(a: Drawing & Image, b: Drawing & Image, c: Drawing & Image, d: Drawing & Image) -> Drawing & Image:
-  (ab,ai) = a
-  (bb,bi) = b
-  (cb,ci) = c
-  (db,di) = d
-  (join(join(ab,bb),join(cb,db)),Qua{ai,bi,ci,di})
-
-type Four is Type:
-  Four{a: Image, b: Image, c: Image, d: Image}
-
-def open(old: Image) -> Four:
-  match old:
-    case Pix{+c}: Four{Pix{c},Pix{c},Pix{c},Pix{c}}
-    case Qua{a,b,c,d}: Four{a,b,c,d}
-
-# Internal unsafe boundary: read-only triangles and bins, disjoint tile pixels.
-# Old image subtrees are reclaimed in the same parallel tile tree.
-@unsafe
-def tree(~level: Nat, ~small: Bool, +depth: Nat, +x: U32, +y: U32, +b: Drawing, old: Four) -> Drawing & Image:
-  match depth:
-    case 0n:
-      Four{a,c,d,e} = old
-      tile_size(~level,small,x,y,b,Qua{a,c,d,e})
-    case 1n+p:
-      Four{oa,ob,oc,od} = old
-      +h = U32.shln((L.word(small,4,8) * U32.shln(1,level) : U32),p)
-      a c d e = tree(~level,~small,p,x,y,b,open(oa)) tree(~level,~small,p,(x + h : U32),y,b,open(ob))
-        tree(~level,~small,p,x,(y + h : U32),b,open(oc)) tree(~level,~small,p,(x + h : U32),(y + h : U32),b,open(od))
-      joined(a,c,d,e)
-
-def render_level(~level: Nat, gpu: Bool, b: Drawing, old: Image) -> Drawing & Image:
+def render_level_mode(~camera: Bool,~level: Nat, gpu: Bool, b: Drawing, old: Image) -> Drawing & Image:
   match gpu:
-    case True{}: tree!(~level,~True{},7n,0,0,b,open(old))
-    case False{}: tree(~level,~False{},6n,0,0,b,open(old))
+    case True{}: Tiles.tree!(~Drawing,~U32.shln(4,level),~tile_size_mode(~camera,~level,True{}),~join,7n,0,0,b,Tiles.open(old))
+    case False{}: Tiles.tree(~Drawing,~U32.shln(8,level),~tile_size_mode(~camera,~level,False{}),~join,6n,0,0,b,Tiles.open(old))
 
 def bounds(t: Triangle) -> Bounds:
   bounds_level(~0n,t)
@@ -398,34 +355,47 @@ def build_quality(level: Bool, gpu: Bool, n: U32, tris: Array<Triangle>, index: 
     case True{}: build_level(~1n,gpu,n,tris,index)
     case False{}: build_level(~0n,gpu,n,tris,index)
 def render( gpu: Bool, b: Drawing, old: Image) -> Drawing & Image:
-  render_level(~0n,gpu,b,old)
+  render_level_mode(~False{},~0n,gpu,b,old)
 
 # Buffer-only path for post-processing. Static fragments occupy [0, area);
 # resolved color/depth occupy [area, 2*area), with one writer per screen pixel.
 # The backdrop_level allocation must have twice the render area.
-def buffer_loop(~level: Nat, n: Nat, +i: U32, b: Drawing) -> Drawing:
+def buffer_loop_mode(~camera: Bool,~level: Nat, n: Nat, +i: U32, b: Drawing) -> Drawing:
   match n:
     case 0n: b
     case 1n+k:
       +tile = U32.shln(4,level)
-      buffer_loop(~level,k,(i + 1 : U32),raster(~level,((i % 128) * tile : U32),((i / 128) * tile : U32),b))
-def buffer_leaf(~level: Nat, i: U32, n: U32, b: Drawing) -> Drawing:
-  buffer_loop(~level,U32.to_nat(n),i,b)
-def buffer(~level: Nat, depth: Nat, b: Drawing) -> Drawing:
-  Region.run(~Drawing,~buffer_leaf(~level),~join,depth,0,16384,b)
-def buffer_level(~level: Nat, gpu: Bool, b: Drawing) -> Drawing:
+      buffer_loop_mode(~camera,~level,k,(i + 1 : U32),raster_mode(~camera,~level,((i % 128) * tile : U32),((i / 128) * tile : U32),b))
+def buffer_leaf_mode(~camera: Bool,~level: Nat, i: U32, n: U32, b: Drawing) -> Drawing:
+  buffer_loop_mode(~camera,~level,U32.to_nat(n),i,b)
+def buffer_mode(~camera: Bool,~level: Nat, depth: Nat, b: Drawing) -> Drawing:
+  Region.run(~Drawing,~buffer_leaf_mode(~camera,~level),~join,depth,0,16384,b)
+def buffer_level_mode(~camera: Bool,~level: Nat, gpu: Bool, b: Drawing) -> Drawing:
   match gpu:
-    case True{}: buffer!(~level,14n,b)
-    case False{}: buffer(~level,8n,b)
+    case True{}: buffer_mode!(~camera,~level,14n,b)
+    case False{}: buffer_mode(~camera,~level,8n,b)
 
 # Stable 512/1024 API. Resolution-level entry points also support level 2 (2048).
 def backdrop(~high: Bool, ~background: U32 -> U32 -> Fragment, out: Array<Fragment>) -> Array<Fragment>:
   backdrop_level(~Bool.pick(Nat,high,1n,0n),~background,out)
 def render_size(~high: Bool, gpu: Bool, b: Drawing, old: Image) -> Drawing & Image:
-  render_level(~Bool.pick(Nat,high,1n,0n),gpu,b,old)
+  render_level_mode(~False{},~Bool.pick(Nat,high,1n,0n),gpu,b,old)
 def render_buffer(~high: Bool, gpu: Bool, b: Drawing) -> Drawing:
-  buffer_level(~Bool.pick(Nat,high,1n,0n),gpu,b)
-def square_leaf(~high: Bool, small: Bool, x: U32, y: U32, pixels: Array<U32>) -> Array<U32> & Image:
-  square_leaf_level(~Bool.pick(Nat,high,1n,0n),small,x,y,pixels)
-def square8(~high: Bool, x: U32, y: U32, pixels: Array<U32>) -> Array<U32> & Image:
-  square8_level(~Bool.pick(Nat,high,1n,0n),x,y,pixels)
+  buffer_level_mode(~False{},~Bool.pick(Nat,high,1n,0n),gpu,b)
+
+# Legacy entry points remain statically specialized to the original equations.
+# Camera batches must use the corresponding camera renderer/sample entry point.
+def sample(x: F32, y: F32, t: Triangle, old: Fragment) -> Fragment:
+  sample_mode(~False{},x,y,t,old)
+def sample_camera(x: F32, y: F32, t: Triangle, old: Fragment) -> Fragment:
+  sample_mode(~True{},x,y,t,old)
+def block_query(n: Nat, i: U32, x: F32, y: F32, q: BlockQuery) -> BlockQuery:
+  block_query_mode(~False{},n,i,x,y,q)
+def raster(~level: Nat, x: U32, y: U32, b: Drawing) -> Drawing:
+  raster_mode(~False{},~level,x,y,b)
+def render_level(~level: Nat, gpu: Bool, b: Drawing, old: Image) -> Drawing & Image:
+  render_level_mode(~False{},~level,gpu,b,old)
+def render_camera_level(~level: Nat, gpu: Bool, b: Drawing, old: Image) -> Drawing & Image:
+  render_level_mode(~True{},~level,gpu,b,old)
+def buffer_level(~level: Nat, gpu: Bool, b: Drawing) -> Drawing:
+  buffer_level_mode(~False{},~level,gpu,b)

@@ -1,0 +1,82 @@
+[
+  {
+    "case": "cloth",
+    "label": "after0",
+    "capture": "results/engine-image-control-cloth-after0.csv",
+    "median_us": {
+      "simulation_us": 9922.5,
+      "raster_us": 2763.0,
+      "frame_us": 12878.0
+    }
+  },
+  {
+    "case": "cloth",
+    "label": "before0",
+    "capture": "results/engine-image-control-cloth-before0.csv",
+    "median_us": {
+      "simulation_us": 10288.5,
+      "raster_us": 2770.0,
+      "frame_us": 13249.0
+    }
+  },
+  {
+    "case": "cloth",
+    "label": "before1",
+    "capture": "results/engine-image-control-cloth-before1.csv",
+    "median_us": {
+      "simulation_us": 10408.5,
+      "raster_us": 2766.0,
+      "frame_us": 13415.0
+    }
+  },
+  {
+    "case": "cloth",
+    "label": "after1",
+    "capture": "results/engine-image-control-cloth-after1.csv",
+    "median_us": {
+      "simulation_us": 12379.0,
+      "raster_us": 2837.5,
+      "frame_us": 15492.0
+    }
+  },
+  {
+    "case": "meadow",
+    "label": "after0",
+    "capture": "results/engine-image-control-meadow-after0.csv",
+    "median_us": {
+      "simulation_us": 257.5,
+      "raster_us": 10096.5,
+      "frame_us": 12293.0
+    }
+  },
+  {
+    "case": "meadow",
+    "label": "before0",
+    "capture": "results/engine-image-control-meadow-before0.csv",
+    "median_us": {
+      "simulation_us": 257.5,
+      "raster_us": 10447.5,
+      "frame_us": 12733.5
+    }
+  },
+  {
+    "case": "meadow",
+    "label": "before1",
+    "capture": "results/engine-image-control-meadow-before1.csv",
+    "median_us": {
+      "simulation_us": 288.5,
+      "raster_us": 10423.0,
+      "frame_us": 12673.0
+    }
+  },
+  {
+    "case": "meadow",
+    "label": "after1",
+    "capture": "results/engine-image-control-meadow-after1.csv",
+    "median_us": {
+      "simulation_us": 275.5,
+      "raster_us": 11926.5,
+      "frame_us": 14509.5
+    }
+  }
+]

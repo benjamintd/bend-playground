@@ -6,5 +6,8 @@ if [ ! -d "$root/.toolchain/bend/.git" ]; then
   mkdir -p "$root/.toolchain"
   git clone https://github.com/bendlang/bend.git "$root/.toolchain/bend"
 fi
+if ! git -C "$root/.toolchain/bend" cat-file -e "$rev^{commit}" 2>/dev/null; then
+  git -C "$root/.toolchain/bend" fetch origin "$rev"
+fi
 git -C "$root/.toolchain/bend" checkout --detach "$rev"
 "$root/scripts/bend" version

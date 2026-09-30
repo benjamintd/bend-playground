@@ -1,0 +1,67 @@
+[
+  {
+    "name": "meadow-metal-dof",
+    "capture": "results/engine-post-isolated-before1-meadow-metal-dof.csv",
+    "binary_sha256": "5ee6b4b81619d29bb20829500fe730bae0f40b23e80c89131ead88de686ca633",
+    "args": [
+      "meadow",
+      "gpu",
+      "dof",
+      "standard",
+      "40",
+      "240"
+    ],
+    "gpu": "on",
+    "samples": 240,
+    "us": {
+      "sim_gpu": {
+        "median": 1.0,
+        "p95": 1
+      },
+      "geometry_gpu": {
+        "median": 1.0,
+        "p95": 1
+      },
+      "binning_gpu": {
+        "median": 1.0,
+        "p95": 1
+      },
+      "raster_gpu": {
+        "median": 1.0,
+        "p95": 1
+      },
+      "post_gpu": {
+        "median": 1.0,
+        "p95": 1
+      },
+      "simulation_us": {
+        "median": 1308.0,
+        "p95": 1441
+      },
+      "geometry_us": {
+        "median": 1210.0,
+        "p95": 1358
+      },
+      "binning_us": {
+        "median": 3291.5,
+        "p95": 3502
+      },
+      "raster_us": {
+        "median": 18568.0,
+        "p95": 19969
+      },
+      "post_us": {
+        "median": 11885.5,
+        "p95": 12191
+      },
+      "work_us": {
+        "median": 36402.0,
+        "p95": 38018
+      },
+      "frame_us": {
+        "median": 36412.5,
+        "p95": 38048
+      }
+    }
+  }
+]

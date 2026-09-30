@@ -1,0 +1,249 @@
+{
+  "date": "2026-09-28T09:32:35.174901+00:00",
+  "os": "macOS-15.7.4-arm64-arm-64bit",
+  "cpu": "Apple M2 Pro",
+  "gpu": [
+    {
+      "sppci_model": "Apple M2 Pro",
+      "sppci_cores": "16"
+    }
+  ],
+  "memory_gb": 16.0,
+  "bend_version": [
+    "2.0.27",
+    "95317d952c8fe5be18ef49f916b2a57250cfb0aa"
+  ],
+  "source_sha256": "fa5a552167c6f6fa4b14813c38e204fb4aa4e90e525c42baab949280a2b82b2e",
+  "threads": 10,
+  "warmup": 120,
+  "samples": 600,
+  "physics_vertices": 1024,
+  "substeps": 2,
+  "substep_dt": 0.008333333333333333,
+  "scene": "Active drape with wind; no grab, pause or user input; restarted for each run.",
+  "scope": "Headless routing comparison alternates order; GPU physics can diverge numerically. Window runs include HUD, presentation and 60 Hz pacing, and request two substeps per frame. No concurrent builds, tests or demo runs from this task. Separate Bend Turn and other workloads were active; system paging was measured. These are not isolated performance claims.",
+  "runs": [
+    {
+      "label": "pair0-before",
+      "kind": "headless",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/cloth-frame-2.0.27",
+        "--gpu",
+        "on",
+        "--threads",
+        "10",
+        "--",
+        "5",
+        "10",
+        "120",
+        "600"
+      ],
+      "csv": "cloth-routing-final-pair0-before.csv",
+      "binary_sha256": "bbea007a939befdd35ac9ffbe5d619a7ed8fe1c5b74fdfded90453aa29e5af45",
+      "date": "2026-09-28T09:34:08.906794+00:00",
+      "returncode": 0,
+      "stderr": "bend: compiling the GPU program (/Users/benjamintd/Personal/bend-playground/bend-swarm/build/cloth-frame-2.0.27.gpu is missing or stale)\n",
+      "gpu_sha256": null,
+      "summary": {
+        "simulation_ms": {
+          "median": 122.2955,
+          "p95": 138.219
+        },
+        "render_ms": {
+          "median": 6.574999999999999,
+          "p95": 8.376
+        },
+        "frame_ms": {
+          "median": 128.9235,
+          "p95": 145.339
+        }
+      },
+      "observed_samples": 600,
+      "status": "complete"
+    },
+    {
+      "label": "pair0-after",
+      "kind": "headless",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/cloth-frame",
+        "--gpu",
+        "on",
+        "--threads",
+        "10",
+        "--",
+        "hybrid",
+        "5",
+        "raw",
+        "120",
+        "600"
+      ],
+      "csv": "cloth-routing-final-pair0-after.csv",
+      "binary_sha256": "9aeea00a2866602de790ccd3303a8f8bf3b3c9a8c63437fcb38ae60a5290f5e7",
+      "date": "2026-09-28T09:35:26.407258+00:00",
+      "returncode": 0,
+      "stderr": "",
+      "gpu_sha256": "1db14587e8721980d333448126c05c91f0fab8a8ee098bf2cf339c782a1ccc0b",
+      "summary": {
+        "simulation_ms": {
+          "median": 70.1615,
+          "p95": 271.663
+        },
+        "render_ms": {
+          "median": 17.642,
+          "p95": 49.295
+        },
+        "frame_ms": {
+          "median": 87.727,
+          "p95": 320.39
+        }
+      },
+      "observed_samples": 600,
+      "status": "complete"
+    },
+    {
+      "label": "pair1-after",
+      "kind": "headless",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/cloth-frame",
+        "--gpu",
+        "on",
+        "--threads",
+        "10",
+        "--",
+        "hybrid",
+        "5",
+        "raw",
+        "120",
+        "600"
+      ],
+      "csv": "cloth-routing-final-pair1-after.csv",
+      "binary_sha256": "9aeea00a2866602de790ccd3303a8f8bf3b3c9a8c63437fcb38ae60a5290f5e7",
+      "date": "2026-09-28T09:37:02.637758+00:00",
+      "returncode": 0,
+      "stderr": "",
+      "gpu_sha256": "1db14587e8721980d333448126c05c91f0fab8a8ee098bf2cf339c782a1ccc0b",
+      "summary": {
+        "simulation_ms": {
+          "median": 89.4665,
+          "p95": 249.372
+        },
+        "render_ms": {
+          "median": 21.341,
+          "p95": 45.925
+        },
+        "frame_ms": {
+          "median": 114.24199999999999,
+          "p95": 290.587
+        }
+      },
+      "observed_samples": 600,
+      "status": "complete"
+    },
+    {
+      "label": "pair1-before",
+      "kind": "headless",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/cloth-frame-2.0.27",
+        "--gpu",
+        "on",
+        "--threads",
+        "10",
+        "--",
+        "5",
+        "10",
+        "120",
+        "600"
+      ],
+      "csv": "cloth-routing-final-pair1-before.csv",
+      "binary_sha256": "bbea007a939befdd35ac9ffbe5d619a7ed8fe1c5b74fdfded90453aa29e5af45",
+      "date": "2026-09-28T09:40:55.723936+00:00",
+      "returncode": 0,
+      "stderr": "bend: compiling the GPU program (/Users/benjamintd/Personal/bend-playground/bend-swarm/build/cloth-frame-2.0.27.gpu is missing or stale)\n",
+      "gpu_sha256": null,
+      "summary": {
+        "simulation_ms": {
+          "median": 253.791,
+          "p95": 523.423
+        },
+        "render_ms": {
+          "median": 18.072499999999998,
+          "p95": 78.287
+        },
+        "frame_ms": {
+          "median": 279.1535,
+          "p95": 565.827
+        }
+      },
+      "observed_samples": 600,
+      "status": "complete"
+    },
+    {
+      "label": "window-cpu-standard-raw",
+      "kind": "window",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/cloth-window",
+        "--gpu",
+        "off",
+        "--threads",
+        "10",
+        "--",
+        "cpu",
+        "standard",
+        "raw"
+      ],
+      "csv": "cloth-routing-final-window-cpu-standard-raw.csv",
+      "binary_sha256": "c7f329653f555274cef580946a18d9e0875575f8b51b6169c47db6eee8b2d563",
+      "date": "2026-09-28T09:41:56.026245+00:00",
+      "returncode": 0,
+      "stderr": "",
+      "gpu_sha256": "e20bb186e513241ba56d5697df5d611abd8756e83fa8dc973fd046ec1db6dcbd",
+      "summary": {
+        "simulation_ms": {
+          "median": 44.65,
+          "p95": 139.683
+        },
+        "render_ms": {
+          "median": 6.9185,
+          "p95": 20.073
+        },
+        "frame_ms": {
+          "median": 54.2585,
+          "p95": 166.586
+        }
+      },
+      "observed_samples": 600,
+      "status": "complete"
+    },
+    {
+      "label": "window-hybrid-standard-aa",
+      "kind": "window",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/cloth-window",
+        "--gpu",
+        "on",
+        "--threads",
+        "10",
+        "--",
+        "hybrid",
+        "standard",
+        "aa"
+      ],
+      "csv": "cloth-routing-final-window-hybrid-standard-aa.csv",
+      "binary_sha256": "c7f329653f555274cef580946a18d9e0875575f8b51b6169c47db6eee8b2d563",
+      "date": "2026-09-28T09:42:24.942826+00:00",
+      "returncode": 0,
+      "stderr": "",
+      "gpu_sha256": "e20bb186e513241ba56d5697df5d611abd8756e83fa8dc973fd046ec1db6dcbd",
+      "observed_samples": 469,
+      "status": "incomplete",
+      "note": "Native window process exited cleanly before the requested sample count. No crash reported. Do not treat as a full benchmark."
+    }
+  ],
+  "load_note": "cloth-routing-load-note.json",
+  "window_matrix_completed": false,
+  "not_run": [
+    "window-hybrid-high-aa",
+    "window-hybrid-high-dof",
+    "window-default (CPU drawing with GPU available)"
+  ]
+}

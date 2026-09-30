@@ -1,0 +1,54 @@
+--- a/demos/meadow/scene.bend
++++ b/demos/meadow/scene.bend
+@@ -139,6 +139,42 @@
+   +lo = (U32.to_f32(part) / 3.0 : F32)
+   +hi = ((U32.to_f32(part) + 1.0) / 3.0 : F32)
+   quad((i * 8 + part * 2 : U32),vertex(~high,i,b,lo,F32.neg(1.0)),vertex(~high,i,b,lo,1.0),vertex(~high,i,b,hi,1.0),vertex(~high,i,b,hi,F32.neg(1.0)),material(i),tris)
++# Flat, frame-local prepared geometry: each curve and orientation is evaluated
++# once per blade, and neighboring segments reuse the same projected sections.
++type Ribbon is Data:
++  Ribbon{root: L.Point, control: L.Point, tip: L.Point, dx: F32, dz: F32, width: F32, color: U32}
++type Section is Data:
++  Section{left: M.Vertex, right: M.Vertex}
++def prepare_ribbon(+i: U32, b: Blade) -> Ribbon:
++  Blade{+x,+z,_,_} = b
++  +h = height(i)
++  +r = root(i)
++  +bend = F32.sqrt((x * x + z * z : F32))
++  +angle = (Math.random(i,384) * 6.2831853 : F32)
++  Ribbon{r,V.add(r,L.Point{(x * h * 0.12 : F32),(h * 0.62 : F32),(z * h * 0.12 : F32)}),
++    V.add(r,L.Point{(x * h : F32),(h * (1.0 - 0.27 * bend) : F32),(z * h : F32)}),
++    F32.cos(angle),F32.sin(angle),(0.016 + Math.random(i,493) * 0.013 : F32),material(i)}
++def section(~high: Bool, shape: Ribbon, +t: F32) -> Section:
++  Ribbon{r,control,tip,dx,dz,width,_} = shape
++  +p = Curve.quadratic(r,control,tip,t)
++  +w = (width * (1.0 - t * 0.96) : F32)
++  +side = {L.Point{(dx * w : F32),0.0,(dz * w : F32)} : L.Point}
++  +light = (0.35 + t * 0.65 : F32)
++  Section{Camera.project(~camera_size(high),V.add(p,V.mul(side,F32.neg(1.0))),light),
++    Camera.project(~camera_size(high),V.add(p,V.mul(side,1.0)),light)}
++def ribbon_sections(+i: U32, +color: U32, a: Section, b: Section, c: Section, d: Section, tris: Array<M.Triangle>) -> Array<M.Triangle>:
++  Section{al,ar} = a
++  Section{+bl,+br} = b
++  Section{+cl,+cr} = c
++  Section{dl,dr} = d
++  quad((i * 8 + 4 : U32),cl,cr,dr,dl,color,
++    quad((i * 8 + 2 : U32),bl,br,cr,cl,color,quad((i * 8 : U32),al,ar,br,bl,color,tris)))
++def ribbon_prepared(~high: Bool,i: U32,+shape: Ribbon,tris: Array<M.Triangle>) -> Array<M.Triangle>:
++  Ribbon{_,_,_,_,_,_,color} = shape
++  ribbon_sections(i,color,section(~high,shape,0.0),section(~high,shape,(1.0 / 3.0 : F32)),
++    section(~high,shape,(2.0 / 3.0 : F32)),section(~high,shape,1.0),tris)
++def ribbon(~high: Bool,+i: U32,b: Blade,tris: Array<M.Triangle>) -> Array<M.Triangle>:
++  ribbon_prepared(~high,i,prepare_ribbon(i,b),tris)
+ def petal(~high: Bool,+p: L.Point, dx: F32, dy: F32) -> M.Vertex:
+   Camera.project(~camera_size(high),V.add(p,L.Point{dx,dy,0.0}),1.0)
+ def blossom(~high: Bool,on: Bool, +i: U32, b: Blade, tris: Array<M.Triangle>) -> Array<M.Triangle>:
+@@ -152,7 +188,7 @@
+   Geometry{blades: Array<Blade>, triangles: Array<M.Triangle>}
+ def blade(~high: Bool,+i: U32, tris: Array<M.Triangle>, r: Array<Blade> & Blade) -> Geometry:
+   (blades,+b) = r
+-  Geometry{blades,blossom(~high,flower(i),i,b,segment(~high,i,b,2,segment(~high,i,b,1,segment(~high,i,b,0,tris))))}
++  Geometry{blades,blossom(~high,flower(i),i,b,ribbon(~high,i,b,tris))}
+ def geometry_loop(~high: Bool,n: Nat, +i: U32, g: Geometry) -> Geometry:
+   match n:
+     case 0n: g

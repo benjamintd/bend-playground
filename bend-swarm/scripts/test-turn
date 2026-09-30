@@ -1,0 +1,31 @@
+#!/bin/sh
+set -eu
+root=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
+cd "$root"
+mkdir -p build
+python3 scripts/generate-turn-levels.py --check
+python3 demos/turn/assets/generate-font.py --check
+scripts/bend PROOF.bend
+scripts/bend demos/turn/PROOF.bend
+scripts/bend demos/turn/CAMPAIGN_PROOF.bend
+bun --preload ./.toolchain/bend/bend2/main.ts tests/turn/catalog.js
+bun --preload ./.toolchain/bend/bend2/main.ts tests/turn/resolution.js
+bun --preload ./.toolchain/bend/bend2/main.ts tests/turn/solve.js
+bun --preload ./.toolchain/bend/bend2/main.ts tests/turn/schedule.js
+bun --preload ./.toolchain/bend/bend2/main.ts tests/turn/tempo.js
+bun --preload ./.toolchain/bend/bend2/main.ts tests/turn/hints.js
+bun --preload ./.toolchain/bend/bend2/main.ts tests/turn/hint-routes.js
+bun --preload ./.toolchain/bend/bend2/main.ts tests/turn/play.js
+bun --preload ./.toolchain/bend/bend2/main.ts tests/turn/settling.js
+bun --preload ./.toolchain/bend/bend2/main.ts tests/turn/visual.js
+bun --preload ./.toolchain/bend/bend2/main.ts tests/turn/font.js
+bun --preload ./.toolchain/bend/bend2/main.ts tests/turn/projection.js
+bun --preload ./.toolchain/bend/bend2/main.ts tests/turn/continuous.js
+scripts/bend tests/turn/tempo-native.bend -o build/turn-tempo-test
+./build/turn-tempo-test 84 1200 60 --gpu off --threads 8
+scripts/bend tests/turn/native.bend -o build/turn-native-test
+python3 tests/turn/native-check.py
+scripts/bend tests/turn/resolution-native.bend -o build/turn-resolution-test
+./build/turn-resolution-test 26 100 --gpu off --threads 8
+scripts/bend tests/turn/native-render.bend -o build/turn-native-render-test
+./build/turn-native-render-test --gpu off --threads 8

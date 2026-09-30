@@ -1,0 +1,56 @@
+import Base
+import ./CAMPAIGN_LAWS.bend as C
+import ./solutions.bend as S
+
+def C.level0_possible(): (S.path0(),{==})
+def C.level0_settling_total(): {==}
+def C.level1_possible(): (S.path1(),{==})
+def C.level1_settling_total(): {==}
+def C.level2_possible(): (S.path2(),{==})
+def C.level2_settling_total(): {==}
+def C.level3_possible(): (S.path3(),{==})
+def C.level3_settling_total(): {==}
+def C.level4_possible(): (S.path4(),{==})
+def C.level4_settling_total(): {==}
+def C.level5_possible(): (S.path5(),{==})
+def C.level5_settling_total(): {==}
+def C.level6_possible(): (S.path6(),{==})
+def C.level6_settling_total(): {==}
+def C.level7_possible(): (S.path7(),{==})
+def C.level7_settling_total(): {==}
+def C.level8_possible(): (S.path8(),{==})
+def C.level8_settling_total(): {==}
+def C.level9_possible(): (S.path9(),{==})
+def C.level9_settling_total(): {==}
+def C.level10_possible(): (S.path10(),{==})
+def C.level10_settling_total(): {==}
+def C.level11_possible(): (S.path11(),{==})
+def C.level11_settling_total(): {==}
+def C.level12_possible(): (S.path12(),{==})
+def C.level12_settling_total(): {==}
+def C.level13_possible(): (S.path13(),{==})
+def C.level13_settling_total(): {==}
+def C.level14_possible(): (S.path14(),{==})
+def C.level14_settling_total(): {==}
+def C.level15_possible(): (S.path15(),{==})
+def C.level15_settling_total(): {==}
+def C.level16_possible(): (S.path16(),{==})
+def C.level16_settling_total(): {==}
+def C.level17_possible(): (S.path17(),{==})
+def C.level17_settling_total(): {==}
+def C.level18_possible(): (S.path18(),{==})
+def C.level18_settling_total(): {==}
+def C.level19_possible(): (S.path19(),{==})
+def C.level19_settling_total(): {==}
+def C.level20_possible(): (S.path20(),{==})
+def C.level20_settling_total(): {==}
+def C.level21_possible(): (S.path21(),{==})
+def C.level21_settling_total(): {==}
+def C.level22_possible(): (S.path22(),{==})
+def C.level22_settling_total(): {==}
+def C.level23_possible(): (S.path23(),{==})
+def C.level23_settling_total(): {==}
+def C.level24_possible(): (S.path24(),{==})
+def C.level24_settling_total(): {==}
+def C.level25_possible(): (S.path25(),{==})
+def C.level25_settling_total(): {==}

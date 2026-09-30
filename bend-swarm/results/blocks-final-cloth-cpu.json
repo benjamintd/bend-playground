@@ -1,0 +1,271 @@
+{
+  "date": "2026-09-28T07:57:42.297123+00:00",
+  "os": "macOS-15.7.4-arm64-arm-64bit",
+  "cpu": "Apple M2 Pro",
+  "gpu": [
+    {
+      "sppci_model": "Apple M2 Pro",
+      "sppci_cores": "16"
+    }
+  ],
+  "memory_gb": 16.0,
+  "bend_version": [
+    "2.0.27",
+    "95317d952c8fe5be18ef49f916b2a57250cfb0aa"
+  ],
+  "source_sha256": {
+    "before": "784c8a7f35219db349bfe4b0571ee2e747de2df4f838f928cd627f9812cf8544",
+    "after": "2d78cf126f80cc93d8ed09c3689ac6bcbba5676f1c122da0aa01fae56436af61"
+  },
+  "binaries": {
+    "before": {
+      "path": "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/cloth-before",
+      "sha256": "c848b4d3386d0f93404c0638e71cb467ca64882aa56a72953e07ca27df8488a2",
+      "gpu_sha256": null
+    },
+    "after": {
+      "path": "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/cloth-frame",
+      "sha256": "8c38bc104007e1d77d3f32f873d30ed251cf6ada7a3bb9640a8e18a97bdde715",
+      "gpu_sha256": null
+    }
+  },
+  "demo": "cloth",
+  "backend": "cpu",
+  "effects": "raw",
+  "resolution": 1024,
+  "scene": {
+    "substeps": 2,
+    "substep_dt": 0.008333333333333333,
+    "physics_vertices": 1024
+  },
+  "threads": 10,
+  "warmup": 120,
+  "samples": 600,
+  "scope": "Headless full frame including old Image reclamation; excludes window/HUD/display. Sequential processes, alternating pair order. Each run restarts the same seeded scene. GPU simulation may diverge numerically; these are evolving scenes, not frozen render-only probes.",
+  "runs": [
+    {
+      "kind": "pair",
+      "pair": 0,
+      "label": "before",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/cloth-before",
+        "--gpu",
+        "off",
+        "--threads",
+        "10",
+        "--",
+        "6",
+        "0",
+        "120",
+        "600"
+      ],
+      "date": "2026-09-28T07:57:42.710270+00:00",
+      "returncode": 0,
+      "stderr": "",
+      "csv": "blocks-final-cloth-cpu-pair0-before.csv",
+      "summary": {
+        "simulation_ms": {
+          "median": 10.756,
+          "p95": 13.619
+        },
+        "render_ms": {
+          "median": 6.6145,
+          "p95": 8.443
+        },
+        "frame_ms": {
+          "median": 17.412,
+          "p95": 21.883
+        }
+      }
+    },
+    {
+      "kind": "pair",
+      "pair": 0,
+      "label": "after",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/cloth-frame",
+        "--gpu",
+        "off",
+        "--threads",
+        "10",
+        "--",
+        "6",
+        "0",
+        "120",
+        "600"
+      ],
+      "date": "2026-09-28T07:57:55.890882+00:00",
+      "returncode": 0,
+      "stderr": "",
+      "csv": "blocks-final-cloth-cpu-pair0-after.csv",
+      "summary": {
+        "simulation_ms": {
+          "median": 11.3885,
+          "p95": 19.033
+        },
+        "render_ms": {
+          "median": 6.0165,
+          "p95": 10.511
+        },
+        "frame_ms": {
+          "median": 17.562,
+          "p95": 27.996
+        }
+      }
+    },
+    {
+      "kind": "pair",
+      "pair": 1,
+      "label": "after",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/cloth-frame",
+        "--gpu",
+        "off",
+        "--threads",
+        "10",
+        "--",
+        "6",
+        "0",
+        "120",
+        "600"
+      ],
+      "date": "2026-09-28T07:58:09.615936+00:00",
+      "returncode": 0,
+      "stderr": "",
+      "csv": "blocks-final-cloth-cpu-pair1-after.csv",
+      "summary": {
+        "simulation_ms": {
+          "median": 10.683,
+          "p95": 12.852
+        },
+        "render_ms": {
+          "median": 5.5489999999999995,
+          "p95": 6.693
+        },
+        "frame_ms": {
+          "median": 16.240499999999997,
+          "p95": 19.407
+        }
+      }
+    },
+    {
+      "kind": "pair",
+      "pair": 1,
+      "label": "before",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/cloth-before",
+        "--gpu",
+        "off",
+        "--threads",
+        "10",
+        "--",
+        "6",
+        "0",
+        "120",
+        "600"
+      ],
+      "date": "2026-09-28T07:58:21.635971+00:00",
+      "returncode": 0,
+      "stderr": "",
+      "csv": "blocks-final-cloth-cpu-pair1-before.csv",
+      "summary": {
+        "simulation_ms": {
+          "median": 18.7615,
+          "p95": 38.629
+        },
+        "render_ms": {
+          "median": 10.559000000000001,
+          "p95": 21.789
+        },
+        "frame_ms": {
+          "median": 29.7195,
+          "p95": 59.676
+        }
+      }
+    },
+    {
+      "kind": "pair",
+      "pair": 2,
+      "label": "before",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/cloth-before",
+        "--gpu",
+        "off",
+        "--threads",
+        "10",
+        "--",
+        "6",
+        "0",
+        "120",
+        "600"
+      ],
+      "date": "2026-09-28T07:58:45.345094+00:00",
+      "returncode": 0,
+      "stderr": "",
+      "csv": "blocks-final-cloth-cpu-pair2-before.csv",
+      "summary": {
+        "simulation_ms": {
+          "median": 15.897,
+          "p95": 24.725
+        },
+        "render_ms": {
+          "median": 8.4945,
+          "p95": 14.272
+        },
+        "frame_ms": {
+          "median": 24.4635,
+          "p95": 35.346
+        }
+      }
+    },
+    {
+      "kind": "pair",
+      "pair": 2,
+      "label": "after",
+      "command": [
+        "/Users/benjamintd/Personal/bend-playground/bend-swarm/build/cloth-frame",
+        "--gpu",
+        "off",
+        "--threads",
+        "10",
+        "--",
+        "6",
+        "0",
+        "120",
+        "600"
+      ],
+      "date": "2026-09-28T07:59:04.420343+00:00",
+      "returncode": 0,
+      "stderr": "",
+      "csv": "blocks-final-cloth-cpu-pair2-after.csv",
+      "summary": {
+        "simulation_ms": {
+          "median": 16.8905,
+          "p95": 27.465
+        },
+        "render_ms": {
+          "median": 8.056000000000001,
+          "p95": 15.099
+        },
+        "frame_ms": {
+          "median": 25.1845,
+          "p95": 40.062
+        }
+      }
+    }
+  ],
+  "median_of_run_medians": {
+    "before": {
+      "simulation_ms": 15.897,
+      "render_ms": 8.4945,
+      "frame_ms": 24.4635
+    },
+    "after": {
+      "simulation_ms": 11.3885,
+      "render_ms": 6.0165,
+      "frame_ms": 17.562
+    }
+  },
+  "desktop_load": "Other desktop applications remained active. A process snapshot during these runs found a separate Bend Turn snapshot job and macOS system services consuming CPU. No builds/tests from this task overlapped timed runs. These are not idle-machine or sustained window-FPS measurements.",
+  "comparison_notes": "Three pairs in AB/BA/AB order; A/A controls for meadow. CPU results are materially confounded by changing desktop load; the unmodified simulation stage also varies."
+}

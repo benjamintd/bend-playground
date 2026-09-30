@@ -18,13 +18,16 @@ def built(r: Array<M.Triangle> & M.Index) -> M.Drawing & Image:
 def rendered() -> M.Drawing & Image:
   built(M.build_level(~2n,True{},4,quad(2,100.25,256.0,100.75,1792.0,16711680,
     quad(0,512.0,512.0,1536.0,1536.0,16777215,Array.new(M.Triangle,2n,M.blank()))),M.empty()))
-def coverage_built(r: Array<M.Triangle> & M.Index) -> M.Drawing & Image:
+def coverage_built(gpu: Bool, r: Array<M.Triangle> & M.Index) -> M.Drawing & Image:
   (tris,M.Index{_,offsets,_,ids,_}) = r
-  Finish.draw_level(~1n,True{},Post.Settings{True{},False{},10.0,4.0},M.Drawing{tris,offsets,ids,Array.new(U32,20n,0),
+  Finish.draw_level(~1n,gpu,Post.Settings{True{},False{},10.0,4.0},M.Drawing{tris,offsets,ids,Array.new(U32,20n,0),
     M.backdrop_level(~1n,~backdrop,Array.new(M.Fragment,21n,M.Fragment{0.0,0}))},Pix{0})
-def coverage_rendered() -> M.Drawing & Image:
-  coverage_built(M.build_level(~1n,True{},4,quad(2,50.125,128.0,50.375,896.0,16711680,
+def coverage_rendered(+gpu: Bool) -> M.Drawing & Image:
+  coverage_built(gpu,M.build_level(~1n,gpu,4,quad(2,50.1,128.0,50.35,896.0,16711680,
     quad(0,256.0,256.0,768.0,768.0,16777215,Array.new(M.Triangle,2n,M.blank()))),M.empty()))
+def coverage_again(gpu: Bool, r: M.Drawing & Image) -> M.Drawing & Image:
+  (drawing,image) = r
+  Finish.draw_level(~1n,gpu,Post.Settings{True{},False{},10.0,4.0},drawing,image)
 def pixel(i: U32, r: Array<U32> & U32) -> IO(Array<U32>):
   (p,c) = r
   do IO<Array<U32>>:
@@ -44,4 +47,5 @@ def main() -> IO(Unit):
   do IO<Unit>:
     Unit <- check(2048,rendered())
     Unit <- check(1024,Finish.resolve(~1n,True{},True{},rendered()))
-    check(1024,coverage_rendered())
+    Unit <- check(1024,coverage_again(False{},coverage_rendered(False{})))
+    check(1024,coverage_again(True{},coverage_rendered(True{})))

@@ -34,33 +34,37 @@ def counted(~S: Type, s: S, ids: Array<U32>, r: Array<U32> & U32) -> Build<S>:
   (counts,_) = r
   Build{s,counts,ids}
 
-def histogram_point(~space: L.Layout, ~S: Type, counts: Array<U32>, ids: Array<U32>, r: S & L.Point) -> Build<S>:
+def histogram_point(~space: L.Layout, ~S: Type, i: U32, counts: Array<U32>, ids: Array<U32>, r: S & L.Point) -> Build<S>:
   (s,p) = r
   counted(~S,s,ids,Array.atomic.add(counts,L.cell(space,p),1))
 
-def histogram_loop(~space: L.Layout, ~S: Type, ~position: @+i:U32 -> S -> S & L.Point,
+# Both stages visit the same active intervals. The closed operation keeps one
+# position read and one atomic increment per ID, without a runtime callback.
+def visit_loop(~S: Type, ~position: @+i:U32 -> S -> S & L.Point,
+  ~point: U32 -> Array<U32> -> Array<U32> -> S & L.Point -> Build<S>,
   n: Nat, +i: U32, b: Build<S>) -> Build<S>:
   match n:
     case 0n: b
     case 1n+p:
       Build{s,counts,ids} = b
-      histogram_loop(~space,~S,~position,p,(i + 1 : U32),
-        histogram_point(~space,~S,counts,ids,position(i,s)))
+      visit_loop(~S,~position,~point,p,(i + 1 : U32),point(i,counts,ids,position(i,s)))
 
-def histogram_leaf(~space: L.Layout, ~S: Type, ~position: @+i:U32 -> S -> S & L.Point,
+def visit_leaf(~S: Type, ~position: @+i:U32 -> S -> S & L.Point,
+  ~point: U32 -> Array<U32> -> Array<U32> -> S & L.Point -> Build<S>,
   start: U32, n: U32, b: Build<S>) -> Build<S>:
-  histogram_loop(~space,~S,~position,U32.to_nat(n),start,b)
+  visit_loop(~S,~position,~point,U32.to_nat(n),start,b)
 
-def histogram(~space: L.Layout, ~S: Type, ~position: @+i:U32 -> S -> S & L.Point,
+def visit(~S: Type, ~position: @+i:U32 -> S -> S & L.Point,
+  ~point: U32 -> Array<U32> -> Array<U32> -> S & L.Point -> Build<S>,
   ~join: S -> S -> S, depth: Nat, +n: U32, b: Build<S>) -> Build<S>:
-  Region.run(~Build<S>,~histogram_leaf(~space,~S,~position),~merge(~S,~join),
+  Region.run(~Build<S>,~visit_leaf(~S,~position,~point),~merge(~S,~join),
     Nat.min(depth,U32.log2(U32.max(n,1))),0,n,b)
 
 def histogram_run(~space: L.Layout, ~S: Type, ~position: @+i:U32 -> S -> S & L.Point,
   ~join: S -> S -> S, gpu: Bool, depth: Nat, n: U32, b: Build<S>) -> Build<S>:
   match gpu:
-    case True{}: histogram!(~space,~S,~position,~join,depth,n,b)
-    case False{}: histogram(~space,~S,~position,~join,depth,n,b)
+    case True{}: visit!(~S,~position,~histogram_point(~space,~S),~join,depth,n,b)
+    case False{}: visit(~S,~position,~histogram_point(~space,~S),~join,depth,n,b)
 
 type Scan is Type:
   Scan{counts: Array<U32>, offsets: Array<U32>, cursors: Array<U32>, total: U32}
@@ -94,29 +98,11 @@ def scatter_point(~space: L.Layout, ~S: Type, i: U32, cursors: Array<U32>, ids: 
   (s,p) = r
   scattered(~S,i,s,ids,Array.atomic.add(cursors,L.cell(space,p),1))
 
-def scatter_loop(~space: L.Layout, ~S: Type, ~position: @+i:U32 -> S -> S & L.Point,
-  n: Nat, +i: U32, b: Build<S>) -> Build<S>:
-  match n:
-    case 0n: b
-    case 1n+p:
-      Build{s,cursors,ids} = b
-      scatter_loop(~space,~S,~position,p,(i + 1 : U32),
-        scatter_point(~space,~S,i,cursors,ids,position(i,s)))
-
-def scatter_leaf(~space: L.Layout, ~S: Type, ~position: @+i:U32 -> S -> S & L.Point,
-  start: U32, n: U32, b: Build<S>) -> Build<S>:
-  scatter_loop(~space,~S,~position,U32.to_nat(n),start,b)
-
-def scatter(~space: L.Layout, ~S: Type, ~position: @+i:U32 -> S -> S & L.Point,
-  ~join: S -> S -> S, depth: Nat, +n: U32, b: Build<S>) -> Build<S>:
-  Region.run(~Build<S>,~scatter_leaf(~space,~S,~position),~merge(~S,~join),
-    Nat.min(depth,U32.log2(U32.max(n,1))),0,n,b)
-
 def scatter_run(~space: L.Layout, ~S: Type, ~position: @+i:U32 -> S -> S & L.Point,
   ~join: S -> S -> S, gpu: Bool, depth: Nat, n: U32, b: Build<S>) -> Build<S>:
   match gpu:
-    case True{}: scatter!(~space,~S,~position,~join,depth,n,b)
-    case False{}: scatter(~space,~S,~position,~join,depth,n,b)
+    case True{}: visit!(~S,~position,~scatter_point(~space,~S),~join,depth,n,b)
+    case False{}: visit(~S,~position,~scatter_point(~space,~S),~join,depth,n,b)
 
 def histogram_done(~space: L.Layout, ~S: Type, cap: U32, offsets: Array<U32>, cursors: Array<U32>, b: Build<S>) -> S & Index<space>:
   Build{s,counts,ids} = b

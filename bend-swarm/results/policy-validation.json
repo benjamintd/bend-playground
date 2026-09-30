@@ -1,0 +1,73 @@
+{
+  "date": "2026-09-28",
+  "toolchain": [
+    "2.0.27",
+    "95317d952c8fe5be18ef49f916b2a57250cfb0aa"
+  ],
+  "checks": {
+    "proofs": "pass",
+    "full_js_suite": "pass",
+    "all_32_policy_selections": "pass",
+    "native_render": {
+      "cpu": {
+        "runtime_gpu_available": 0,
+        "cases": 34,
+        "pixels_checked": 13631488,
+        "max_image_mismatches": 0,
+        "max_pixel_channel_difference": 0
+      },
+      "gpu": {
+        "runtime_gpu_available": 1,
+        "cases": 34,
+        "pixels_checked": 13631488,
+        "max_image_mismatches": 0,
+        "max_pixel_channel_difference": 0
+      }
+    },
+    "cpu_only_runtime": "pass",
+    "forced_gpu_off_frame": "pass",
+    "profiler_csv_accounting": "pass",
+    "invalid_cli_arguments": "pass",
+    "builds": [
+      "cloth",
+      "meadow",
+      "life",
+      "cloth-frame",
+      "meadow-frame",
+      "life-frame",
+      "profile",
+      "policy-native",
+      "policy-runtime"
+    ],
+    "window_checks": {
+      "cloth": [
+        "CPU labels",
+        "G CPU physics + GPU rendering",
+        "A+D effects",
+        "pause",
+        "Q 1024",
+        "H hide"
+      ],
+      "meadow": [
+        "H show",
+        "G all GPU labels"
+      ]
+    }
+  },
+  "limitations": [
+    "Elapsed host timings include dispatch and synchronization, not GPU hardware timestamps.",
+    "Work excludes HUD, presentation, pacing, reset and resize.",
+    "Timers are always enabled; H controls only visibility.",
+    "Comparisons were sequential on a non-isolated desktop; Cloth samples are short.",
+    "Swarm and Particle Life do not yet use the per-stage policy."
+  ],
+  "comparison": "results/policy-comparison.json",
+  "binary_sha256": {
+    "cloth": "dc2fb92f67751d6585bc922f4f1a423ea58a659c89c979308a2301e6d7010040",
+    "meadow": "7f30bc1f221abdd9c4a5bfa3de57bd8ffb7d7c9720631efaa31963b08deaf132",
+    "life": "b66e3a04788eb9ca58eea50792a3f507c3e5d43fdf990cf753e5f8153c445613",
+    "profile": "524def88867e7dd15d16690258147eebde79ac76639d86619e792399ca61e630",
+    "policy-native": "a93daa81bdd8b9343212ae68161c444d29f4f13e6b14bbd1daba3cdec96e39e3",
+    "policy-runtime": "bdada4a845bce11d0e0490bb3ec73304124f854792519af3b2b5d21d99970a34"
+  }
+}
