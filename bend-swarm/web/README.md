@@ -22,10 +22,22 @@ only public static assets and Vercel configuration. The build uses the pinned
 Bend compiler's supported Bun plugin and emits separate JavaScript chunks for
 the experiments. No engine or compiler patches are needed.
 
-Deploy the built directory, not the repository:
+## GitHub deployment
+
+The public source is at https://github.com/benjamintd/bend-playground.
+The `bend-engine-demos` Vercel project is connected to this repository and
+hosted by the **Benjamin Td** Pro team (`benjamin-td`). Pushes to `main` build
+and deploy production; other branches get preview deployments.
+
+The repository-root `package.json` pins Bun, and `vercel.json` runs the setup,
+proofs, browser compilation, and static-link checks sequentially. The only
+published output directory is `bend-swarm/build/web-site`.
+
+For a manual deployment of already-built static files, use the linked build
+directory and select the Pro team explicitly:
 
 ```
-vercel --cwd build/web-site --prod
+vercel --cwd build/web-site --scope benjamin-td --prod
 ```
 
 ## Browser boundary
